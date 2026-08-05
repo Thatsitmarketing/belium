@@ -220,6 +220,26 @@
     transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), background-position 0.5s ease, box-shadow 0.2s ease;
   }
   .btn-primary:hover { background-position: 100% 50%; box-shadow: 0 18px 40px -14px rgba(169, 116, 31, 0.65); }
+  /* Feiner Licht-Sweep beim Hover (Premium-Detail) */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 45%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-18deg);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .btn-primary:hover::after { animation: btn-sheen 0.9s ease; }
+  @keyframes btn-sheen {
+    0% { left: -75%; opacity: 0; }
+    12% { opacity: 1; }
+    100% { left: 130%; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:hover::after { animation: none; }
+  }
 
   .btn-dark {
     background-color: var(--color-ink);
@@ -321,6 +341,23 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+
+  /* Atmosphaere-Ebene: optimiertes Textur-/Glow-Bild als dezenter Hintergrund.
+     Das eigentliche <img> wird vom <Atmosphere>-Komponenten geliefert. */
+  .atmosphere {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .atmosphere > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .grain {

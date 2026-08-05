@@ -8,8 +8,10 @@
  * hier einbinden (das Nachladen erst nach `belium:consent granted=true`).
  */
 import Icon from '@/components/Icon.astro';
+import Atmosphere from '@/components/Atmosphere.astro';
 ---
 <section id="bewertungen" class="section-pad bewertungen">
+  <Atmosphere tone="light" opacity={0.6} class="bewertungen__atmo" />
   <div class="container-page">
     <header class="section-head reveal">
       <p class="t-eyebrow">Das sagen Kundinnen und Kunden</p>
@@ -51,7 +53,9 @@ import Icon from '@/components/Icon.astro';
 </section>
 
 <style>
-  .bewertungen { background: var(--color-cream-deep); }
+  .bewertungen { position: relative; isolation: isolate; overflow: hidden; background: var(--color-cream-deep); }
+  .bewertungen :global(.bewertungen__atmo) { z-index: -1; }
+  .bewertungen > .container-page { position: relative; z-index: 1; }
   .bewertungen__slot {
     /* Feste Mindesthöhe verhindert Layout Shift beim Nachladen */
     min-height: 220px;
