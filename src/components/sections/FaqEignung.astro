@@ -56,9 +56,9 @@ const eingeschraenkt = [
         </article>
       </div>
 
-      <!-- Rechts: FAQ -->
+      <!-- Rechts: FAQ (Top 6) -->
       <div class="fe__faq reveal" data-reveal="left">
-        {faqItems.map((item, i) => (
+        {faqItems.slice(0, 6).map((item, i) => (
           <details class="faq__item" name="faq" open={i === 0}>
             <summary class="faq__summary">
               <h3 class="faq__frage">{item.frage}</h3>

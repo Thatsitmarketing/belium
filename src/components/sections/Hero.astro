@@ -170,7 +170,7 @@ const checks = [
 
   .hero__img-wrap {
     position: relative; overflow: hidden;
-    border-radius: 2rem 2rem 2rem 0.4rem;
+    border-radius: var(--radius-lg);
     aspect-ratio: 4 / 5;
     box-shadow: var(--shadow-float);
     border: 1px solid var(--color-sand);
@@ -207,7 +207,7 @@ const checks = [
     position: absolute; z-index: 2; right: -0.8rem; top: 1.4rem;
     display: flex; align-items: center; gap: 0.5rem;
     background: color-mix(in srgb, #fff 92%, transparent); backdrop-filter: blur(6px);
-    border: 1px solid var(--color-sand-deep); border-radius: var(--radius-pill);
+    border: 1px solid var(--color-sand-deep); border-radius: var(--radius-sm);
     padding: 0.5rem 0.85rem 0.5rem 0.6rem; box-shadow: var(--shadow-card);
     font-size: 0.7rem; font-weight: 700; line-height: 1.15; color: var(--color-espresso);
   }

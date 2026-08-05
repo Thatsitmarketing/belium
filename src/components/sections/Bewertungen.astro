@@ -10,7 +10,7 @@ import Ornament from '@/components/Ornament.astro';
 import { reviews, reviewsPlatzhalter } from '@/data/reviews';
 ---
 <section id="bewertungen" class="rev">
-  <div class="container-page rev__head" data-reveal="up">
+  <div class="rev__head" data-reveal="up">
     <Ornament class="rev__ornament" />
     <p class="t-eyebrow t-eyebrow--center">Kundenstimmen</p>
     <h2 class="t-h2 rev__title">Das sagen <span class="text-gold">unsere Kundinnen &amp; Kunden</span></h2>
@@ -60,10 +60,12 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
 
 <style>
   .rev { background: var(--color-cream-deep); padding-block: clamp(3.75rem, 8vw, 7rem); overflow: hidden; }
-  /* Headline breiter gesetzt, damit sie nicht in viele kurze Zeilen umbricht. */
-  .rev__head { text-align: center; max-width: 58rem; margin-inline: auto; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  /* Headline breit & zusammengeführt: eigener, moderater Innenabstand statt der
+     viewport-prozentualen container-page-Polsterung (die auf breiten Screens zu
+     stark einschnürte und die Überschrift in viele kurze Zeilen brach). */
+  .rev__head { text-align: center; max-width: 54rem; margin-inline: auto; padding-inline: 1.5rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
   .rev :global(.rev__ornament) { margin-bottom: 1rem; }
-  .rev__head .rev__title { margin-top: 0.7rem; text-wrap: pretty; }
+  .rev__head .rev__title { margin-top: 0.7rem; text-wrap: balance; }
 
   /* Durchlaufender Slider (Endlos-Schleife) */
   .rev__viewport { position: relative; overflow: hidden; padding-block: 0.5rem 2rem; }

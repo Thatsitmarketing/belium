@@ -1,15 +1,20 @@
 ---
 /**
- * Zusammengeführter Vertrauensabschnitt: „Über Maria" + „Räumlichkeiten".
- * Die behandelnde Person ist der zentrale Vertrauensfaktor und steht daher vor dem Preisrechner.
- * Kein separater CTA („Termin bei Maria anfragen" wurde bewusst entfernt).
+ * Vertrauensabschnitt „Über Maria" + Studio.
+ * Oben: Maria im ruhigen, parallelen Split (Bild neben Text, ohne Überlappung).
+ * Unten: ein voll-breiter, durchlaufender Studio-Bilderslider – er dient zugleich als
+ * Trenner zwischen diesem und dem nächsten Abschnitt (nur Bilder, keine Bullet-Points).
  */
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
 import mariaImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
 import warteraum from '@/assets/images/warteraum-belium-gelsenkirchen-buer.png';
+import wartebereich from '@/assets/images/wartebereich-belium-gelsenkirchen-buer.png';
 import behandlungsraum from '@/assets/images/behandlungsraum-neutral-belium-gelsenkirchen-buer.png';
+import behandlungsraum2 from '@/assets/images/behandlungsraum-belium-gelsenkirchen-buer.png';
 import lichtdecke from '@/assets/images/studio-lichtdecke-belium-gelsenkirchen-buer.png';
+import eingang from '@/assets/images/studio-eingang-belium-gelsenkirchen-buer.png';
+import dekoration from '@/assets/images/studio-dekoration-belium-gelsenkirchen-buer.png';
 
 const qualifikationen = [
   'Zertifizierte Laserschutzbeauftragte für kosmetische Laserbehandlungen',
@@ -22,16 +27,14 @@ const studio = [
   { src: warteraum, alt: 'Gemütlicher Wartebereich im Studio von Belium Beauty in Gelsenkirchen Buer' },
   { src: behandlungsraum, alt: 'Ruhiger, sauberer Behandlungsraum bei Belium Beauty' },
   { src: lichtdecke, alt: 'Beleuchtete Lichtdecke sorgt für Wohlfühlatmosphäre im Behandlungsraum' },
-];
-
-const atmosphaere = [
-  { icon: 'shield', text: 'Hygiene & saubere Abläufe' },
-  { icon: 'heart', text: 'Diskret & respektvoll' },
-  { icon: 'leaf', text: 'Ruhige Wohlfühl-Atmosphäre' },
+  { src: eingang, alt: 'Einladender Eingangsbereich des Studios von Belium Beauty' },
+  { src: behandlungsraum2, alt: 'Behandlungsraum mit Diodenlaser bei Belium Beauty in Gelsenkirchen Buer' },
+  { src: wartebereich, alt: 'Ruhiger Wartebereich mit warmer Beleuchtung im Studio' },
+  { src: dekoration, alt: 'Liebevolle Dekoration sorgt für eine wohnliche Atmosphäre im Studio' },
 ];
 ---
-<section id="ueber-maria" class="section-pad maria">
-  <div class="container-page">
+<section id="ueber-maria" class="maria">
+  <div class="container-page maria__intro">
     <header class="section-head reveal">
       <p class="t-eyebrow">Persönlich behandelt</p>
       <h2 class="t-h2">Persönlich behandelt. <span class="text-gold">Professionell begleitet.</span></h2>
@@ -47,7 +50,7 @@ const atmosphaere = [
           src={mariaImg}
           alt="Maria Espejo Jimenez, Inhaberin von Belium Beauty und zertifizierte Laserschutzbeauftragte in Gelsenkirchen Buer"
           widths={[380, 560, 760]}
-          sizes="(min-width: 900px) 38vw, 88vw"
+          sizes="(min-width: 900px) 40vw, 88vw"
           loading="lazy"
           format="avif"
           quality={72}
@@ -69,39 +72,40 @@ const atmosphaere = [
         </ul>
       </div>
     </div>
+  </div>
 
-    <div class="maria__studio reveal">
-      <div class="maria__gallery">
-        {studio.map((b) => (
-          <Image
-            src={b.src}
-            alt={b.alt}
-            widths={[360, 560, 760]}
-            sizes="(min-width: 900px) 30vw, 90vw"
-            loading="lazy"
-            format="avif"
-            quality={64}
-            class="maria__shot"
-          />
-        ))}
-      </div>
-      <ul class="maria__atmo">
-        {atmosphaere.map((a) => (
-          <li><span class="maria__atmo-ic"><Icon name={a.icon} class="w-4 h-4" gradient /></span>{a.text}</li>
-        ))}
-      </ul>
+  <!-- Voll-breiter, durchlaufender Studio-Slider – zugleich Trenner zum nächsten Abschnitt -->
+  <div class="mslider" data-mslider aria-label="Eindrücke aus dem Studio">
+    <div class="mslider__track">
+      {[0, 1].map((copy) => (
+        <div class="mslider__group" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {studio.map((b) => (
+            <figure class="mslider__item">
+              <Image
+                src={b.src}
+                alt={copy === 1 ? '' : b.alt}
+                widths={[360, 520, 680]}
+                sizes="(min-width: 900px) 24vw, 70vw"
+                loading="lazy"
+                format="avif"
+                quality={62}
+                class="mslider__img"
+              />
+            </figure>
+          ))}
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
-  .maria { background: var(--color-cream-deep); }
+  .maria { background: var(--color-cream); padding-top: clamp(3.75rem, 8vw, 7.5rem); }
 
-  .maria__grid { display: grid; grid-template-columns: 1fr; gap: 2.25rem; align-items: start; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
-  @media (min-width: 900px) { .maria__grid { grid-template-columns: 0.62fr 1.38fr; gap: clamp(2rem, 4vw, 3.25rem); } }
+  /* --- Intro: Bild neben Text, ruhig & parallel (keine Überlappung) --- */
+  .maria__grid { display: grid; grid-template-columns: 1fr; gap: 2.25rem; align-items: center; margin-bottom: clamp(3rem, 6vw, 4.5rem); }
+  @media (min-width: 900px) { .maria__grid { grid-template-columns: 0.9fr 1.1fr; gap: clamp(2.5rem, 5vw, 4rem); } }
 
-  /* Bild von Maria bewusst schmaler & kleiner gehalten (schmale Spalte im Desktop-Grid),
-     damit Bild und Text als ein ruhiger Block zusammenpassen (oben bündig zum Textsatz). */
   .maria__media { position: relative; }
   .maria__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
   .maria__badge {
@@ -109,22 +113,44 @@ const atmosphaere = [
     display: inline-flex; align-items: center; gap: 0.45rem; max-width: calc(100% - 1.8rem);
     background: color-mix(in srgb, var(--color-ink) 88%, transparent); backdrop-filter: blur(6px);
     border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
-    color: var(--color-gold-light); border-radius: var(--radius-pill);
+    color: var(--color-gold-light); border-radius: var(--radius-sm);
     padding: 0.5rem 0.9rem; font-size: 0.78rem; font-weight: 700; box-shadow: var(--shadow-card);
   }
 
   .maria__name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 3vw, 2.2rem); color: var(--color-ink); }
-  .maria__lead { margin-top: 0.8rem; color: var(--color-ink-soft); font-size: 1.05rem; line-height: 1.6; max-width: 46ch; }
+  .maria__lead { margin-top: 0.8rem; color: var(--color-ink-soft); font-size: 1.05rem; line-height: 1.6; }
   .maria__quali { list-style: none; margin-top: 1.4rem; display: flex; flex-direction: column; gap: 0.7rem; }
   .maria__quali li { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 600; }
   .maria__quali :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
 
-  .maria__studio { border-top: 1px solid var(--color-sand); padding-top: clamp(2rem, 4vw, 2.75rem); }
-  .maria__gallery { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
-  @media (min-width: 620px) { .maria__gallery { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
-  .maria__shot { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); }
+  /* --- Voll-breiter Studio-Slider (Trenner) --- */
+  .mslider {
+    position: relative; overflow: hidden; width: 100%;
+    border-top: 1px solid var(--color-sand);
+    background: var(--color-cream);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+  .mslider__track { display: flex; width: max-content; }
+  .mslider__group {
+    display: flex; flex: 0 0 auto; gap: 0.9rem; padding: 1rem 0.45rem;
+    animation: mslider-run 55s linear infinite;
+  }
+  .mslider:hover .mslider__group { animation-play-state: paused; }
+  @keyframes mslider-run {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - 0.9rem)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mslider { overflow-x: auto; scrollbar-width: none; }
+    .mslider::-webkit-scrollbar { display: none; }
+    .mslider__group { animation: none; }
+    .mslider__group[aria-hidden="true"] { display: none; }
+  }
 
-  .maria__atmo { list-style: none; display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; justify-content: center; margin-top: 1.5rem; }
-  .maria__atmo li { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 0.9rem; color: var(--color-espresso); }
-  .maria__atmo-ic { display: inline-flex; flex: 0 0 auto; }
+  .mslider__item { flex: 0 0 auto; margin: 0; }
+  .mslider__img {
+    display: block; width: clamp(15rem, 24vw, 22rem); height: clamp(9.5rem, 15vw, 13.5rem);
+    object-fit: cover; border-radius: var(--radius-md);
+  }
 </style>
