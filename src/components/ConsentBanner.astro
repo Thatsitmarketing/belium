@@ -1,81 +1,231 @@
 ---
 import Icon from '@/components/Icon.astro';
+import Wordmark from '@/components/Wordmark.astro';
 /**
- * Cookie-/Consent-Banner (DSGVO/GDPR-konform).
- * Grundsatz: Vor Einwilligung wird NICHTS Externes geladen (keine Karte, keine Bewertungs-Widgets,
- * kein Tracking) – „block by default". Erst nach „Alle akzeptieren" wird das Event `belium:consent`
- * mit granted=true gefeuert, auf das die entsprechenden Komponenten hören.
- * Gleichwertige Buttons (Ablehnen so einfach wie Akzeptieren), keine Vorauswahl, kein Auto-Schließen.
- * Auswahl wird in localStorage gespeichert; jederzeit widerrufbar über das gebrandete Cookie-Widget.
+ * Cookie-/Consent-Manager im Stil eines klassischen CMP (Cookiebot-Look):
+ * Modal mit Tabs (Zustimmung / Details / Über Cookies), granulare Kategorien als Schalter
+ * (Notwendig immer aktiv) und drei gleichwertige Aktionen (Ablehnen / Auswahl erlauben /
+ * Alle zulassen). DSGVO/GDPR: „block by default" – ohne Einwilligung lädt NICHTS Externes;
+ * keine Vorauswahl bei optionalen Kategorien; jederzeit widerrufbar über das Cookie-Widget.
+ *
+ * Kompatibilität: window.__beliumConsent ('all' | 'essential') und das Event `belium:consent`
+ * mit { granted } bleiben erhalten (z. B. für die Google-Karte im Kontaktbereich).
  */
+const kategorien = [
+  {
+    key: 'necessary',
+    label: 'Notwendig',
+    locked: true,
+    desc: 'Technisch erforderlich – zum Beispiel, um deine Cookie-Auswahl zu speichern. Diese Cookies sind immer aktiv und werden nicht an Dritte weitergegeben.',
+  },
+  {
+    key: 'preferences',
+    label: 'Präferenzen',
+    locked: false,
+    desc: 'Merken sich Einstellungen wie deine bevorzugte Ansicht, damit die Seite komfortabler wird.',
+  },
+  {
+    key: 'statistics',
+    label: 'Statistiken',
+    locked: false,
+    desc: 'Helfen uns, anonym und zusammengefasst zu verstehen, wie die Seite genutzt wird, damit wir sie verbessern können.',
+  },
+  {
+    key: 'marketing',
+    label: 'Marketing',
+    locked: false,
+    desc: 'Ermöglichen die Einbindung externer Dienste wie der Google-Karte und von Bewertungs-Widgets. Es werden keine Werbe-Pixel automatisch geladen.',
+  },
+];
 ---
-<div
-  id="consent-banner"
-  class="consent"
-  role="dialog"
-  aria-modal="false"
-  aria-label="Hinweis zum Datenschutz"
-  hidden
->
-  <div class="consent__inner container-page">
-    <div class="consent__text">
-      <p class="consent__title">Wir respektieren deine Privatsphäre</p>
-      <p class="consent__body">
-        Diese Website lädt standardmäßig keine externen Dienste. Nur mit deiner Einwilligung binden wir
-        Karte, Bewertungen und Statistik ein. Mehr dazu in der
-        <a href="/datenschutz">Datenschutzerklärung</a>.
-      </p>
+<div class="cc-root">
+  <div class="cc-overlay" data-cc-overlay hidden></div>
+
+  <div id="consent-banner" class="cc" role="dialog" aria-modal="true" aria-labelledby="cc-title" hidden>
+    <div class="cc__head">
+      <Wordmark size="sm" class="cc__logo" />
+      <span class="cc__badge"><Icon name="shield" class="w-4 h-4" /> Datenschutz</span>
     </div>
-    <div class="consent__actions">
-      <button type="button" class="btn btn-dark consent__btn" data-consent="essential">
-        Nur notwendige
-      </button>
-      <button type="button" class="btn btn-primary consent__btn" data-consent="all">
-        Alle akzeptieren
-      </button>
+
+    <div class="cc__tabs" role="tablist" aria-label="Cookie-Informationen">
+      <button type="button" class="cc__tab is-active" role="tab" aria-selected="true" data-cc-tab="zustimmung">Zustimmung</button>
+      <button type="button" class="cc__tab" role="tab" aria-selected="false" data-cc-tab="details">Details</button>
+      <button type="button" class="cc__tab" role="tab" aria-selected="false" data-cc-tab="ueber">Über Cookies</button>
+    </div>
+
+    <div class="cc__body">
+      <!-- Tab: Zustimmung -->
+      <section class="cc__panel is-active" data-cc-panel="zustimmung">
+        <h2 id="cc-title" class="cc__title">Diese Website verwendet Cookies</h2>
+        <p class="cc__text">
+          Standardmäßig laden wir keine externen Dienste. Nur mit deiner Einwilligung binden wir
+          Inhalte wie die Google-Karte oder Bewertungen ein und erheben – falls von dir erlaubt –
+          anonyme Statistiken, um die Seite zu verbessern. Du kannst deine Auswahl jederzeit ändern.
+          Mehr dazu in der <a href="/datenschutz">Datenschutzerklärung</a>.
+        </p>
+
+        <div class="cc__cats">
+          {kategorien.map((k) => (
+            <label class={`cc-cat${k.locked ? ' is-locked' : ''}`}>
+              <span class="cc-cat__label">{k.label}</span>
+              <span class="cc-switch">
+                <input type="checkbox" data-cc-cat={k.key} checked={k.locked} disabled={k.locked} />
+                <span class="cc-switch__track" aria-hidden="true"><span class="cc-switch__thumb"></span></span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <!-- Tab: Details -->
+      <section class="cc__panel" data-cc-panel="details" hidden>
+        <ul class="cc__detail-list">
+          {kategorien.map((k) => (
+            <li class="cc__detail">
+              <div class="cc__detail-head">
+                <span class="cc__detail-name">{k.label}</span>
+                {k.locked
+                  ? <span class="cc__detail-state cc__detail-state--on">Immer aktiv</span>
+                  : <span class="cc__detail-state" data-cc-state={k.key}>Aus</span>}
+              </div>
+              <p class="cc__detail-desc">{k.desc}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Tab: Über Cookies -->
+      <section class="cc__panel" data-cc-panel="ueber" hidden>
+        <p class="cc__text">
+          Cookies sind kleine Textdateien, die eine Website auf deinem Gerät speichern kann. Sie sorgen
+          dafür, dass grundlegende Funktionen arbeiten, und können – nur mit deiner Einwilligung – z. B.
+          externe Inhalte einbinden oder helfen, die Nutzung anonym auszuwerten.
+        </p>
+        <p class="cc__text">
+          Deine Einwilligung ist freiwillig und jederzeit mit Wirkung für die Zukunft widerrufbar –
+          über das Cookie-Symbol unten rechts. Details findest du in unserer
+          <a href="/datenschutz">Datenschutzerklärung</a> und im <a href="/impressum">Impressum</a>.
+        </p>
+      </section>
+    </div>
+
+    <div class="cc__actions">
+      <button type="button" class="btn btn-ghost cc__btn" data-consent="essential">Ablehnen</button>
+      <button type="button" class="btn btn-ghost cc__btn" data-consent="selection">Auswahl erlauben</button>
+      <button type="button" class="btn btn-primary cc__btn" data-consent="all">Alle zulassen</button>
     </div>
   </div>
+
+  <!-- Gebrandetes Cookie-Widget (rechtsbündig): jederzeitiger Zugriff / Widerruf -->
+  <button type="button" id="consent-widget" class="consent-widget" aria-label="Cookie-Einstellungen öffnen" hidden>
+    <Icon name="cookie" class="w-6 h-6" />
+  </button>
 </div>
 
-<!-- Gebrandetes Cookie-Widget: jederzeitiger Zugriff auf die Einstellungen (Widerruf) -->
-<button type="button" id="consent-widget" class="consent-widget" aria-label="Cookie-Einstellungen öffnen" hidden>
-  <Icon name="cookie" class="w-6 h-6" />
-</button>
-
 <style>
-  .consent {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 90;
-    background: #fff;
-    border-top: 1px solid var(--color-sand-deep);
-    box-shadow: var(--shadow-float);
-    animation: consent-up 0.4s ease;
+  .cc-overlay {
+    position: fixed; inset: 0; z-index: 95;
+    background: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    backdrop-filter: blur(2px);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .consent { animation: none; }
-  }
-  @keyframes consent-up {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .consent__inner {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-block: 1.1rem;
-  }
-  .consent__title { font-weight: 800; margin-bottom: 0.2rem; }
-  .consent__body { font-size: 0.92rem; color: var(--color-ink-soft); }
-  .consent__body a { color: var(--color-gold-deep); text-decoration: underline; }
-  .consent__actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .consent__btn { flex: 1 1 auto; }
 
-  /* Gebrandetes Cookie-Widget (rund, Gold – passend zum Marken-Look) */
+  .cc {
+    position: fixed; z-index: 96; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(48rem, calc(100vw - 1.75rem));
+    max-height: min(90vh, 46rem); overflow: auto;
+    background: #fff; color: var(--color-ink);
+    border: 1px solid var(--color-sand);
+    border-radius: 0.5rem; box-shadow: var(--shadow-float);
+    animation: cc-in 0.35s cubic-bezier(0.22,1,0.36,1);
+  }
+  @media (prefers-reduced-motion: reduce) { .cc { animation: none; } }
+  @keyframes cc-in { from { opacity: 0; transform: translate(-50%, -46%) scale(0.98); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+  .cc__head {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1.1rem clamp(1.1rem, 3vw, 1.9rem);
+    border-bottom: 1px solid var(--color-sand);
+  }
+  .cc :global(.cc__logo) { color: var(--color-ink); }
+  .cc__badge {
+    display: inline-flex; align-items: center; gap: 0.4rem; flex: 0 0 auto;
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--color-gold-deep);
+  }
+  .cc__badge :global(svg) { color: var(--color-gold-deep); }
+
+  /* Tabs */
+  .cc__tabs { display: flex; gap: 0.25rem; padding: 0 clamp(0.6rem, 2vw, 1.4rem); border-bottom: 1px solid var(--color-sand); }
+  .cc__tab {
+    appearance: none; background: none; border: 0; cursor: pointer;
+    padding: 0.9rem 0.9rem; font: inherit; font-weight: 700; font-size: 0.92rem;
+    color: var(--color-mocha); position: relative;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .cc__tab:hover { color: var(--color-ink); }
+  .cc__tab.is-active { color: var(--color-gold-deep); border-bottom-color: var(--color-gold); }
+
+  .cc__body { padding: clamp(1.1rem, 3vw, 1.9rem); }
+  .cc__title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.35rem, 3vw, 1.75rem); }
+  .cc__text { margin-top: 0.7rem; font-size: 0.95rem; color: var(--color-ink-soft); line-height: 1.6; }
+  .cc__text a { color: var(--color-gold-deep); text-decoration: underline; }
+  .cc__panel { animation: cc-fade 0.25s ease; }
+  @keyframes cc-fade { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Kategorie-Schalter (Zustimmung) */
+  .cc__cats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.4rem; }
+  @media (min-width: 640px) { .cc__cats { grid-template-columns: repeat(4, 1fr); gap: 1rem; } }
+  .cc-cat {
+    display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center;
+    padding: 1rem 0.6rem; border: 1px solid var(--color-sand); border-radius: var(--radius-sm);
+    background: var(--color-cream);
+  }
+  .cc-cat__label { font-size: 0.86rem; font-weight: 800; }
+  .cc-cat.is-locked .cc-cat__label { color: var(--color-mocha); }
+
+  .cc-switch { position: relative; display: inline-flex; width: 3rem; height: 1.7rem; cursor: pointer; }
+  .cc-switch input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .cc-switch input:disabled { cursor: not-allowed; }
+  .cc-switch__track {
+    width: 3rem; height: 1.7rem; border-radius: 999px; background: var(--color-sand-deep);
+    transition: background 0.22s ease;
+  }
+  .cc-switch__thumb {
+    position: absolute; top: 0.22rem; left: 0.22rem; width: 1.26rem; height: 1.26rem;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    transition: transform 0.22s cubic-bezier(0.22,1,0.36,1);
+  }
+  .cc-switch input:checked ~ .cc-switch__track { background: var(--gradient-gold); }
+  .cc-switch input:checked ~ .cc-switch__track .cc-switch__thumb { transform: translateX(1.3rem); }
+  .cc-switch input:disabled:checked ~ .cc-switch__track { background: var(--color-taupe); }
+  .cc-switch input:focus-visible ~ .cc-switch__track { outline: 3px solid var(--color-gold); outline-offset: 2px; }
+
+  /* Details */
+  .cc__detail-list { list-style: none; display: flex; flex-direction: column; gap: 1.1rem; }
+  .cc__detail { border: 1px solid var(--color-sand); border-radius: var(--radius-sm); padding: 1rem 1.1rem; background: var(--color-cream); }
+  .cc__detail-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .cc__detail-name { font-weight: 800; }
+  .cc__detail-state {
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--color-mocha); border: 1px solid var(--color-sand-deep); border-radius: var(--radius-xs);
+    padding: 0.15rem 0.5rem;
+  }
+  .cc__detail-state--on, .cc__detail-state.is-on { color: #2a1c07; background: var(--gradient-gold); border-color: transparent; }
+  .cc__detail-desc { margin-top: 0.5rem; font-size: 0.9rem; color: var(--color-ink-soft); line-height: 1.55; }
+
+  /* Aktionen */
+  .cc__actions {
+    display: grid; grid-template-columns: 1fr; gap: 0.6rem;
+    padding: clamp(1rem, 3vw, 1.5rem); border-top: 1px solid var(--color-sand);
+    position: sticky; bottom: 0; background: #fff;
+  }
+  @media (min-width: 620px) { .cc__actions { grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; } }
+  .cc__btn { width: 100%; }
+
+  /* Gebrandetes Cookie-Widget (rund, Gold – passend zum Marken-Look), rechtsbündig */
   .consent-widget {
-    position: fixed; left: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+    position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
     z-index: 85; width: 3.1rem; height: 3.1rem; border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
     background: var(--gradient-gold); color: #2a1c07; border: 0; cursor: pointer;
@@ -85,59 +235,119 @@ import Icon from '@/components/Icon.astro';
   .consent-widget:hover { transform: translateY(-2px) rotate(-6deg); box-shadow: 0 18px 40px -14px rgba(169,116,31,0.65); }
   .consent-widget:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .consent-widget:hover { transform: none; } }
-  @media (min-width: 860px) {
-    .consent__inner { flex-direction: row; align-items: center; justify-content: space-between; }
-    .consent__text { max-width: 60ch; }
-    .consent__actions { flex: 0 0 auto; }
-    .consent__btn { flex: 0 0 auto; }
-  }
 </style>
 
 <script is:inline>
   (function () {
-    var KEY = 'belium-consent-v1';
+    var KEY = 'belium-consent-v2';
     var banner = document.getElementById('consent-banner');
+    var overlay = document.querySelector('[data-cc-overlay]');
     var widget = document.getElementById('consent-widget');
+    var OPTIONAL = ['preferences', 'statistics', 'marketing'];
 
-    function showWidget(show) {
-      if (widget) widget.hidden = !show;
+    function inputs() { return Array.prototype.slice.call(document.querySelectorAll('[data-cc-cat]')); }
+
+    function setToggles(cats) {
+      inputs().forEach(function (el) {
+        var k = el.getAttribute('data-cc-cat');
+        if (k === 'necessary') { el.checked = true; return; }
+        el.checked = !!(cats && cats[k]);
+      });
+      syncDetailStates();
     }
 
-    function apply(value) {
-      window.__beliumConsent = value; // 'all' | 'essential'
-      var granted = value === 'all';
-      // Event, auf das Karte/Bewertungen/Tracking hören
-      window.dispatchEvent(new CustomEvent('belium:consent', { detail: { granted: granted, value: value } }));
+    function readToggles() {
+      var cats = { necessary: true };
+      inputs().forEach(function (el) {
+        var k = el.getAttribute('data-cc-cat');
+        if (k !== 'necessary') cats[k] = !!el.checked;
+      });
+      return cats;
     }
 
-    function store(value) {
-      try { localStorage.setItem(KEY, value); } catch (e) {}
-      apply(value);
+    function syncDetailStates() {
+      var cats = readToggles();
+      OPTIONAL.forEach(function (k) {
+        var el = document.querySelector('[data-cc-state="' + k + '"]');
+        if (!el) return;
+        var on = !!cats[k];
+        el.textContent = on ? 'An' : 'Aus';
+        el.classList.toggle('is-on', on);
+      });
+    }
+
+    function apply(cats) {
+      // Externe Einbettungen (Karte/Bewertungen) hängen an "marketing".
+      var granted = !!cats.marketing;
+      window.__beliumConsent = granted ? 'all' : 'essential';
+      window.__beliumConsentCats = cats;
+      window.dispatchEvent(new CustomEvent('belium:consent', { detail: { granted: granted, categories: cats } }));
+    }
+
+    function open() {
+      if (banner) banner.hidden = false;
+      if (overlay) overlay.hidden = false;
+      if (widget) widget.hidden = true;
+    }
+    function close() {
       if (banner) banner.hidden = true;
-      showWidget(true);
+      if (overlay) overlay.hidden = true;
+      if (widget) widget.hidden = false;
     }
 
-    var saved = null;
-    try { saved = localStorage.getItem(KEY); } catch (e) {}
-
-    if (saved) {
-      apply(saved);
-      showWidget(true);
-    } else if (banner) {
-      banner.hidden = false;
+    function store(cats) {
+      try { localStorage.setItem(KEY, JSON.stringify(cats)); } catch (e) {}
+      apply(cats);
+      close();
     }
 
-    document.querySelectorAll('[data-consent]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        store(btn.getAttribute('data-consent'));
+    // Tabs
+    document.querySelectorAll('[data-cc-tab]').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var name = tab.getAttribute('data-cc-tab');
+        document.querySelectorAll('[data-cc-tab]').forEach(function (t) {
+          var active = t === tab;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', String(active));
+        });
+        document.querySelectorAll('[data-cc-panel]').forEach(function (p) {
+          var show = p.getAttribute('data-cc-panel') === name;
+          p.hidden = !show;
+          p.classList.toggle('is-active', show);
+        });
+        if (name === 'details') syncDetailStates();
       });
     });
 
-    // Widerruf/erneutes Öffnen – über das Cookie-Widget (oder window.openConsent von anderswo)
-    window.openConsent = function () {
-      if (banner) banner.hidden = false;
-      showWidget(false);
-    };
-    if (widget) widget.addEventListener('click', window.openConsent);
+    inputs().forEach(function (el) { el.addEventListener('change', syncDetailStates); });
+
+    // Aktionen
+    document.querySelectorAll('[data-consent]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var mode = btn.getAttribute('data-consent');
+        var cats;
+        if (mode === 'all') cats = { necessary: true, preferences: true, statistics: true, marketing: true };
+        else if (mode === 'essential') cats = { necessary: true, preferences: false, statistics: false, marketing: false };
+        else cats = readToggles(); // selection
+        setToggles(cats);
+        store(cats);
+      });
+    });
+
+    // Widget öffnet den Manager erneut (Widerruf jederzeit)
+    window.openConsent = open;
+    if (widget) widget.addEventListener('click', open);
+
+    // Initialzustand
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    if (saved) {
+      var cats;
+      try { cats = JSON.parse(saved); } catch (e) { cats = null; }
+      if (cats) { setToggles(cats); apply(cats); if (widget) widget.hidden = false; }
+      else open();
+    } else {
+      open();
+    }
   })();
 </script>
