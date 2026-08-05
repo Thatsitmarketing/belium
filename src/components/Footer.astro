@@ -1,12 +1,13 @@
 ---
 import { site, telLink, whatsappLink } from '@/data/site';
 import Icon from '@/components/Icon.astro';
+import Wordmark from '@/components/Wordmark.astro';
 const year = 2026;
 ---
 <footer class="footer">
   <div class="container-page footer__grid">
     <div class="footer__brand">
-      <span class="wordmark__name footer__name">Belium</span>
+      <Wordmark size="md" class="footer__wm" />
       <p class="footer__tag">Dauerhafte Laser Haarentfernung in Gelsenkirchen Buer.</p>
       <div class="footer__social">
         <a href={site.social.instagram} target="_blank" rel="noopener me" aria-label="Instagram">
@@ -74,8 +75,8 @@ const year = 2026;
   @media (min-width: 640px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; } }
 
-  .footer__name { color: #fff; font-size: 1.6rem; }
-  .footer__tag { margin-top: 0.5rem; max-width: 32ch; font-size: 0.95rem; }
+  .footer :global(.footer__wm) { color: #fff; }
+  .footer__tag { margin-top: 0.85rem; max-width: 32ch; font-size: 0.95rem; }
   .footer__social { display: flex; gap: 0.6rem; margin-top: 1rem; }
   .footer__social a {
     display: inline-flex; align-items: center; justify-content: center;

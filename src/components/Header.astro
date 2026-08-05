@@ -2,12 +2,18 @@
 import { navItems } from '@/data/inhalt';
 import { telLink } from '@/data/site';
 import Icon from '@/components/Icon.astro';
+import Wordmark from '@/components/Wordmark.astro';
+
+interface Props {
+  /** true auf Seiten ohne dunklen Hero (z. B. Rechtsseiten): Header startet solide. */
+  solid?: boolean;
+}
+const { solid = false } = Astro.props;
 ---
-<header id="siteheader" class="siteheader">
+<header id="siteheader" class={`siteheader${solid ? ' is-solid' : ''}`} data-header>
   <div class="container-page siteheader__inner">
-    <a href="#top" class="wordmark" aria-label="Belium Beauty Startseite">
-      <span class="wordmark__name">Belium</span>
-      <span class="wordmark__sub">Beauty</span>
+    <a href="#top" class="siteheader__brand" aria-label="Belium Beauty Startseite">
+      <Wordmark size="sm" />
     </a>
 
     <nav class="nav-desktop" aria-label="Hauptnavigation">
@@ -39,7 +45,10 @@ import Icon from '@/components/Icon.astro';
   <div class="nav-mobile" id="nav-mobile" hidden>
     <nav aria-label="Mobile Navigation" class="container-page nav-mobile__list">
       {navItems.map((item) => (
-        <a href={item.href} class="nav-mobile__link" data-nav-close>{item.label}</a>
+        <a href={item.href} class="nav-mobile__link" data-nav-close>
+          <span>{item.label}</span>
+          <Icon name="arrow-up-right" class="w-4 h-4 nav-mobile__link-icon" />
+        </a>
       ))}
       <a href="#kontakt" class="btn btn-primary nav-mobile__cta" data-nav-close>Termin anfragen</a>
     </nav>
@@ -48,18 +57,29 @@ import Icon from '@/components/Icon.astro';
 
 <style>
   .siteheader {
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 0; left: 0; right: 0;
     z-index: 80;
-    background: color-mix(in srgb, var(--color-cream) 88%, transparent);
-    backdrop-filter: saturate(140%) blur(10px);
+    background: transparent;
     border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+    transition: background-color 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+    /* Standard (ueber dem dunklen Hero): helle Schrift */
+    color: var(--color-onink);
   }
-  .siteheader.is-scrolled {
-    border-bottom-color: color-mix(in srgb, var(--color-sand-deep) 70%, transparent);
-    background: color-mix(in srgb, var(--color-cream) 96%, transparent);
+  /* Nach dem Scrollen: heller, glasiger Balken mit dunkler Schrift */
+  .siteheader.is-scrolled,
+  .siteheader.is-solid {
+    background: color-mix(in srgb, var(--color-cream) 90%, transparent);
+    backdrop-filter: saturate(150%) blur(12px);
+    border-bottom-color: color-mix(in srgb, var(--color-sand-deep) 60%, transparent);
+    color: var(--color-ink);
   }
+  /* Bei offenem Mobile-Menue ebenfalls solide */
+  .siteheader.is-open {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+
   .siteheader__inner {
     display: flex;
     align-items: center;
@@ -67,74 +87,63 @@ import Icon from '@/components/Icon.astro';
     min-height: 4.5rem;
     gap: 1rem;
   }
-  .wordmark { display: inline-flex; align-items: baseline; gap: 0.4rem; text-decoration: none; }
-  .wordmark__name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.7rem;
-    line-height: 1;
-    color: var(--color-ink);
-    letter-spacing: 0.01em;
-  }
-  .wordmark__sub {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: 0.72rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--color-gold-deep);
-  }
+  .siteheader__brand { text-decoration: none; color: inherit; }
 
-  .nav-desktop { display: none; gap: 1.6rem; }
+  .nav-desktop { display: none; gap: 1.7rem; }
   .nav-desktop__link {
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     font-weight: 600;
-    color: var(--color-ink-soft);
+    color: inherit;
+    opacity: 0.9;
     text-decoration: none;
     position: relative;
     padding: 0.25rem 0;
-    transition: color 0.2s ease;
+    transition: opacity 0.2s ease;
   }
   .nav-desktop__link::after {
     content: '';
     position: absolute;
-    left: 0; bottom: -2px;
+    left: 0; bottom: -3px;
     width: 0; height: 2px;
-    background: var(--color-gold);
-    transition: width 0.25s ease;
+    border-radius: 2px;
+    background: var(--gradient-gold);
+    transition: width 0.28s cubic-bezier(0.22,1,0.36,1);
   }
-  .nav-desktop__link:hover { color: var(--color-ink); }
+  .nav-desktop__link:hover { opacity: 1; }
   .nav-desktop__link:hover::after { width: 100%; }
 
   .siteheader__cta { display: none; align-items: center; gap: 0.85rem; }
   .nav-phone {
     display: inline-flex; align-items: center; justify-content: center;
     width: 2.75rem; height: 2.75rem; border-radius: 50%;
-    color: var(--color-ink); border: 1.5px solid var(--color-sand-deep);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    color: inherit; border: 1.5px solid color-mix(in srgb, currentColor 32%, transparent);
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
   }
-  .nav-phone:hover { border-color: var(--color-gold); color: var(--color-gold-deep); }
-  .btn--sm { padding: 0.7rem 1.15rem; min-height: 2.75rem; font-size: 0.92rem; }
+  .nav-phone:hover { border-color: var(--color-gold); color: var(--color-gold); }
 
   .nav-toggle {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 2.75rem; height: 2.75rem; color: var(--color-ink); background: transparent; border: 0;
+    width: 2.75rem; height: 2.75rem; color: inherit; background: transparent; border: 0;
   }
   .nav-toggle :global(.nav-toggle__close) { display: none; }
   .nav-toggle[aria-expanded='true'] :global(.nav-toggle__open) { display: none; }
   .nav-toggle[aria-expanded='true'] :global(.nav-toggle__close) { display: block; }
 
   .nav-mobile {
-    border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 70%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 60%, transparent);
     background: var(--color-cream);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-card);
   }
-  .nav-mobile__list { display: flex; flex-direction: column; padding-block: 1rem 1.5rem; gap: 0.25rem; }
+  .nav-mobile__list { display: flex; flex-direction: column; padding-block: 0.75rem 1.5rem; gap: 0.15rem; }
   .nav-mobile__link {
-    font-size: 1.05rem; font-weight: 600; color: var(--color-ink);
-    text-decoration: none; padding: 0.85rem 0.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 1.1rem; font-weight: 600; color: var(--color-ink);
+    text-decoration: none; padding: 0.9rem 0.25rem;
     border-bottom: 1px solid color-mix(in srgb, var(--color-sand) 80%, transparent);
   }
-  .nav-mobile__cta { margin-top: 1rem; }
+  .nav-mobile__link :global(.nav-mobile__link-icon) { color: var(--color-gold-deep); opacity: 0.7; }
+  .nav-mobile__cta { margin-top: 1.1rem; }
 
   @media (min-width: 1024px) {
     .nav-desktop { display: flex; }
@@ -150,10 +159,11 @@ import Icon from '@/components/Icon.astro';
   const menu = document.getElementById('nav-mobile');
 
   function setMenu(open: boolean) {
-    if (!toggle || !menu) return;
+    if (!toggle || !menu || !header) return;
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
     menu.hidden = !open;
+    header.classList.toggle('is-open', open);
   }
 
   toggle?.addEventListener('click', () => {
@@ -163,9 +173,8 @@ import Icon from '@/components/Icon.astro';
     el.addEventListener('click', () => setMenu(false))
   );
 
-  // Header-Schatten beim Scrollen
-  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  // Solider Balken sobald der Hero verlassen wird
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
-  // Klick-Tracking läuft zentral über die Delegation im Layout.
 </script>

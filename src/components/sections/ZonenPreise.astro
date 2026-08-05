@@ -1,308 +1,502 @@
 ---
-/** Abschnitt 4: Behandlungszonen & Preise mit interaktivem Zonenwähler. Wichtigster neuer Abschnitt. */
+/**
+ * Abschnitt: Zonen & Preise als geführter Funnel.
+ * Schritt 1 Bereich (Damen/Herren) → Schritt 2 Zonen wählen (Live-Summe) →
+ * Schritt 3 Paket oder Einzelsitzung → Schritt 4 Ergebnis + persönliches Angebot.
+ * Ein Fortschrittsbalken zeigt den Stand; die Schritte erscheinen nacheinander.
+ */
 import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/data/zonen';
 import LeadForm from '@/components/LeadForm.astro';
 import Icon from '@/components/Icon.astro';
+
+const steps = [
+  { n: 1, label: 'Bereich' },
+  { n: 2, label: 'Zonen' },
+  { n: 3, label: 'Paket' },
+  { n: 4, label: 'Angebot' },
+];
 ---
 <section id="preise" class="section-pad preise">
   <div class="container-page">
-    <header class="section-head reveal">
-      <p class="t-eyebrow">Zonen &amp; Preise</p>
-      <h2 class="t-h2">Stell dir deine Zonen zusammen</h2>
+    <header class="section-head section-head--center reveal">
+      <p class="t-eyebrow t-eyebrow--center">Zonen &amp; Preise</p>
+      <h2 class="t-h2">Berechne deinen Preis in <span class="text-gold">wenigen Schritten</span></h2>
       <p class="t-lead section-head__lead">
-        Wähle die Bereiche aus, die dich interessieren. Der Rechner zeigt dir sofort eine Übersicht.
-        Danach bekommst du in wenigen Schritten dein persönliches Angebot.
+        Klick dich durch den Rechner. Du bekommst sofort eine unverbindliche Richtsumme –
+        und auf Wunsch dein persönliches Angebot für die kostenlose Beratung.
       </p>
     </header>
 
-    {preisePlatzhalter && (
-      <p class="preise__hinweis reveal" role="note">
-        <Icon name="info" class="w-5 h-5" />
-        <span><strong>Hinweis:</strong> Die angezeigten Preise sind Platzhalter zur Veranschaulichung.
-        Die verbindlichen Preise erhältst du im kostenlosen Beratungsgespräch.</span>
-      </p>
-    )}
-
-    <div class="zw reveal" data-zonenwaehler>
-      <!-- Tabs Damen / Herren -->
-      <div class="zw__tabs" role="tablist" aria-label="Damen oder Herren">
-        {zonenGruppen.map((g, i) => (
-          <button
-            type="button"
-            role="tab"
-            id={`tab-${g.id}`}
-            aria-controls={`panel-${g.id}`}
-            aria-selected={i === 0 ? 'true' : 'false'}
-            class:list={['zw__tab', { 'is-active': i === 0 }]}
-            data-tab={g.id}
-          >{g.label}</button>
-        ))}
+    <div class="funnel reveal" data-funnel>
+      <!-- Fortschrittsbalken -->
+      <div class="funnel__progress" aria-hidden="true">
+        <div class="funnel__track"><span class="funnel__bar" data-bar style="width: 12%"></span></div>
+        <ol class="funnel__steps">
+          {steps.map((s) => (
+            <li class:list={['funnel__step', { 'is-active': s.n === 1 }]} data-step-dot={s.n}>
+              <span class="funnel__step-num">{s.n}</span>
+              <span class="funnel__step-label">{s.label}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
-      <div class="zw__body">
-        <!-- Panels -->
-        <div class="zw__panels">
+      <div class="funnel__stage">
+        <!-- SCHRITT 1: Bereich -->
+        <div class="fstep" data-step="1">
+          <p class="fstep__kicker"><span class="num-gold">01</span> Für wen ist die Behandlung?</p>
+          <div class="choice-grid">
+            {zonenGruppen.map((g) => (
+              <button type="button" class="choice" data-gender={g.id}>
+                <span class="choice__ic"><Icon name="user" class="w-6 h-6" gradient /></span>
+                <span class="choice__name">{g.label}</span>
+                <span class="choice__hint">{g.zonen.length} Zonen verfügbar</span>
+                <span class="choice__go"><Icon name="arrow" class="w-4 h-4" /></span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- SCHRITT 2: Zonen -->
+        <div class="fstep" data-step="2" hidden>
+          <p class="fstep__kicker"><span class="num-gold">02</span> Wähle deine Wunschzonen</p>
           {zonenGruppen.map((g, i) => (
-            <div
-              id={`panel-${g.id}`}
-              role="tabpanel"
-              aria-labelledby={`tab-${g.id}`}
-              class="zw__panel"
-              hidden={i !== 0}
-            >
-              <div class="zw__zonen" role="group" aria-label={`Zonen ${g.label}`}>
-                {g.zonen.map((z) => (
-                  <button
-                    type="button"
-                    class="zone"
-                    aria-pressed="false"
-                    data-zone
-                    data-name={z.name}
-                    data-einzel={z.einzel}
-                    data-paket={z.paket}
-                  >
-                    <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
-                    <span class="zone__info">
-                      <span class="zone__name">{z.name}</span>
-                      {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
-                    </span>
-                    <span class="zone__preis">
-                      <span class="zone__paket">{formatEuro(z.paket)}<span class="zone__paket-tag"> / Paket</span></span>
-                      <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
+            <div class="zones" data-zones={g.id} hidden={i !== 0}>
+              {g.zonen.map((z) => (
+                <button
+                  type="button"
+                  class="zone"
+                  aria-pressed="false"
+                  data-zone
+                  data-name={z.name}
+                  data-einzel={z.einzel}
+                  data-paket={z.paket}
+                >
+                  <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
+                  <span class="zone__info">
+                    <span class="zone__name">{z.name}</span>
+                    {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
+                  </span>
+                  <span class="zone__preis">
+                    <span class="zone__paket">{formatEuro(z.paket)}</span>
+                    <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
+                  </span>
+                </button>
+              ))}
             </div>
           ))}
         </div>
 
-        <!-- Zusammenfassung -->
-        <aside class="zw__summary" aria-live="polite">
-          <div class="zw__summary-head">
-            <span class="zw__summary-count"><span data-count>0</span> Zonen gewählt</span>
+        <!-- SCHRITT 3: Paket oder Einzel -->
+        <div class="fstep" data-step="3" hidden>
+          <p class="fstep__kicker"><span class="num-gold">03</span> Wie möchtest du buchen?</p>
+          <div class="choice-grid">
+            <button type="button" class="choice choice--mode is-active" data-mode="paket">
+              <span class="choice__badge">Empfohlen</span>
+              <span class="choice__ic"><Icon name="gem" class="w-6 h-6" gradient /></span>
+              <span class="choice__name">Paket</span>
+              <span class="choice__hint">ca. {paketSitzungen} Sitzungen bis zum Ergebnis – bester Preis pro Sitzung.</span>
+            </button>
+            <button type="button" class="choice choice--mode" data-mode="einzel">
+              <span class="choice__ic"><Icon name="droplet" class="w-6 h-6" gradient /></span>
+              <span class="choice__name">Einzelsitzung</span>
+              <span class="choice__hint">Erst einmal ausprobieren – Preis pro einzelner Sitzung.</span>
+            </button>
           </div>
-          <ul class="zw__chosen" data-chosen>
-            <li class="zw__empty" data-empty>Noch keine Zone gewählt. Tippe oben auf deine Wunschbereiche.</li>
-          </ul>
-          <dl class="zw__totals">
-            <div class="zw__total-row">
-              <dt>Paketpreis (ca. {paketSitzungen} Sitzungen)</dt>
-              <dd data-total-paket>{formatEuro(0)}</dd>
-            </div>
-            <div class="zw__total-row zw__total-row--muted">
-              <dt>Summe Einzelsitzungen</dt>
-              <dd data-total-einzel>{formatEuro(0)}</dd>
-            </div>
-          </dl>
-          <button type="button" class="btn btn-primary zw__cta" data-angebot-open disabled>
-            Persönliches Angebot erhalten
-          </button>
-          <p class="zw__reset"><button type="button" data-reset>Auswahl zurücksetzen</button></p>
-        </aside>
-      </div>
-    </div>
+        </div>
 
-    <!-- Schritt 2: Angebot-Formular (erscheint nach Klick) -->
-    <div class="zw__angebot" id="angebot" data-angebot hidden>
-      <div class="zw__angebot-inner card">
-        <h3 class="t-h3">Fast geschafft: dein persönliches Angebot</h3>
-        <p class="zw__angebot-lead">
-          Hinterlasse uns Name und Kontakt. Wir schicken dir ein unverbindliches Angebot für deine
-          gewählten Zonen und schlagen dir einen Termin für die kostenlose Beratung vor.
-        </p>
-        <LeadForm id="leadform-angebot" variant="angebot" eventName="zonenwaehler_abschluss" />
+        <!-- SCHRITT 4: Ergebnis -->
+        <div class="fstep" data-step="4" hidden>
+          <p class="fstep__kicker"><span class="num-gold">04</span> Deine unverbindliche Richtsumme</p>
+          <div class="result">
+            <div class="result__figure">
+              <span class="result__mode" data-result-mode>Paketpreis</span>
+              <span class="result__amount text-gold" data-result-amount>{formatEuro(0)}</span>
+              <span class="result__meta" data-result-meta>für {paketSitzungen} Sitzungen</span>
+              <span class="result__alt" data-result-alt></span>
+            </div>
+            <ul class="result__chips" data-result-chips aria-label="Gewählte Zonen"></ul>
+          </div>
+
+          {preisePlatzhalter && (
+            <p class="preise__hinweis" role="note">
+              <Icon name="info" class="w-5 h-5" />
+              <span>Die angezeigten Preise sind Richtwerte zur Orientierung. Deinen verbindlichen
+              Preis erhältst du im kostenlosen Beratungsgespräch.</span>
+            </p>
+          )}
+
+          <div class="result__offer card" id="angebot">
+            <h3 class="t-h3">Persönliches Angebot &amp; Wunschtermin</h3>
+            <p class="result__offer-lead">
+              Hinterlasse uns Name und Kontakt. Wir senden dir ein unverbindliches Angebot für deine
+              Auswahl und schlagen einen Termin für die kostenlose Beratung vor.
+            </p>
+            <LeadForm id="leadform-angebot" variant="angebot" eventName="zonenwaehler_abschluss" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Steuerung -->
+      <div class="funnel__nav">
+        <button type="button" class="funnel__back" data-back hidden>
+          <Icon name="arrow" class="w-4 h-4 funnel__back-ic" /> Zurück
+        </button>
+        <div class="funnel__live" data-live hidden>
+          <span class="funnel__live-count"><span data-count>0</span> Zonen</span>
+          <span class="funnel__live-sep">·</span>
+          <span class="funnel__live-sum text-gold" data-live-sum>{formatEuro(0)}</span>
+        </div>
+        <button type="button" class="btn btn-primary funnel__next" data-next disabled>
+          Weiter <Icon name="arrow" class="w-4 h-4" />
+        </button>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .preise { background: var(--color-cream); }
-  .preise__hinweis {
-    display: flex; align-items: flex-start; gap: 0.6rem;
-    background: color-mix(in srgb, var(--color-gold-soft) 20%, #fff);
-    border: 1px solid var(--color-sand-deep);
-    border-radius: var(--radius-sm);
-    padding: 0.85rem 1rem; margin-bottom: 1.75rem; font-size: 0.92rem; color: var(--color-ink-soft);
+  .preise { background: var(--gradient-ink); color: var(--color-onink); position: relative; }
+  .preise .t-h2 { color: #fff; }
+  .preise .t-lead { color: var(--color-onink-soft); }
+
+  .funnel {
+    max-width: 60rem; margin-inline: auto;
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-float);
+    overflow: hidden;
+    backdrop-filter: blur(6px);
   }
-  .preise__hinweis :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
 
-  .zw { border: 1px solid var(--color-sand); border-radius: var(--radius-lg); background: #fff; overflow: hidden; box-shadow: var(--shadow-soft); }
-  .zw__tabs { display: flex; gap: 0.25rem; padding: 0.5rem; background: var(--color-cream-deep); border-bottom: 1px solid var(--color-sand); }
-  .zw__tab {
-    flex: 1 1 0; padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 0;
-    background: transparent; font-weight: 700; font-size: 1rem; color: var(--color-mocha); cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  /* Fortschritt */
+  .funnel__progress { padding: 1.4rem clamp(1.1rem, 4vw, 2.2rem) 0.4rem; }
+  .funnel__track { height: 6px; border-radius: 999px; background: color-mix(in srgb, #fff 12%, transparent); overflow: hidden; }
+  .funnel__bar { display: block; height: 100%; border-radius: 999px; background: var(--gradient-gold); transition: width 0.55s cubic-bezier(0.22,1,0.36,1); }
+  .funnel__steps { list-style: none; display: flex; justify-content: space-between; margin-top: 0.9rem; }
+  .funnel__step { display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; transition: opacity 0.3s ease; }
+  .funnel__step.is-active, .funnel__step.is-done { opacity: 1; }
+  .funnel__step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.7rem; height: 1.7rem; border-radius: 50%; font-size: 0.8rem; font-weight: 800;
+    background: color-mix(in srgb, #fff 10%, transparent); color: var(--color-onink);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    transition: background 0.3s ease, color 0.3s ease;
   }
-  .zw__tab.is-active { background: #fff; color: var(--color-ink); box-shadow: var(--shadow-soft); }
+  .funnel__step.is-active .funnel__step-num,
+  .funnel__step.is-done .funnel__step-num { background: var(--gradient-gold); color: #2a1c07; border-color: transparent; }
+  .funnel__step-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; }
+  @media (max-width: 520px) { .funnel__step-label { display: none; } }
 
-  .zw__body { display: grid; grid-template-columns: 1fr; gap: 0; }
-  @media (min-width: 900px) { .zw__body { grid-template-columns: 1.5fr 1fr; } }
+  /* Stage */
+  .funnel__stage { padding: clamp(1.2rem, 4vw, 2.2rem); }
+  .fstep { animation: fstep-in 0.5s cubic-bezier(0.22,1,0.36,1); }
+  .fstep[hidden] { display: none; }
+  @keyframes fstep-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fstep { animation: none; } }
+  .fstep__kicker { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 1.1rem; display: flex; align-items: baseline; gap: 0.6rem; }
+  .fstep__kicker .num-gold { font-size: 1.5rem; }
 
-  .zw__panels { padding: 1.1rem; }
-  .zw__zonen { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
-  @media (min-width: 520px) { .zw__zonen { grid-template-columns: 1fr 1fr; } }
+  /* Auswahl-Karten (Bereich / Modus) */
+  .choice-grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+  @media (min-width: 560px) { .choice-grid { grid-template-columns: 1fr 1fr; } }
+  .choice {
+    position: relative; text-align: left; cursor: pointer;
+    display: flex; flex-direction: column; gap: 0.3rem;
+    padding: 1.4rem 1.4rem; border-radius: var(--radius-md);
+    background: color-mix(in srgb, #fff 6%, transparent);
+    border: 1.5px solid color-mix(in srgb, #fff 14%, transparent);
+    color: var(--color-onink);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .choice:hover { border-color: color-mix(in srgb, var(--color-gold) 60%, transparent); transform: translateY(-2px); }
+  .choice.is-active { border-color: var(--color-gold); background: color-mix(in srgb, var(--color-gold) 12%, transparent); }
+  .choice__ic {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3rem; height: 3rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem;
+    background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
+  }
+  .choice__name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: #fff; }
+  .choice__hint { font-size: 0.88rem; color: var(--color-onink-soft); }
+  .choice__go { position: absolute; top: 1.4rem; right: 1.4rem; color: var(--color-gold-light); opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; }
+  .choice:hover .choice__go { opacity: 1; transform: translateX(3px); }
+  .choice__badge {
+    position: absolute; top: 1rem; right: 1rem;
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.25rem 0.6rem; border-radius: 999px; color: #2a1c07; background: var(--gradient-gold);
+  }
 
+  /* Zonen-Grid */
+  .zones { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
+  .zones[hidden] { display: none; }
+  @media (min-width: 560px) { .zones { grid-template-columns: 1fr 1fr; } }
   .zone {
-    display: flex; align-items: center; gap: 0.75rem; text-align: left;
-    padding: 0.75rem 0.85rem; border-radius: var(--radius-sm);
-    border: 1.5px solid var(--color-sand-deep); background: #fff; cursor: pointer;
+    display: flex; align-items: center; gap: 0.75rem; text-align: left; cursor: pointer;
+    padding: 0.8rem 0.9rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, #fff 5%, transparent);
+    border: 1.5px solid color-mix(in srgb, #fff 12%, transparent);
+    color: var(--color-onink);
     transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.1s ease;
   }
-  .zone:hover { border-color: var(--color-gold-soft); }
+  .zone:hover { border-color: color-mix(in srgb, var(--color-gold) 45%, transparent); }
   .zone:active { transform: scale(0.99); }
   .zone__check {
     flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    width: 1.5rem; height: 1.5rem; border-radius: 6px; border: 1.5px solid var(--color-sand-deep);
-    color: transparent; transition: all 0.18s ease;
+    width: 1.5rem; height: 1.5rem; border-radius: 7px; color: transparent;
+    border: 1.5px solid color-mix(in srgb, #fff 25%, transparent); transition: all 0.18s ease;
   }
   .zone__info { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.2; }
-  .zone__name { font-weight: 700; font-size: 0.98rem; }
-  .zone__hinweis { font-size: 0.76rem; color: var(--color-mocha); }
-  .zone__preis { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
-  .zone__paket { font-weight: 800; font-size: 0.95rem; color: var(--color-ink); }
-  .zone__paket-tag { font-weight: 500; font-size: 0.72rem; color: var(--color-mocha); }
-  .zone__einzel { font-size: 0.74rem; color: var(--color-mocha); }
+  .zone__name { font-weight: 700; font-size: 0.98rem; color: #fff; }
+  .zone__hinweis { font-size: 0.74rem; color: var(--color-onink-soft); }
+  .zone__preis { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
+  .zone__paket { font-weight: 800; font-size: 0.95rem; color: var(--color-gold-light); }
+  .zone__einzel { font-size: 0.72rem; color: var(--color-onink-soft); }
+  .zone[aria-pressed='true'] { border-color: var(--color-gold); background: color-mix(in srgb, var(--color-gold) 14%, transparent); }
+  .zone[aria-pressed='true'] .zone__check { background: var(--gradient-gold); border-color: transparent; color: #2a1c07; }
 
-  .zone[aria-pressed='true'] { border-color: var(--color-gold); background: color-mix(in srgb, var(--color-gold-soft) 16%, #fff); }
-  .zone[aria-pressed='true'] .zone__check { background: var(--color-gold); border-color: var(--color-gold); color: #fff; }
-
-  .zw__summary {
-    padding: 1.25rem; background: var(--color-cream-deep);
-    border-top: 1px solid var(--color-sand);
-    display: flex; flex-direction: column;
+  /* Ergebnis */
+  .result { display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem; }
+  @media (min-width: 620px) { .result { grid-template-columns: auto 1fr; gap: 2rem; } }
+  .result__figure {
+    display: flex; flex-direction: column; align-items: flex-start;
+    padding: 1.5rem 1.75rem; border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-gold) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    min-width: 14rem;
   }
-  @media (min-width: 900px) { .zw__summary { border-top: 0; border-left: 1px solid var(--color-sand); } }
-  .zw__summary-count { font-weight: 700; font-size: 0.95rem; }
-  .zw__chosen { list-style: none; margin: 0.9rem 0; display: flex; flex-wrap: wrap; gap: 0.4rem; min-height: 2rem; }
-  .zw__chosen li.chip {
+  .result__mode { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-gold-light); }
+  .result__amount { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 8vw, 3.6rem); line-height: 1; margin-top: 0.35rem; }
+  .result__meta { font-size: 0.85rem; color: var(--color-onink-soft); margin-top: 0.35rem; }
+  .result__alt { font-size: 0.85rem; color: var(--color-onink-soft); margin-top: 0.5rem; }
+  .result__chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; align-content: flex-start; }
+  .result__chips li {
     display: inline-flex; align-items: center; gap: 0.35rem;
-    background: #fff; border: 1px solid var(--color-sand-deep); border-radius: 999px;
-    padding: 0.3rem 0.7rem; font-size: 0.82rem; font-weight: 600;
+    background: color-mix(in srgb, #fff 8%, transparent); border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+    border-radius: 999px; padding: 0.32rem 0.75rem; font-size: 0.82rem; font-weight: 600; color: #fff;
   }
-  .zw__chosen li.chip button { border: 0; background: none; cursor: pointer; color: var(--color-mocha); font-size: 1rem; line-height: 1; padding: 0; }
-  .zw__empty { font-size: 0.86rem; color: var(--color-mocha); }
-  .zw__totals { margin-top: auto; border-top: 1px solid var(--color-sand); padding-top: 0.9rem; }
-  .zw__total-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.2rem 0; }
-  .zw__total-row dt { font-size: 0.9rem; color: var(--color-ink-soft); }
-  .zw__total-row dd { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--color-ink); }
-  .zw__total-row--muted dd { font-size: 1rem; font-family: var(--font-sans); color: var(--color-mocha); }
-  .zw__cta { margin-top: 1.1rem; width: 100%; }
-  .zw__cta:disabled { opacity: 0.5; pointer-events: none; }
-  .zw__reset { text-align: center; margin-top: 0.6rem; }
-  .zw__reset button { background: none; border: 0; color: var(--color-mocha); text-decoration: underline; cursor: pointer; font-size: 0.82rem; }
 
-  .zw__angebot { margin-top: 1.5rem; }
-  .zw__angebot-inner { padding: clamp(1.25rem, 3vw, 2rem); }
-  .zw__angebot-lead { margin: 0.6rem 0 1.25rem; color: var(--color-ink-soft); max-width: 60ch; }
+  .preise__hinweis {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    background: color-mix(in srgb, var(--color-gold) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--color-onink-soft);
+  }
+  .preise__hinweis :global(svg) { color: var(--color-gold-light); flex: 0 0 auto; margin-top: 0.1rem; }
+
+  .result__offer { background: #fff; color: var(--color-ink); padding: clamp(1.25rem, 3vw, 2rem); }
+  .result__offer-lead { margin: 0.6rem 0 1.25rem; color: var(--color-ink-soft); }
+
+  /* Nav */
+  .funnel__nav {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem clamp(1.1rem, 4vw, 2.2rem) 1.4rem;
+    border-top: 1px solid color-mix(in srgb, #fff 10%, transparent);
+  }
+  .funnel__back {
+    display: inline-flex; align-items: center; gap: 0.4rem; background: none; border: 0; cursor: pointer;
+    color: var(--color-onink-soft); font-weight: 700; font-size: 0.92rem;
+  }
+  .funnel__back:hover { color: #fff; }
+  .funnel__back-ic { transform: rotate(180deg); }
+  .funnel__live { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.95rem; color: #fff; }
+  .funnel__live-sum { font-family: var(--font-display); font-size: 1.15rem; }
+  .funnel__live-sep { color: var(--color-onink-soft); }
+  .funnel__next { margin-left: auto; }
+  .funnel__live + .funnel__next { margin-left: 1rem; }
+  .funnel__next:disabled { opacity: 0.45; pointer-events: none; }
 </style>
 
 <script>
-  import { formatEuro } from '@/data/zonen';
+  import { formatEuro, paketSitzungen } from '@/data/zonen';
+  import { gsap } from 'gsap';
 
-  const root = document.querySelector<HTMLElement>('[data-zonenwaehler]');
+  const root = document.querySelector<HTMLElement>('[data-funnel]');
   if (root) {
-    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-tab]');
-    const panels = root.querySelectorAll<HTMLElement>('.zw__panel');
-    const zones = root.querySelectorAll<HTMLButtonElement>('[data-zone]');
-    const chosenList = root.querySelector<HTMLElement>('[data-chosen]');
-    const emptyEl = root.querySelector<HTMLElement>('[data-empty]');
+    const bar = root.querySelector<HTMLElement>('[data-bar]');
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-step-dot]'));
+    const fsteps = Array.from(root.querySelectorAll<HTMLElement>('[data-step]'));
+    const backBtn = root.querySelector<HTMLButtonElement>('[data-back]');
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]');
+    const liveBox = root.querySelector<HTMLElement>('[data-live]');
     const countEl = root.querySelector<HTMLElement>('[data-count]');
-    const totalPaketEl = root.querySelector<HTMLElement>('[data-total-paket]');
-    const totalEinzelEl = root.querySelector<HTMLElement>('[data-total-einzel]');
-    const ctaOpen = root.querySelector<HTMLButtonElement>('[data-angebot-open]');
-    const resetBtn = root.querySelector<HTMLButtonElement>('[data-reset]');
+    const liveSumEl = root.querySelector<HTMLElement>('[data-live-sum]');
 
-    const angebot = document.querySelector<HTMLElement>('[data-angebot]');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Ergebnis-Elemente
+    const resAmount = root.querySelector<HTMLElement>('[data-result-amount]');
+    const resMode = root.querySelector<HTMLElement>('[data-result-mode]');
+    const resMeta = root.querySelector<HTMLElement>('[data-result-meta]');
+    const resAlt = root.querySelector<HTMLElement>('[data-result-alt]');
+    const resChips = root.querySelector<HTMLElement>('[data-result-chips]');
+
+    // Lead-Formular
     const angebotForm = document.getElementById('leadform-angebot') as HTMLFormElement | null;
     const zonenField = angebotForm?.querySelector<HTMLInputElement>('input[name="zonen"]') ?? null;
     const summeField = angebotForm?.querySelector<HTMLInputElement>('input[name="summe"]') ?? null;
     const zonenSummary = angebotForm?.querySelector<HTMLElement>('[data-zonen-summary]') ?? null;
     const zonenText = angebotForm?.querySelector<HTMLElement>('[data-zonen-text]') ?? null;
 
-    // Map: name -> {einzel, paket, btn}
-    const selected = new Map<string, { einzel: number; paket: number; btn: HTMLButtonElement }>();
-    let started = false;
+    const state = {
+      step: 1,
+      gender: '' as '' | 'damen' | 'herren',
+      mode: 'paket' as 'paket' | 'einzel',
+      selected: new Map<string, { einzel: number; paket: number; btn: HTMLButtonElement }>(),
+      started: false,
+    };
 
-    function fmt(n: number) { return formatEuro(n); }
-
-    function render() {
-      if (!chosenList) return;
-      // Chips neu aufbauen
-      chosenList.querySelectorAll('.chip').forEach((c) => c.remove());
+    function totals() {
       let paket = 0, einzel = 0;
-      selected.forEach((v, name) => {
-        paket += v.paket; einzel += v.einzel;
-        const li = document.createElement('li');
-        li.className = 'chip';
-        li.innerHTML = `<span>${name}</span>`;
-        const x = document.createElement('button');
-        x.type = 'button';
-        x.setAttribute('aria-label', `${name} entfernen`);
-        x.textContent = '×';
-        x.addEventListener('click', () => toggle(v.btn, name));
-        li.appendChild(x);
-        chosenList.appendChild(li);
-      });
-      const count = selected.size;
-      if (emptyEl) emptyEl.style.display = count ? 'none' : '';
-      if (countEl) countEl.textContent = String(count);
-      if (totalPaketEl) totalPaketEl.textContent = fmt(paket);
-      if (totalEinzelEl) totalEinzelEl.textContent = fmt(einzel);
-      if (ctaOpen) ctaOpen.disabled = count === 0;
+      state.selected.forEach((v) => { paket += v.paket; einzel += v.einzel; });
+      return { paket, einzel };
+    }
 
-      // Formular-Felder aktualisieren
-      const names = Array.from(selected.keys());
+    function animateNumber(el: HTMLElement | null, to: number) {
+      if (!el) return;
+      if (prefersReduced) { el.textContent = formatEuro(to); return; }
+      const from = Number(el.dataset.val || 0);
+      const obj = { v: from };
+      gsap.to(obj, {
+        v: to, duration: 0.7, ease: 'power2.out',
+        onUpdate: () => { el.textContent = formatEuro(Math.round(obj.v)); },
+      });
+      el.dataset.val = String(to);
+    }
+
+    function updateLive() {
+      const { paket, einzel } = totals();
+      const count = state.selected.size;
+      if (countEl) countEl.textContent = String(count);
+      if (liveSumEl) liveSumEl.textContent = formatEuro(state.mode === 'einzel' ? einzel : paket);
+      if (nextBtn && state.step === 2) nextBtn.disabled = count === 0;
+    }
+
+    function syncForm() {
+      const names = Array.from(state.selected.keys());
+      const { paket, einzel } = totals();
+      const summe = state.mode === 'einzel' ? einzel : paket;
+      const modeLabel = state.mode === 'einzel' ? 'Einzelsitzung' : `Paket (ca. ${paketSitzungen} Sitzungen)`;
       if (zonenField) zonenField.value = names.join(', ');
-      if (summeField) summeField.value = String(paket);
-      if (zonenText) zonenText.textContent = names.length ? `${names.join(', ')} · Paketpreis ca. ${fmt(paket)}` : '—';
+      if (summeField) summeField.value = String(summe);
+      if (zonenText) zonenText.textContent = names.length ? `${names.join(', ')} · ${modeLabel} ca. ${formatEuro(summe)}` : '—';
       if (zonenSummary) zonenSummary.hidden = names.length === 0;
     }
 
-    function toggle(btn: HTMLButtonElement, name: string) {
-      const einzel = Number(btn.dataset.einzel || 0);
-      const paket = Number(btn.dataset.paket || 0);
-      if (selected.has(name)) {
-        selected.delete(name);
-        btn.setAttribute('aria-pressed', 'false');
-      } else {
-        selected.set(name, { einzel, paket, btn });
-        btn.setAttribute('aria-pressed', 'true');
-        if (!started) { started = true; (window as any).trackEvent?.('zonenwaehler_start'); }
+    function renderResult() {
+      const { paket, einzel } = totals();
+      const isPaket = state.mode === 'paket';
+      animateNumber(resAmount, isPaket ? paket : einzel);
+      if (resMode) resMode.textContent = isPaket ? 'Paketpreis' : 'Einzelsitzung';
+      if (resMeta) resMeta.textContent = isPaket ? `für ca. ${paketSitzungen} Sitzungen` : 'pro Sitzung';
+      if (resAlt) resAlt.textContent = isPaket
+        ? `Einzelne Sitzung: ca. ${formatEuro(einzel)}`
+        : `Als Paket (${paketSitzungen} Sitzungen): ca. ${formatEuro(paket)}`;
+      if (resChips) {
+        resChips.innerHTML = '';
+        state.selected.forEach((_, name) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${name}</span>`;
+          resChips.appendChild(li);
+        });
       }
-      render();
+      syncForm();
     }
 
-    zones.forEach((btn) => {
-      const name = btn.dataset.name || '';
-      btn.addEventListener('click', () => toggle(btn, name));
-    });
+    // --- Schrittsteuerung ---
+    function progressPercent(step: number) {
+      // Balken fuellt sich ueber die 4 Schritte
+      return [12, 40, 68, 100][step - 1] ?? 12;
+    }
 
-    // Tabs
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const id = tab.dataset.tab;
-        tabs.forEach((t) => { t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', String(t === tab)); });
-        panels.forEach((p) => { p.hidden = p.id !== `panel-${id}`; });
+    function goTo(step: number) {
+      state.step = step;
+      fsteps.forEach((el) => { el.hidden = Number(el.dataset.step) !== step; });
+      dots.forEach((d) => {
+        const n = Number(d.dataset.stepDot);
+        d.classList.toggle('is-active', n === step);
+        d.classList.toggle('is-done', n < step);
+      });
+      if (bar) bar.style.width = progressPercent(step) + '%';
+
+      // Nav-Zustand
+      if (backBtn) backBtn.hidden = step === 1;
+      if (liveBox) liveBox.hidden = !(step === 2 || step === 3);
+      if (nextBtn) {
+        if (step === 4) {
+          nextBtn.hidden = true;
+        } else {
+          nextBtn.hidden = false;
+          nextBtn.innerHTML = step === 3
+            ? 'Ergebnis anzeigen <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+            : 'Weiter <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+          nextBtn.disabled = step === 2 ? state.selected.size === 0 : false;
+        }
+      }
+
+      updateLive();
+      if (step === 4) renderResult();
+
+      // sanft in den Rechner scrollen (nicht beim ersten Laden)
+      if (step > 1) {
+        const top = root.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
+      }
+    }
+
+    // --- Schritt 1: Bereich ---
+    root.querySelectorAll<HTMLButtonElement>('[data-gender]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.gender = btn.dataset.gender as 'damen' | 'herren';
+        // relevante Zonengruppe zeigen
+        root.querySelectorAll<HTMLElement>('[data-zones]').forEach((z) => {
+          z.hidden = z.dataset.zones !== state.gender;
+        });
+        goTo(2);
       });
     });
 
-    // Angebot öffnen
-    ctaOpen?.addEventListener('click', () => {
-      if (angebot) {
-        angebot.hidden = false;
-        angebot.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        angebotForm?.querySelector<HTMLInputElement>('input[name="name"]')?.focus({ preventScroll: true });
-      }
+    // --- Schritt 2: Zonen ---
+    root.querySelectorAll<HTMLButtonElement>('[data-zone]').forEach((btn) => {
+      const name = btn.dataset.name || '';
+      btn.addEventListener('click', () => {
+        if (state.selected.has(name)) {
+          state.selected.delete(name);
+          btn.setAttribute('aria-pressed', 'false');
+        } else {
+          state.selected.set(name, {
+            einzel: Number(btn.dataset.einzel || 0),
+            paket: Number(btn.dataset.paket || 0),
+            btn,
+          });
+          btn.setAttribute('aria-pressed', 'true');
+          if (!state.started) { state.started = true; (window as any).trackEvent?.('zonenwaehler_start'); }
+        }
+        updateLive();
+      });
     });
 
-    resetBtn?.addEventListener('click', () => {
-      selected.forEach((v) => v.btn.setAttribute('aria-pressed', 'false'));
-      selected.clear();
-      render();
+    // --- Schritt 3: Modus ---
+    root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.mode = btn.dataset.mode as 'paket' | 'einzel';
+        root.querySelectorAll<HTMLElement>('[data-mode]').forEach((b) =>
+          b.classList.toggle('is-active', b === btn)
+        );
+        updateLive();
+      });
     });
 
-    render();
+    // --- Nav ---
+    nextBtn?.addEventListener('click', () => {
+      if (state.step === 1 && !state.gender) return;
+      if (state.step === 2 && state.selected.size === 0) return;
+      goTo(Math.min(4, state.step + 1));
+    });
+    backBtn?.addEventListener('click', () => goTo(Math.max(1, state.step - 1)));
+
+    goTo(1);
   }
 </script>

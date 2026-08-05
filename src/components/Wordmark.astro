@@ -1,0 +1,62 @@
+---
+/**
+ * Belium-Wortmarke, dem hochgeladenen Logo nachempfunden:
+ * "BEL" + gold-verlaufendes "IUM" + darunter gesperrtes "BEAUTY".
+ * Als Text/CSS umgesetzt (statt Raster), damit die Marke sich an helle UND dunkle
+ * Flaechen anpasst (transparenter Header ueber dem dunklen Hero, heller Header nach Scroll).
+ * Die Buchstaben "BEL"/"BEAUTY" erben die Textfarbe (currentColor); "IUM" traegt den Logo-Goldverlauf.
+ */
+interface Props {
+  class?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+const { class: className = '', size = 'md' } = Astro.props;
+---
+<span class:list={['wm', `wm--${size}`, className]} aria-label="Belium Beauty">
+  <span class="wm__main" aria-hidden="true"><span class="wm__dark">BEL</span><span class="wm__gold">IUM</span></span>
+  <span class="wm__sub" aria-hidden="true">Beauty</span>
+</span>
+
+<style>
+  .wm {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+  .wm__main {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    display: inline-flex;
+  }
+  .wm__dark { color: currentColor; }
+  .wm__gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+  .wm__sub {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+    color: currentColor;
+    opacity: 0.86;
+    align-self: stretch;
+    text-align: justify;
+  }
+
+  .wm--sm .wm__main { font-size: 1.35rem; }
+  .wm--sm .wm__sub { font-size: 0.5rem; margin-top: 0.18rem; padding-left: 0.06em; }
+
+  .wm--md .wm__main { font-size: 1.7rem; }
+  .wm--md .wm__sub { font-size: 0.6rem; margin-top: 0.22rem; padding-left: 0.06em; }
+
+  .wm--lg .wm__main { font-size: clamp(2.4rem, 6vw, 3.6rem); }
+  .wm--lg .wm__sub { font-size: clamp(0.8rem, 1.9vw, 1.05rem); margin-top: 0.3rem; }
+</style>

@@ -7,16 +7,17 @@ import Icon from '@/components/Icon.astro';
   <div class="container-page">
     <header class="section-head reveal">
       <p class="t-eyebrow">Deine Vorteile</p>
-      <h2 class="t-h2">Warum Laser statt immer wieder rasieren</h2>
+      <h2 class="t-h2">Warum Laser statt <span class="text-gold">immer wieder rasieren</span></h2>
       <p class="t-lead section-head__lead">
         Sechs Gründe, warum unsere Kundinnen und Kunden auf die dauerhafte Methode umsteigen.
       </p>
     </header>
 
     <div class="vorteile__grid">
-      {vorteile.map((v) => (
+      {vorteile.map((v, i) => (
         <article class="card vorteil reveal">
-          <div class="vorteil__icon"><Icon name={v.icon} class="w-7 h-7" /></div>
+          <span class="vorteil__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="icon-badge vorteil__icon"><Icon name={v.icon} class="w-7 h-7" gradient /></div>
           <h3 class="t-h3 vorteil__titel">{v.titel}</h3>
           <p class="vorteil__text">{v.text}</p>
         </article>
@@ -27,8 +28,6 @@ import Icon from '@/components/Icon.astro';
 
 <style>
   .vorteile { background: var(--color-cream-deep); }
-  .section-head { max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
-  .section-head__lead { margin-top: 0.85rem; }
 
   .vorteile__grid {
     display: grid;
@@ -38,13 +37,17 @@ import Icon from '@/components/Icon.astro';
   @media (min-width: 620px) { .vorteile__grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1000px) { .vorteile__grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
 
-  .vorteil { padding: 1.6rem 1.5rem; }
-  .vorteil__icon {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 3.25rem; height: 3.25rem; border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-gold-soft) 32%, #fff);
-    color: var(--color-gold-deep); margin-bottom: 1.1rem;
+  .vorteil {
+    position: relative; padding: 1.7rem 1.6rem; overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, border-color 0.25s ease;
   }
-  .vorteil__titel { font-size: 1.35rem; }
+  .vorteil:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--color-gold-soft); }
+  .vorteil__index {
+    position: absolute; top: 0.9rem; right: 1.1rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 2.6rem; line-height: 1;
+    color: color-mix(in srgb, var(--color-gold-soft) 55%, transparent);
+  }
+  .vorteil__icon { margin-bottom: 1.1rem; }
+  .vorteil__titel { font-size: 1.35rem; position: relative; }
   .vorteil__text { margin-top: 0.55rem; color: var(--color-ink-soft); font-size: 0.98rem; }
 </style>

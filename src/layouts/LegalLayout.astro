@@ -18,7 +18,7 @@ const { title, description, path, heading } = Astro.props;
   jsonLdType="legal"
   breadcrumb={[{ name: 'Start', path: '/' }, { name: heading, path }]}
 >
-  <Header />
+  <Header solid />
   <main id="hauptinhalt" class="legal">
     <div class="container-page legal__inner">
       <p class="t-eyebrow"><a href="/" class="legal__back">&larr; Zurück zur Startseite</a></p>
@@ -32,7 +32,7 @@ const { title, description, path, heading } = Astro.props;
 </Layout>
 
 <style>
-  .legal { padding-top: clamp(2.5rem, 5vw, 4rem); padding-bottom: clamp(3rem, 6vw, 5rem); background: var(--color-cream); }
+  .legal { padding-top: clamp(6.5rem, 5vw, 8rem); padding-bottom: clamp(3rem, 6vw, 5rem); background: var(--color-cream); }
   .legal__inner { max-width: 52rem; }
   .legal__back { color: var(--color-gold-deep); font-weight: 700; text-decoration: none; }
   .legal__back:hover { text-decoration: underline; }

@@ -22,3 +22,6 @@ npm-debug.log*
 
 # testing artifacts (screenshots werden separat unter docs/screenshots gepflegt)
 *.log
+
+# lokal installierte Design-Skills (nicht Teil des Website-Repos)
+.claude/skills/

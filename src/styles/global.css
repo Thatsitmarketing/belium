@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 /*
-  Belium Beauty – Design System
-  Farbwelt aus Logo (goldene Schrift) und Studioraeumen abgeleitet:
-  warme Beige- und Cremetoene, zurueckgenommenes Gold als Akzent, dunkler warmer Text.
-  Aenderungen am Design bitte zentral hier vornehmen.
+  Belium Beauty – Design System (Redesign)
+  Farbwelt direkt aus dem Logo abgeleitet: tiefes warmes Anthrazit/Schwarz der Wortmarke
+  und der Gold-Verlauf des Schriftzugs "IUM" (helles Gold -> Bernstein -> Kupfer).
+  Premium, ruhig, hochwertig. Aenderungen am Design bitte zentral hier vornehmen.
 */
 
 @theme {
@@ -12,54 +12,66 @@
   --font-display: "Cormorant Garamond", ui-serif, Georgia, "Times New Roman", serif;
   --font-sans: "Mulish Variable", "Mulish", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  /* Farbpalette */
-  --color-cream: #faf6f0;        /* Haupt-Hintergrund */
-  --color-cream-deep: #f3ece1;   /* abgesetzte Sektionen */
-  --color-sand: #e9ddc9;         /* Karten, Rahmen */
-  --color-sand-deep: #d9c7ab;
-  --color-taupe: #b7a184;        /* dezente Flaechen */
-  --color-mocha: #8a7359;        /* sekundaerer Text auf hell */
-  --color-espresso: #6a563f;
+  /* --- Helle Flaechen (warmes Off-White, aus dem Papierweiss des Logos) --- */
+  --color-cream: #faf6ef;        /* Haupt-Hintergrund */
+  --color-cream-deep: #f2e9db;   /* abgesetzte helle Sektionen */
+  --color-sand: #eaddc8;         /* Karten-Raender, feine Linien */
+  --color-sand-deep: #d8c4a3;
+  --color-taupe: #b9a381;
+  --color-mocha: #7a6547;        /* sekundaerer Text auf hell */
+  --color-espresso: #5c4a32;
 
-  --color-ink: #2c261f;          /* Haupttext / dunkle Flaechen */
-  --color-ink-soft: #4a4136;
+  /* --- Dunkle Flaechen (Anthrazit der Wortmarke) --- */
+  --color-ink: #171310;          /* dunkle Sektionen / Haupttext */
+  --color-ink-soft: #3d3529;     /* Fliesstext */
+  --color-ink-2: #211b15;        /* leicht aufgehellte dunkle Flaeche */
+  --color-onink: #efe6d6;        /* Text auf dunklem Grund */
+  --color-onink-soft: #b8ab97;   /* sekundaerer Text auf dunklem Grund */
 
-  --color-gold: #b3934f;         /* dekorativer Akzent (Icons, Rahmen, Badges) */
-  --color-gold-deep: #7d6321;    /* Text/Links/Buttons – WCAG-AA-tauglich auf Creme & mit Weiss */
-  --color-gold-darker: #624d17;  /* Button-Hover */
-  --color-gold-soft: #cbb583;    /* dezente Linien, Icons */
+  /* --- Gold-Verlauf (aus dem Logo-Schriftzug) --- */
+  --color-gold-light: #f7d488;   /* hellstes Gold */
+  --color-gold: #e6b25a;         /* Kern-Gold (Icons, Rahmen, Badges) */
+  --color-gold-deep: #a9741f;    /* Text/Links auf Creme – WCAG-AA-tauglich */
+  --color-gold-darker: #855a15;  /* Hover */
+  --color-amber: #a5641f;
+  --color-copper: #6e3b0e;       /* dunkles Ende des Verlaufs */
+  --color-gold-soft: #ecd6a6;    /* sehr dezente Linien/Flaechen */
 
-  --color-rose: #a9776b;         /* sehr sparsamer Zweitakzent (aus Deko) */
+  --color-rose: #b07a5f;         /* sparsamer Zweitakzent (Warnhinweise) */
 
   /* Radien */
   --radius-xs: 0.375rem;
-  --radius-sm: 0.625rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
+  --radius-sm: 0.7rem;
+  --radius-md: 1.1rem;
+  --radius-lg: 1.6rem;
+  --radius-xl: 2.2rem;
+  --radius-pill: 999px;
 
-  /* Schatten – weich und warm gehalten */
-  --shadow-soft: 0 2px 8px -2px rgba(74, 58, 38, 0.10);
-  --shadow-card: 0 12px 32px -12px rgba(74, 58, 38, 0.18);
-  --shadow-float: 0 18px 48px -16px rgba(74, 58, 38, 0.28);
+  /* Schatten – weich, warm, mit leichtem Goldstich */
+  --shadow-soft: 0 2px 10px -3px rgba(46, 33, 15, 0.12);
+  --shadow-card: 0 16px 40px -16px rgba(46, 33, 15, 0.22);
+  --shadow-float: 0 26px 60px -20px rgba(46, 33, 15, 0.34);
+  --shadow-gold: 0 14px 34px -14px rgba(169, 116, 31, 0.5);
+}
+
+/* Gold-Verlauf als wiederverwendbare Custom-Properties (nicht Teil von @theme) */
+:root {
+  --gradient-gold: linear-gradient(115deg, #f7d488 0%, #e6b25a 34%, #b47f2c 66%, #6e3b0e 100%);
+  --gradient-gold-soft: linear-gradient(115deg, #f7e6c2 0%, #ecd0a0 50%, #d8b478 100%);
+  --gradient-ink: linear-gradient(160deg, #211b15 0%, #171310 60%, #100c09 100%);
 }
 
 /* ---------- Basisstile ---------- */
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Offset fuer die Sticky-Navigation bei Ankersprüngen */
     scroll-padding-top: 5.5rem;
     -webkit-text-size-adjust: 100%;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
@@ -74,82 +86,109 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    line-height: 1.12;
+    line-height: 1.1;
     color: var(--color-ink);
     text-wrap: balance;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
   }
 
   p { text-wrap: pretty; }
-
   a { color: inherit; }
 
-  /* Sichtbarer Fokuszustand fuer Tastaturbedienung (WCAG) */
   :focus-visible {
     outline: 3px solid var(--color-gold);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   ::selection {
-    background: var(--color-gold-soft);
+    background: var(--color-gold);
     color: var(--color-ink);
   }
 }
 
-/* ---------- Typografie-Skala (fluid) ---------- */
+/* ---------- Typografie & Komponenten ---------- */
 @layer components {
   .t-display {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6.5vw, 4.5rem);
-    line-height: 1.05;
+    font-size: clamp(2.6rem, 6.8vw, 4.8rem);
+    line-height: 1.02;
     font-weight: 600;
   }
   .t-h2 {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4.2vw, 3rem);
-    line-height: 1.1;
+    font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+    line-height: 1.08;
     font-weight: 600;
   }
   .t-h3 {
     font-family: var(--font-display);
-    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+    font-size: clamp(1.4rem, 2.4vw, 1.75rem);
     line-height: 1.2;
     font-weight: 600;
   }
   .t-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     font-family: var(--font-sans);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-gold-deep);
   }
+  .t-eyebrow::before {
+    content: "";
+    width: 1.6rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--gradient-gold);
+  }
+  .t-eyebrow--center { justify-content: center; }
+  .t-eyebrow--on-dark { color: var(--color-gold-light); }
+
   .t-lead {
     font-size: clamp(1.05rem, 1.6vw, 1.3rem);
     color: var(--color-ink-soft);
     line-height: 1.6;
   }
 
+  /* Gold-Verlauf auf Text (fuer Highlights in Ueberschriften) */
+  .text-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Fallback fuer Browser ohne background-clip */
+    -webkit-text-fill-color: transparent;
+  }
+
   /* Layout-Container */
   .container-page {
     width: 100%;
-    max-width: 75rem; /* 1200px */
+    max-width: 75rem;
     margin-inline: auto;
     padding-inline: 1.25rem;
   }
+  .container-narrow { max-width: 60rem; }
   @media (min-width: 768px) {
     .container-page { padding-inline: 2rem; }
   }
 
-  .section-pad {
-    padding-block: clamp(3.5rem, 8vw, 7rem);
-  }
+  .section-pad { padding-block: clamp(3.75rem, 8vw, 7.5rem); }
+
+  /* Standard-Sektionskopf */
+  .section-head { max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3.25rem); }
+  .section-head--center { margin-inline: auto; text-align: center; }
+  .section-head__lead { margin-top: 0.9rem; }
+  .section-head .t-h2 { margin-top: 0.7rem; }
 
   /* Buttons */
   .btn {
@@ -160,28 +199,34 @@
     font-weight: 700;
     font-size: 0.98rem;
     line-height: 1;
-    padding: 0.95rem 1.6rem;
-    border-radius: var(--radius-sm);
-    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+    padding: 0.98rem 1.7rem;
+    border-radius: var(--radius-pill);
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
     text-align: center;
     min-height: 3rem;
+    position: relative;
+    overflow: hidden;
   }
   .btn:hover { transform: translateY(-2px); }
   .btn:active { transform: translateY(0); }
 
   .btn-primary {
-    background-color: var(--color-gold-deep);
-    color: #fff;
-    box-shadow: var(--shadow-soft);
+    background: var(--gradient-gold);
+    background-size: 160% 160%;
+    background-position: 0% 50%;
+    color: #2a1c07;
+    box-shadow: var(--shadow-gold);
+    transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), background-position 0.5s ease, box-shadow 0.2s ease;
   }
-  .btn-primary:hover { background-color: var(--color-gold-darker); box-shadow: var(--shadow-card); }
+  .btn-primary:hover { background-position: 100% 50%; box-shadow: 0 18px 40px -14px rgba(169, 116, 31, 0.65); }
 
   .btn-dark {
     background-color: var(--color-ink);
-    color: var(--color-cream);
+    color: var(--color-onink);
+    border: 1px solid transparent;
   }
-  .btn-dark:hover { background-color: #1c1712; }
+  .btn-dark:hover { background-color: #241d15; box-shadow: var(--shadow-card); }
 
   .btn-ghost {
     background-color: transparent;
@@ -190,11 +235,16 @@
   }
   .btn-ghost:hover { border-color: var(--color-gold); color: var(--color-gold-deep); }
 
-  .btn-whatsapp {
-    background-color: #0f7c37; /* dunkleres WhatsApp-Grün für ausreichenden Kontrast mit Weiss */
-    color: #fff;
+  .btn-ghost--on-dark {
+    color: var(--color-onink);
+    border-color: color-mix(in srgb, var(--color-onink) 34%, transparent);
   }
+  .btn-ghost--on-dark:hover { border-color: var(--color-gold); color: var(--color-gold-light); }
+
+  .btn-whatsapp { background-color: #0f7c37; color: #fff; }
   .btn-whatsapp:hover { background-color: #0c6a2f; }
+
+  .btn--sm { padding: 0.72rem 1.3rem; min-height: 2.85rem; font-size: 0.92rem; }
 
   /* Karten */
   .card {
@@ -204,23 +254,85 @@
     box-shadow: var(--shadow-soft);
   }
 
-  /* dezente Trennlinie */
+  /* Gold-Icon-Rahmen (Premium-Look): Verlaufsring um ein Icon */
+  .icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-gold-deep);
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      var(--gradient-gold) border-box;
+    border: 1.5px solid transparent;
+    box-shadow: var(--shadow-soft);
+  }
+  .icon-badge--on-dark {
+    color: var(--color-gold-light);
+    background:
+      var(--gradient-ink) padding-box,
+      var(--gradient-gold) border-box;
+  }
+  .icon-badge--round { border-radius: 50%; }
+
+  /* Verlaufs-Ziffer (fuer nummerierte Schritte) */
+  .num-gold {
+    font-family: var(--font-display);
+    font-weight: 700;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Pill / Chip */
+  .pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.9rem; border-radius: var(--radius-pill);
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+    background: color-mix(in srgb, var(--color-gold-soft) 40%, #fff);
+    border: 1px solid var(--color-sand-deep);
+    color: var(--color-espresso);
+  }
+  .pill--on-dark {
+    background: color-mix(in srgb, var(--color-gold) 14%, transparent);
+    border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
+    color: var(--color-gold-light);
+  }
+
   .hairline { border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 60%, transparent); }
 }
 
-/* ---------- Scroll-Reveal (respektiert reduced motion) ---------- */
+/* ---------- Scroll-Reveal (Fallback ohne GSAP + reduced motion) ---------- */
 @layer utilities {
   .reveal {
     opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateY(22px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
   }
-  .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-  }
+  .reveal.is-visible { opacity: 1; transform: none; }
+
+  /* Wenn GSAP die Steuerung uebernimmt, blenden wir den CSS-Fallback aus. */
+  html.gsap-ready .reveal { opacity: 1; transform: none; transition: none; }
+
   @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; transition: none; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
   }
 }

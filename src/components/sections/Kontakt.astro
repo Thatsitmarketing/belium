@@ -1,5 +1,5 @@
 ---
-/** Abschnitt 13: Standort und Kontakt. Karte (consent-gated), Adresse, Anfahrt, Öffnungszeiten, Formular. */
+/** Standort & Kontakt – dunkles Kontaktpanel mit Kanal-Kacheln neben dem Formular, Karte darunter. */
 import { site, telLink, whatsappLink } from '@/data/site';
 import LeadForm from '@/components/LeadForm.astro';
 import Icon from '@/components/Icon.astro';
@@ -9,104 +9,139 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
 ---
 <section id="kontakt" class="section-pad kontakt">
   <div class="container-page">
-    <header class="section-head reveal">
-      <p class="t-eyebrow">Standort &amp; Kontakt</p>
-      <h2 class="t-h2">Dein Termin in Gelsenkirchen Buer</h2>
+    <header class="section-head section-head--center reveal">
+      <p class="t-eyebrow t-eyebrow--center">Standort &amp; Kontakt</p>
+      <h2 class="t-h2">Dein Termin in <span class="text-gold">Gelsenkirchen Buer</span></h2>
       <p class="t-lead section-head__lead">
-        Stell deine Anfrage, ruf uns an oder schreib per WhatsApp. Wir melden uns zeitnah und finden
+        Ruf an, schreib per WhatsApp oder sende deine Anfrage. Wir melden uns zeitnah und finden
         gemeinsam einen Termin für deine kostenlose Beratung.
       </p>
     </header>
 
-    <div class="kontakt__grid">
-      <!-- Formular -->
-      <div class="kontakt__form card reveal">
-        <h3 class="t-h3 kontakt__form-title">Anfrage senden</h3>
-        <LeadForm id="leadform-kontakt" variant="full" />
-      </div>
+    <div class="kontakt__panel reveal">
+      <!-- Dunkles Kontakt-Rail -->
+      <aside class="kontakt__rail grain">
+        <div class="kontakt__rail-glow" aria-hidden="true"></div>
+        <h3 class="kontakt__rail-title">Direkt erreichbar</h3>
 
-      <!-- Infos -->
-      <div class="kontakt__info reveal">
-        <div class="kontakt__card">
-          <h3 class="kontakt__h">Adresse</h3>
-          <address class="kontakt__addr">
-            <Icon name="map" class="w-5 h-5" />
-            <span>{site.address.street}<br />{site.address.zip} {site.address.city} {site.address.district}</span>
-          </address>
-          <div class="kontakt__row">
-            <a href={telLink()} class="kontakt__link" data-track="telefon_klick"><Icon name="phone" class="w-5 h-5" /> {site.contact.phone}</a>
-            <a href={`mailto:${site.contact.email}`} class="kontakt__link"><Icon name="mail" class="w-5 h-5" /> {site.contact.email}</a>
-          </div>
-          <a href={whatsappLink()} class="btn btn-whatsapp kontakt__wa" target="_blank" rel="noopener" data-track="whatsapp_klick">
-            <Icon name="whatsapp" class="w-5 h-5" /> Direkt per WhatsApp schreiben
+        <div class="kontakt__channels">
+          <a href={telLink()} class="kchannel" data-track="telefon_klick">
+            <span class="kchannel__ic"><Icon name="phone" class="w-5 h-5" gradient /></span>
+            <span class="kchannel__body"><span class="kchannel__label">Anrufen</span><span class="kchannel__val">{site.contact.phone}</span></span>
+            <Icon name="arrow-up-right" class="w-4 h-4 kchannel__go" />
+          </a>
+          <a href={whatsappLink()} class="kchannel" target="_blank" rel="noopener" data-track="whatsapp_klick">
+            <span class="kchannel__ic"><Icon name="whatsapp" class="w-5 h-5" gradient /></span>
+            <span class="kchannel__body"><span class="kchannel__label">WhatsApp</span><span class="kchannel__val">Schnelle Antwort</span></span>
+            <Icon name="arrow-up-right" class="w-4 h-4 kchannel__go" />
+          </a>
+          <a href={`mailto:${site.contact.email}`} class="kchannel">
+            <span class="kchannel__ic"><Icon name="mail" class="w-5 h-5" gradient /></span>
+            <span class="kchannel__body"><span class="kchannel__label">E-Mail</span><span class="kchannel__val">{site.contact.email}</span></span>
+            <Icon name="arrow-up-right" class="w-4 h-4 kchannel__go" />
           </a>
         </div>
 
-        <div class="kontakt__card">
-          <h3 class="kontakt__h">Öffnungszeiten</h3>
-          <ul class="kontakt__hours">
-            {site.openingHours.map((d) => (
-              <li><span>{d.day}</span><span>{d.hours}</span></li>
-            ))}
-          </ul>
-          <p class="kontakt__note"><Icon name="info" class="w-4 h-4" /> Termine nach Vereinbarung.</p>
-        </div>
-
-        <div class="kontakt__card">
-          <h3 class="kontakt__h">Anfahrt &amp; Parken</h3>
-          <ul class="kontakt__anfahrt">
-            <li><Icon name="parking" class="w-5 h-5" /> Parkmöglichkeiten in der direkten Umgebung der Beckeradstraße.</li>
-            <li><Icon name="car" class="w-5 h-5" /> Zentral in Buer, gut aus Gelsenkirchen, Gladbeck und Herten erreichbar.</li>
-          </ul>
-        </div>
-
-        <!-- Karte: erst nach Einwilligung -->
-        <div class="kontakt__map" data-map>
-          <div class="kontakt__map-gate" data-map-gate>
-            <Icon name="map" class="w-8 h-8" />
-            <p>Die Google-Karte wird erst nach deiner Einwilligung geladen.</p>
-            <div class="kontakt__map-actions">
-              <button type="button" class="btn btn-ghost" data-map-load>Karte laden</button>
-              <a href={mapLink} target="_blank" rel="noopener" class="btn btn-ghost">In Google Maps öffnen</a>
-            </div>
+        <div class="kontakt__meta">
+          <div class="kmeta">
+            <span class="kmeta__h"><Icon name="map-pin" class="w-4 h-4" /> Adresse</span>
+            <address class="kmeta__addr">{site.address.street}<br />{site.address.zip} {site.address.city} {site.address.district}</address>
           </div>
-          <div class="kontakt__map-frame" data-map-frame hidden data-embed={mapEmbed}></div>
+          <div class="kmeta">
+            <span class="kmeta__h"><Icon name="clock" class="w-4 h-4" /> Öffnungszeiten</span>
+            <p class="kmeta__hours">Termine nach Vereinbarung.<br />Ruf uns an, wir finden einen Slot.</p>
+          </div>
+        </div>
+
+        <ul class="kontakt__perks">
+          <li><Icon name="parking" class="w-4 h-4" /> Parkmöglichkeiten in direkter Umgebung</li>
+          <li><Icon name="car" class="w-4 h-4" /> Zentral in Buer, gut erreichbar</li>
+        </ul>
+      </aside>
+
+      <!-- Formular -->
+      <div class="kontakt__form">
+        <h3 class="t-h3 kontakt__form-title">Anfrage senden</h3>
+        <p class="kontakt__form-sub">Wir melden uns unverbindlich bei dir.</p>
+        <LeadForm id="leadform-kontakt" variant="full" />
+      </div>
+    </div>
+
+    <!-- Karte: erst nach Einwilligung -->
+    <div class="kontakt__map reveal" data-map>
+      <div class="kontakt__map-gate" data-map-gate>
+        <Icon name="map" class="w-8 h-8" />
+        <p>Die Google-Karte wird erst nach deiner Einwilligung geladen.</p>
+        <div class="kontakt__map-actions">
+          <button type="button" class="btn btn-ghost" data-map-load>Karte laden</button>
+          <a href={mapLink} target="_blank" rel="noopener" class="btn btn-ghost">In Google Maps öffnen</a>
         </div>
       </div>
+      <div class="kontakt__map-frame" data-map-frame hidden data-embed={mapEmbed}></div>
     </div>
   </div>
 </section>
 
 <style>
-  .kontakt { background: var(--color-cream); }
-  .kontakt__grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-  @media (min-width: 960px) { .kontakt__grid { grid-template-columns: 1.05fr 0.95fr; gap: 2rem; align-items: start; } }
+  .kontakt { background: var(--color-cream-deep); }
 
-  .kontakt__form { padding: clamp(1.25rem, 3vw, 2rem); }
-  .kontakt__form-title { margin-bottom: 1.1rem; }
+  .kontakt__panel {
+    display: grid; grid-template-columns: 1fr; gap: 0;
+    border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow-card); border: 1px solid var(--color-sand);
+    background: #fff;
+  }
+  @media (min-width: 900px) { .kontakt__panel { grid-template-columns: 0.92fr 1.08fr; } }
 
-  .kontakt__info { display: flex; flex-direction: column; gap: 1rem; }
-  .kontakt__card { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); padding: 1.25rem 1.35rem; box-shadow: var(--shadow-soft); }
-  .kontakt__h { font-family: var(--font-sans); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-mocha); margin-bottom: 0.8rem; }
-  .kontakt__addr { display: flex; gap: 0.6rem; font-style: normal; font-size: 1rem; line-height: 1.5; }
-  .kontakt__addr :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.15rem; }
-  .kontakt__row { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.9rem; }
-  .kontakt__link { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; }
-  .kontakt__link :global(svg) { color: var(--color-gold-deep); }
-  .kontakt__link:hover { color: var(--color-gold-deep); }
-  .kontakt__wa { margin-top: 1.1rem; width: 100%; }
+  /* Dunkles Rail */
+  .kontakt__rail {
+    position: relative; overflow: hidden;
+    background: var(--gradient-ink); color: var(--color-onink);
+    padding: clamp(1.6rem, 4vw, 2.5rem);
+  }
+  .kontakt__rail-glow {
+    position: absolute; top: -30%; left: -20%; width: 20rem; height: 20rem; border-radius: 50%;
+    background: radial-gradient(circle, rgba(230,178,90,0.28), transparent 70%); pointer-events: none;
+  }
+  .kontakt__rail-title { position: relative; color: #fff; font-size: 1.4rem; margin-bottom: 1.25rem; }
 
-  .kontakt__hours { list-style: none; display: flex; flex-direction: column; }
-  .kontakt__hours li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0; border-bottom: 1px solid color-mix(in srgb, var(--color-sand) 70%, transparent); font-size: 0.94rem; }
-  .kontakt__hours li:last-child { border-bottom: 0; }
-  .kontakt__hours span:last-child { color: var(--color-mocha); }
-  .kontakt__note { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-mocha); }
+  .kontakt__channels { position: relative; display: flex; flex-direction: column; gap: 0.6rem; }
+  .kchannel {
+    display: flex; align-items: center; gap: 0.85rem; text-decoration: none;
+    padding: 0.85rem 1rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, #fff 6%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .kchannel:hover { border-color: color-mix(in srgb, var(--color-gold) 55%, transparent); transform: translateX(3px); }
+  .kchannel__ic {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    background: color-mix(in srgb, var(--color-gold) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+  }
+  .kchannel__body { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.25; }
+  .kchannel__label { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-gold-light); }
+  .kchannel__val { font-weight: 700; color: #fff; font-size: 0.98rem; }
+  .kchannel__go { color: var(--color-onink-soft); flex: 0 0 auto; }
 
-  .kontakt__anfahrt { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-  .kontakt__anfahrt li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.95rem; }
-  .kontakt__anfahrt :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
+  .kontakt__meta { position: relative; display: grid; grid-template-columns: 1fr; gap: 1.1rem; margin-top: 1.6rem; }
+  @media (min-width: 480px) { .kontakt__meta { grid-template-columns: 1fr 1fr; } }
+  .kmeta__h { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-gold-light); margin-bottom: 0.4rem; }
+  .kmeta__addr { font-style: normal; font-size: 0.95rem; line-height: 1.55; color: var(--color-onink); }
+  .kmeta__hours { font-size: 0.92rem; color: var(--color-onink-soft); }
 
-  .kontakt__map { border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; background: #fff; }
+  .kontakt__perks { position: relative; list-style: none; margin-top: 1.6rem; padding-top: 1.3rem; border-top: 1px solid color-mix(in srgb, #fff 12%, transparent); display: flex; flex-direction: column; gap: 0.6rem; }
+  .kontakt__perks li { display: flex; align-items: center; gap: 0.55rem; font-size: 0.9rem; color: var(--color-onink-soft); }
+  .kontakt__perks :global(svg) { color: var(--color-gold-light); flex: 0 0 auto; }
+
+  /* Formular */
+  .kontakt__form { padding: clamp(1.5rem, 4vw, 2.5rem); }
+  .kontakt__form-title { margin-bottom: 0.25rem; }
+  .kontakt__form-sub { color: var(--color-mocha); font-size: 0.95rem; margin-bottom: 1.3rem; }
+
+  /* Karte */
+  .kontakt__map { margin-top: 1.5rem; border: 1px solid var(--color-sand); border-radius: var(--radius-lg); overflow: hidden; background: #fff; }
   .kontakt__map-gate {
     min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 0.9rem; text-align: center; padding: 1.5rem;
@@ -115,11 +150,11 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
       repeating-linear-gradient(0deg, var(--color-sand) 0 1px, transparent 1px 26px),
       repeating-linear-gradient(90deg, var(--color-sand) 0 1px, transparent 1px 26px);
   }
-  .kontakt__map-gate :global(svg) { color: var(--color-gold); }
+  .kontakt__map-gate :global(svg) { color: var(--color-gold-deep); }
   .kontakt__map-gate p { color: var(--color-ink-soft); font-size: 0.9rem; max-width: 34ch; }
   .kontakt__map-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
   .kontakt__map-frame { min-height: 260px; }
-  .kontakt__map-frame :global(iframe) { width: 100%; height: 320px; border: 0; display: block; }
+  .kontakt__map-frame :global(iframe) { width: 100%; height: 340px; border: 0; display: block; }
 </style>
 
 <script>
