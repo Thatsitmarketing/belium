@@ -2,75 +2,103 @@
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
 import { telLink } from '@/data/site';
-import heroImg from '@/assets/images/behandlungsraum-belium-gelsenkirchen-buer.png';
+import heroImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
 
-const trust = [
-  { icon: 'shield', text: 'Zertifizierte Laserschutzbeauftragte' },
-  { icon: 'droplet', text: 'Gekühlter Diodenlaser, schmerzarm' },
-  { icon: 'map-pin', text: 'Mitten in Gelsenkirchen Buer' },
+/**
+ * Hero – heller, editorialer Split:
+ * links Headline + Nutzen-Checks + CTAs, rechts das echte Portrait der Inhaberin
+ * in einem Rahmen mit feinen Gold-Linien und einer schwebenden Geraete-Karte.
+ * Bewusst weiss-dominant (Kontrast zur dunklen Wortmarke/den dunklen Sektionen).
+ */
+const checks = [
+  'Zertifizierte Laserschutzbeauftragte',
+  'Gekühlter 808 nm Diodenlaser, schmerzarm',
+  'Kostenlose, ehrliche Erstberatung',
+  'Mitten in Gelsenkirchen Buer',
 ];
 ---
-<section id="hero" class="hero grain" data-hero>
-  <!-- Vollflaechiges, optimiertes Hintergrundbild -->
-  <div class="hero__bg" aria-hidden="true">
-    <Image
-      src={heroImg}
-      alt=""
-      widths={[768, 1200, 1600, 2000]}
-      sizes="100vw"
-      loading="eager"
-      fetchpriority="high"
-      format="avif"
-      quality={62}
-      class="hero__bg-img"
-    />
-    <div class="hero__overlay"></div>
-  </div>
+<section id="hero" class="hero" data-hero>
+  <div class="hero__aura" aria-hidden="true"></div>
 
   <div class="container-page hero__inner">
+    <!-- Text -->
     <div class="hero__content">
-      <p class="pill pill--on-dark hero__pill" data-hero-el>
-        <Icon name="spark" class="w-4 h-4" gradient /> Dauerhafte Laser Haarentfernung
+      <p class="hero__eyebrow" data-hero-el>
+        <span class="hero__eyebrow-line"></span>
+        Dauerhafte Laser Haarentfernung
       </p>
 
       <h1 class="hero__title">
         <span class="hero__line" data-hero-line>Dauerhaft glatte Haut.</span>
-        <span class="hero__line hero__line--accent" data-hero-line>Ganz ohne Rasieren.</span>
+        <span class="hero__line text-gold" data-hero-line>Ganz ohne Rasieren.</span>
       </h1>
 
       <p class="hero__lead" data-hero-el>
-        Mit dem gekühlten VIKINI&nbsp;Diodenlaser reduzieren wir deine Haare dauerhaft,
-        schmerzarm und begleitet von einer zertifizierten Laserschutzbeauftragten –
-        mitten in Gelsenkirchen&nbsp;Buer.
+        Mit dem gekühlten VIKINI&nbsp;Diodenlaser reduzieren wir deine Haare dauerhaft und
+        schmerzarm – begleitet von einer zertifizierten Laserschutzbeauftragten.
       </p>
+
+      <ul class="hero__checks" data-hero-el>
+        {checks.map((c) => (
+          <li class="hero__check">
+            <span class="hero__check-ic"><Icon name="check" class="w-3.5 h-3.5" /></span>
+            <span>{c}</span>
+          </li>
+        ))}
+      </ul>
 
       <div class="hero__actions" data-hero-el>
         <a href="#kontakt" class="btn btn-primary" data-track="cta_hero">Kostenlose Beratung sichern</a>
-        <a href="#preise" class="btn btn-ghost btn-ghost--on-dark">
+        <a href="#preise" class="btn btn-ghost">
           <Icon name="euro" class="w-5 h-5" /> Preis berechnen
         </a>
       </div>
 
-      <ul class="hero__trust" aria-label="Vertrauensmerkmale" data-hero-el>
-        {trust.map((t) => (
-          <li class="hero__trust-item">
-            <span class="hero__trust-ic"><Icon name={t.icon} class="w-4 h-4" gradient /></span>
-            <span>{t.text}</span>
-          </li>
-        ))}
-      </ul>
+      <div class="hero__proof" data-hero-el>
+        <span class="hero__proof-item"><Icon name="laser" class="w-4 h-4" /> VIKINI 808 nm</span>
+        <span class="hero__proof-dot"></span>
+        <span class="hero__proof-item"><Icon name="snowflake" class="w-4 h-4" /> Saphir-Kühlung</span>
+        <span class="hero__proof-dot"></span>
+        <span class="hero__proof-item"><Icon name="shield" class="w-4 h-4" /> Zertifiziert</span>
+      </div>
     </div>
 
-    <!-- Floating Info-Karte -->
-    <aside class="hero__card" data-hero-el aria-label="Gerätehinweis">
-      <div class="hero__card-glow" aria-hidden="true"></div>
-      <span class="hero__card-num text-gold">808&nbsp;nm</span>
-      <span class="hero__card-label">VIKINI Diodenlaser</span>
-      <p class="hero__card-text">Saphir-Kontaktkühlung für ein angenehmes Behandlungsgefühl.</p>
-      <a href={telLink()} class="hero__card-call" data-track="telefon_klick">
-        <Icon name="phone" class="w-4 h-4" /> Direkt anrufen
-      </a>
-    </aside>
+    <!-- Visual -->
+    <div class="hero__visual" data-hero-el>
+      <div class="hero__frame">
+        <span class="hero__ln hero__ln--v" aria-hidden="true"></span>
+        <span class="hero__ln hero__ln--h" aria-hidden="true"></span>
+        <div class="hero__img-wrap">
+          <Image
+            src={heroImg}
+            alt="Maria Espejo, Inhaberin von Belium Beauty in Gelsenkirchen Buer"
+            widths={[560, 780, 1040]}
+            sizes="(min-width: 1024px) 42vw, 90vw"
+            loading="eager"
+            fetchpriority="high"
+            format="avif"
+            quality={66}
+            class="hero__img"
+            data-parallax="6"
+          />
+        </div>
+
+        <!-- schwebende Geraete-Karte -->
+        <div class="hero__stat">
+          <span class="hero__stat-num">808<span>nm</span></span>
+          <span class="hero__stat-label">VIKINI Diodenlaser</span>
+          <a href={telLink()} class="hero__stat-call" data-track="telefon_klick">
+            <Icon name="phone" class="w-4 h-4" /> Direkt anrufen
+          </a>
+        </div>
+
+        <!-- kleines Vertrauens-Badge -->
+        <div class="hero__chip">
+          <Icon name="award" class="w-4 h-4" />
+          <span>Zertifizierte<br />Laserschutz&shy;beauftragte</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <a href="#einstieg" class="hero__scroll" aria-label="Weiterscrollen" data-hero-el>
@@ -82,114 +110,134 @@ const trust = [
 <style>
   .hero {
     position: relative;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    padding-top: clamp(6rem, 14vh, 9rem);
-    padding-bottom: clamp(4rem, 10vh, 7rem);
-    color: var(--color-onink);
+    background: var(--color-cream);
+    padding-top: clamp(6.5rem, 13vh, 9rem);
+    padding-bottom: clamp(3rem, 7vh, 5rem);
     overflow: hidden;
     isolation: isolate;
   }
-  .hero__bg { position: absolute; inset: 0; z-index: -2; }
-  .hero__bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-  .hero__overlay {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(90% 70% at 78% 18%, rgba(230, 178, 90, 0.28) 0%, transparent 55%),
-      linear-gradient(120deg, rgba(15, 11, 8, 0.94) 0%, rgba(20, 15, 10, 0.82) 42%, rgba(23, 19, 16, 0.55) 100%),
-      linear-gradient(0deg, rgba(15, 11, 8, 0.85) 0%, transparent 45%);
+  .hero__aura {
+    position: absolute; z-index: -1; pointer-events: none;
+    top: -18%; right: -8%; width: 44rem; height: 44rem; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-gold) 22%, transparent) 0%, transparent 62%);
+    filter: blur(6px);
   }
 
   .hero__inner {
-    position: relative;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: clamp(2.5rem, 5vw, 4rem);
     align-items: center;
-    width: 100%;
+    min-height: min(84svh, 720px);
+  }
+  @media (min-width: 1000px) {
+    .hero__inner { grid-template-columns: 1.02fr 0.98fr; }
   }
 
-  .hero__pill { margin-bottom: 1.4rem; }
+  /* ---- Text ---- */
+  .hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--color-gold-deep); margin-bottom: 1.3rem;
+  }
+  .hero__eyebrow-line { width: 2.2rem; height: 2px; border-radius: 2px; background: var(--gradient-gold); }
 
   .hero__title {
-    font-size: clamp(2.7rem, 8vw, 5rem);
-    line-height: 1.02;
-    color: #fff;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.7rem, 6.4vw, 4.6rem);
+    line-height: 1.03; letter-spacing: -0.02em; color: var(--color-ink);
+    overflow: hidden;
   }
   .hero__line { display: block; }
-  .hero__line--accent {
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-  }
 
   .hero__lead {
-    margin-top: 1.4rem;
-    max-width: 44ch;
-    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
-    color: color-mix(in srgb, var(--color-onink) 92%, #fff);
-    line-height: 1.6;
+    margin-top: 1.4rem; max-width: 40ch;
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--color-ink-soft); line-height: 1.6;
+  }
+
+  .hero__checks { list-style: none; margin-top: 1.6rem; display: grid; gap: 0.7rem; }
+  @media (min-width: 560px) { .hero__checks { grid-template-columns: 1fr 1fr; } }
+  .hero__check { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 0.94rem; color: var(--color-espresso); }
+  .hero__check-ic {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem; border-radius: 50%; color: #fff;
+    background: var(--gradient-gold); box-shadow: var(--shadow-gold);
   }
 
   .hero__actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2rem; }
-  .hero__actions .btn { flex: 1 1 auto; }
 
-  .hero__trust { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; margin-top: 2.25rem; }
-  .hero__trust-item { display: flex; align-items: center; gap: 0.7rem; font-weight: 600; font-size: 0.95rem; color: color-mix(in srgb, var(--color-onink) 96%, #fff); }
-  .hero__trust-ic {
-    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    width: 1.9rem; height: 1.9rem; border-radius: 50%;
-    background: color-mix(in srgb, var(--color-gold) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+  .hero__proof {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.7rem;
+    margin-top: 1.8rem; color: var(--color-mocha); font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.02em;
   }
+  .hero__proof-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .hero__proof-item :global(svg) { color: var(--color-gold-deep); }
+  .hero__proof-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-sand-deep); }
 
-  .hero__card {
-    position: relative;
-    background: color-mix(in srgb, var(--color-ink) 62%, transparent);
-    backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
-    border-radius: var(--radius-lg);
-    padding: 1.6rem 1.7rem;
+  /* ---- Visual ---- */
+  .hero__visual { position: relative; }
+  .hero__frame { position: relative; max-width: 30rem; margin-inline: auto; }
+  @media (min-width: 1000px) { .hero__frame { margin-right: 0; } }
+
+  .hero__img-wrap {
+    position: relative; overflow: hidden;
+    border-radius: 2rem 2rem 2rem 0.4rem;
+    aspect-ratio: 4 / 5;
     box-shadow: var(--shadow-float);
-    max-width: 22rem;
-    overflow: hidden;
+    border: 1px solid var(--color-sand);
+    background: var(--color-cream-deep);
+    z-index: 1;
   }
-  .hero__card-glow {
-    position: absolute; top: -40%; right: -30%;
-    width: 16rem; height: 16rem; border-radius: 50%;
-    background: radial-gradient(circle, rgba(230,178,90,0.4), transparent 70%);
-    pointer-events: none;
+  .hero__img { width: 100%; height: 116%; object-fit: cover; object-position: center 22%; }
+
+  /* feine Gold-Geometrie hinter dem Bild */
+  .hero__ln { position: absolute; background: color-mix(in srgb, var(--color-gold) 55%, transparent); z-index: 0; }
+  .hero__ln--v { top: -1.4rem; bottom: 2.5rem; left: -1.4rem; width: 1px; }
+  .hero__ln--h { left: -1.4rem; right: 3rem; top: -1.4rem; height: 1px; }
+
+  .hero__stat {
+    position: absolute; z-index: 2; left: -1.1rem; bottom: 1.6rem;
+    background: color-mix(in srgb, var(--color-ink) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+    border-radius: var(--radius-md); padding: 1rem 1.15rem;
+    box-shadow: var(--shadow-float); min-width: 12.5rem;
   }
-  .hero__card-num { font-family: var(--font-display); font-weight: 700; font-size: 2.6rem; line-height: 1; display: block; }
-  .hero__card-label { font-size: 0.74rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-gold-light); }
-  .hero__card-text { margin-top: 0.9rem; font-size: 0.92rem; color: var(--color-onink-soft); }
-  .hero__card-call {
-    display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 1.1rem;
-    font-weight: 700; font-size: 0.9rem; color: var(--color-gold-light);
-    text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  .hero__stat-num {
+    display: block; font-family: var(--font-display); font-weight: 700; line-height: 1;
+    font-size: 2.4rem; color: var(--color-gold-light);
   }
-  .hero__card-call:hover { color: #fff; }
+  .hero__stat-num span { font-size: 1rem; margin-left: 0.15rem; }
+  .hero__stat-label { display: block; margin-top: 0.15rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-onink-soft); }
+  .hero__stat-call {
+    display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem;
+    font-weight: 700; font-size: 0.86rem; color: var(--color-gold-light); text-decoration: none;
+    padding-bottom: 2px; border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  }
+  .hero__stat-call:hover { color: #fff; }
+
+  .hero__chip {
+    position: absolute; z-index: 2; right: -0.8rem; top: 1.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    background: color-mix(in srgb, #fff 92%, transparent); backdrop-filter: blur(6px);
+    border: 1px solid var(--color-sand-deep); border-radius: var(--radius-pill);
+    padding: 0.5rem 0.85rem 0.5rem 0.6rem; box-shadow: var(--shadow-card);
+    font-size: 0.7rem; font-weight: 700; line-height: 1.15; color: var(--color-espresso);
+  }
+  .hero__chip :global(svg) {
+    flex: 0 0 auto; color: #fff; width: 1.5rem; height: 1.5rem; padding: 0.32rem;
+    border-radius: 50%; background: var(--gradient-gold);
+  }
 
   .hero__scroll {
-    position: absolute; left: 50%; bottom: 1.4rem; transform: translateX(-50%);
-    display: none; flex-direction: column; align-items: center; gap: 0.35rem;
-    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--color-onink-soft); text-decoration: none;
+    display: none;
+    margin: clamp(2rem, 4vw, 3rem) auto 0; width: max-content;
+    flex-direction: column; align-items: center; gap: 0.35rem;
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--color-mocha); text-decoration: none;
   }
-  .hero__scroll :global(svg) { animation: hero-bounce 1.8s ease-in-out infinite; }
+  .hero__scroll :global(svg) { color: var(--color-gold-deep); animation: hero-bounce 1.8s ease-in-out infinite; }
   @keyframes hero-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+  @media (min-width: 1000px) { .hero__scroll { display: flex; } }
   @media (prefers-reduced-motion: reduce) { .hero__scroll :global(svg) { animation: none; } }
-
-  @media (min-width: 560px) {
-    .hero__actions .btn { flex: 0 0 auto; }
-  }
-  @media (min-width: 1024px) {
-    .hero__inner { grid-template-columns: 1.35fr 0.65fr; gap: 3.5rem; }
-    .hero__card { justify-self: end; }
-    .hero__scroll { display: flex; }
-  }
 </style>

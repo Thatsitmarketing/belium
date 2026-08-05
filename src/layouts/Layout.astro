@@ -93,15 +93,14 @@ const { title, description, path, jsonLdType = 'home', breadcrumb } = Astro.prop
         if (hero) {
           const lines = hero.querySelectorAll('[data-hero-line]');
           const els = hero.querySelectorAll('[data-hero-el]');
-          const tl = gsap.timeline({ defaults: { ease, duration: 0.9 } });
+          const tl = gsap.timeline({ defaults: { ease, duration: 1 } });
           if (lines.length) {
-            tl.from(lines, { yPercent: 115, opacity: 0, stagger: 0.12 }, 0.1);
+            tl.from(lines, { yPercent: 115, opacity: 0, stagger: 0.1 }, 0.1);
           }
-          tl.from(els, { y: 28, opacity: 0, duration: 0.8, stagger: 0.09 }, 0.35);
+          tl.from(els, { y: 26, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.3);
         }
 
-        // 2) Scroll-Reveal: einzelne Elemente sanft einblenden.
-        //    Elemente mit gemeinsamem Elternteil werden gestaffelt (batch).
+        // 2) Scroll-Reveal (Legacy .reveal): einzelne Elemente sanft einblenden.
         ScrollTrigger.batch(revealEls, {
           start: 'top 86%',
           once: true,
@@ -113,8 +112,106 @@ const { title, description, path, jsonLdType = 'home', breadcrumb } = Astro.prop
             ),
         });
 
+        // 3) Richtungs-Reveal ([data-reveal]) – vertikale UND horizontale Bewegung.
+        //    Wert: up (Default) | down | left | right | zoom.
+        //    Container mit [data-reveal-stagger] blenden ihre [data-reveal]-Kinder gestaffelt ein.
+        const OFF = 46;
+        const offX = (el: Element) => {
+          const d = el.getAttribute('data-reveal');
+          return d === 'left' ? -OFF : d === 'right' ? OFF : 0;
+        };
+        const offY = (el: Element) => {
+          const d = el.getAttribute('data-reveal') || 'up';
+          return d === 'up' ? OFF : d === 'down' ? -OFF : 0;
+        };
+        const isZoom = (el: Element) => el.getAttribute('data-reveal') === 'zoom';
+
+        const animateGroup = (items: Element[], stagger: number) => {
+          gsap.fromTo(
+            items,
+            {
+              opacity: 0,
+              x: (i: number, t: Element) => offX(t),
+              y: (i: number, t: Element) => offY(t),
+              scale: (i: number, t: Element) => (isZoom(t) ? 0.92 : 1),
+            },
+            {
+              opacity: 1, x: 0, y: 0, scale: 1,
+              duration: 0.85, ease, stagger, overwrite: true,
+              onStart: () => items.forEach((it) => it.setAttribute('data-revealed', '')),
+            }
+          );
+        };
+
+        // Staggered Container zuerst (deren Kinder dann nicht doppelt getriggert werden)
+        const claimed = new Set<Element>();
+        gsap.utils.toArray<HTMLElement>('[data-reveal-stagger]').forEach((container) => {
+          const items = Array.from(container.querySelectorAll<HTMLElement>('[data-reveal]'));
+          if (!items.length) return;
+          items.forEach((it) => claimed.add(it));
+          ScrollTrigger.create({
+            trigger: container, start: 'top 84%', once: true,
+            onEnter: () => animateGroup(items, 0.09),
+          });
+        });
+
+        // Einzelne [data-reveal]
+        gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+          if (claimed.has(el)) return;
+          const delay = parseFloat(el.getAttribute('data-reveal-delay') || '0');
+          ScrollTrigger.create({
+            trigger: el, start: 'top 88%', once: true,
+            onEnter: () => gsap.delayedCall(delay, () => animateGroup([el], 0)),
+          });
+        });
+
+        // 4) Parallax ([data-parallax]) – sanfte Tiefe fuer ueberformatige Bild-Ebenen.
+        //    Element muss in einem overflow-hidden-Eltern liegen und groesser als dieser sein.
+        gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
+          const amt = parseFloat(el.getAttribute('data-parallax') || '10');
+          gsap.fromTo(
+            el, { yPercent: -amt }, {
+              yPercent: amt, ease: 'none',
+              scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true },
+            }
+          );
+        });
+
+        // 4b) Horizontaler Drift ([data-driftx]) – grosse Hintergrund-Woerter, die
+        //     beim Scrollen sanft seitlich wandern.
+        gsap.utils.toArray<HTMLElement>('[data-driftx]').forEach((el) => {
+          const amt = parseFloat(el.getAttribute('data-driftx') || '12');
+          gsap.fromTo(
+            el, { xPercent: amt }, {
+              xPercent: -amt, ease: 'none',
+              scrollTrigger: { trigger: el.closest('section') || el, start: 'top bottom', end: 'bottom top', scrub: true },
+            }
+          );
+        });
+
+        // 5) Horizontaler Scroll ([data-hscroll] + [data-hscroll-track]) – nur Desktop.
+        //    Auf kleinen Screens bleibt es ein nativer horizontaler Scroll (CSS).
+        const mm = gsap.matchMedia();
+        mm.add('(min-width: 1000px)', () => {
+          gsap.utils.toArray<HTMLElement>('[data-hscroll]').forEach((section) => {
+            const track = section.querySelector<HTMLElement>('[data-hscroll-track]');
+            if (!track) return;
+            const distance = () => Math.max(0, track.scrollWidth - section.offsetWidth);
+            const tween = gsap.to(track, {
+              x: () => -distance(), ease: 'none',
+              scrollTrigger: {
+                trigger: section, start: 'top top',
+                end: () => '+=' + distance(),
+                pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true,
+              },
+            });
+            return () => tween.kill();
+          });
+        });
+
         // Sicherheitsnetz: bereits sichtbare Elemente sofort zeigen.
         requestAnimationFrame(() => ScrollTrigger.refresh());
+        window.addEventListener('load', () => ScrollTrigger.refresh());
       }
     </script>
   </body>

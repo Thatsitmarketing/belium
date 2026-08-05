@@ -160,13 +160,24 @@
     line-height: 1.6;
   }
 
-  /* Gold-Verlauf auf Text (fuer Highlights in Ueberschriften) */
+  /* Gold auf Text (fuer Highlights in Ueberschriften).
+     Bewusst LUMINOES und kurz gehalten (helles Gold -> warmes Gold), NICHT bis ins dunkle
+     Kupfer – so bleibt der Akzent edel statt muddy. Der volle Verlauf bleibt kleinen
+     Flaechen (Buttons, Punkte, Linien) vorbehalten. */
   .text-gold {
-    background: var(--gradient-gold);
+    background: linear-gradient(96deg, #e9b866 0%, #c9902f 60%, #b6801f 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     /* Fallback fuer Browser ohne background-clip */
+    -webkit-text-fill-color: transparent;
+  }
+  /* Auf dunklem Grund darf das Gold heller leuchten. */
+  .text-gold--on-dark {
+    background: linear-gradient(96deg, #f7d488 0%, #ecc073 55%, #d9a44f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
     -webkit-text-fill-color: transparent;
   }
 
@@ -342,6 +353,23 @@
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1 !important; transform: none !important; transition: none; }
   }
+
+  /* ---------- Erweitertes Reveal-System ([data-reveal]) ----------
+     GSAP steuert Ein-/Ausblenden richtungsabhaengig (siehe Layout.astro).
+     Elemente werden erst versteckt, sobald GSAP bereit ist -> kein FOUC,
+     und ohne JS / bei reduced-motion bleibt alles sofort sichtbar. */
+  html.gsap-ready [data-reveal] { opacity: 0; }
+  html.gsap-ready [data-reveal][data-revealed] { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    html.gsap-ready [data-reveal] { opacity: 1 !important; transform: none !important; }
+  }
+
+  /* Feine Gold-Haarlinie als Sektions-/Block-Trenner (dezent, nicht der volle Verlauf). */
+  .gold-hairline {
+    height: 1px; border: 0; width: 100%;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-gold) 55%, transparent) 22%, color-mix(in srgb, var(--color-gold) 55%, transparent) 78%, transparent);
+  }
+  .gold-hairline--short { max-width: 4.5rem; }
 
   /* Atmosphaere-Ebene: optimiertes Textur-/Glow-Bild als dezenter Hintergrund.
      Das eigentliche <img> wird vom <Atmosphere>-Komponenten geliefert. */
