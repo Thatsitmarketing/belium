@@ -84,7 +84,9 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
 </section>
 
 <style>
-  .kontakt { position: relative; overflow: hidden; padding-block: clamp(4rem, 8vw, 7.5rem); color: var(--color-onink); isolation: isolate; }
+  /* Zusätzlicher Fußabstand, damit der überlappend hochgezogene Footer nur den freien
+     Bereich abdeckt und keine Inhalte (Karte) verdeckt. */
+  .kontakt { position: relative; overflow: hidden; padding-top: clamp(4rem, 8vw, 7.5rem); padding-bottom: clamp(6rem, 10vw, 9.5rem); color: var(--color-onink); isolation: isolate; }
   .kontakt__bg { position: absolute; inset: 0; z-index: -1; }
   .kontakt__bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
   .kontakt__bg-scrim {
