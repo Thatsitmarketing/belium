@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+/*
+  Belium Beauty – Design System
+  Farbwelt aus Logo (goldene Schrift) und Studioraeumen abgeleitet:
+  warme Beige- und Cremetoene, zurueckgenommenes Gold als Akzent, dunkler warmer Text.
+  Aenderungen am Design bitte zentral hier vornehmen.
+*/
+
+@theme {
+  /* Schriften – lokal eingebunden ueber @fontsource (kein Google CDN) */
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: "Mulish Variable", "Mulish", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Farbpalette */
+  --color-cream: #faf6f0;        /* Haupt-Hintergrund */
+  --color-cream-deep: #f3ece1;   /* abgesetzte Sektionen */
+  --color-sand: #e9ddc9;         /* Karten, Rahmen */
+  --color-sand-deep: #d9c7ab;
+  --color-taupe: #b7a184;        /* dezente Flaechen */
+  --color-mocha: #8a7359;        /* sekundaerer Text auf hell */
+  --color-espresso: #6a563f;
+
+  --color-ink: #2c261f;          /* Haupttext / dunkle Flaechen */
+  --color-ink-soft: #4a4136;
+
+  --color-gold: #b3934f;         /* dekorativer Akzent (Icons, Rahmen, Badges) */
+  --color-gold-deep: #7d6321;    /* Text/Links/Buttons – WCAG-AA-tauglich auf Creme & mit Weiss */
+  --color-gold-darker: #624d17;  /* Button-Hover */
+  --color-gold-soft: #cbb583;    /* dezente Linien, Icons */
+
+  --color-rose: #a9776b;         /* sehr sparsamer Zweitakzent (aus Deko) */
+
+  /* Radien */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  /* Schatten – weich und warm gehalten */
+  --shadow-soft: 0 2px 8px -2px rgba(74, 58, 38, 0.10);
+  --shadow-card: 0 12px 32px -12px rgba(74, 58, 38, 0.18);
+  --shadow-float: 0 18px 48px -16px rgba(74, 58, 38, 0.28);
+}
+
+/* ---------- Basisstile ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Offset fuer die Sticky-Navigation bei Ankersprüngen */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.12;
+    color: var(--color-ink);
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  p { text-wrap: pretty; }
+
+  a { color: inherit; }
+
+  /* Sichtbarer Fokuszustand fuer Tastaturbedienung (WCAG) */
+  :focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-gold-soft);
+    color: var(--color-ink);
+  }
+}
+
+/* ---------- Typografie-Skala (fluid) ---------- */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6.5vw, 4.5rem);
+    line-height: 1.05;
+    font-weight: 600;
+  }
+  .t-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    line-height: 1.1;
+    font-weight: 600;
+  }
+  .t-h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  .t-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-gold-deep);
+  }
+  .t-lead {
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+  }
+
+  /* Layout-Container */
+  .container-page {
+    width: 100%;
+    max-width: 75rem; /* 1200px */
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-page { padding-inline: 2rem; }
+  }
+
+  .section-pad {
+    padding-block: clamp(3.5rem, 8vw, 7rem);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.98rem;
+    line-height: 1;
+    padding: 0.95rem 1.6rem;
+    border-radius: var(--radius-sm);
+    transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
+    cursor: pointer;
+    text-align: center;
+    min-height: 3rem;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-primary {
+    background-color: var(--color-gold-deep);
+    color: #fff;
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-primary:hover { background-color: var(--color-gold-darker); box-shadow: var(--shadow-card); }
+
+  .btn-dark {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+  }
+  .btn-dark:hover { background-color: #1c1712; }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-ink);
+    border: 1.5px solid var(--color-sand-deep);
+  }
+  .btn-ghost:hover { border-color: var(--color-gold); color: var(--color-gold-deep); }
+
+  .btn-whatsapp {
+    background-color: #0f7c37; /* dunkleres WhatsApp-Grün für ausreichenden Kontrast mit Weiss */
+    color: #fff;
+  }
+  .btn-whatsapp:hover { background-color: #0c6a2f; }
+
+  /* Karten */
+  .card {
+    background-color: #fff;
+    border: 1px solid var(--color-sand);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* dezente Trennlinie */
+  .hairline { border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 60%, transparent); }
+}
+
+/* ---------- Scroll-Reveal (respektiert reduced motion) ---------- */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+}
