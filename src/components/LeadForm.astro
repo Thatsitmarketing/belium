@@ -36,12 +36,10 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
   <input type="hidden" name="summe" value="" />
   <input type="hidden" name="quelle" value={variant} />
 
-  {variant === 'angebot' && (
-    <div class="leadform__zonen" data-zonen-summary hidden>
-      <span class="leadform__zonen-label">Deine Auswahl:</span>
-      <span data-zonen-text>—</span>
-    </div>
-  )}
+  <div class="leadform__zonen" data-zonen-summary hidden>
+    <span class="leadform__zonen-label">Deine Auswahl aus dem Preisrechner:</span>
+    <span data-zonen-text>—</span>
+  </div>
 
   <div class="leadform__row">
     <div class="field">
@@ -95,7 +93,7 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
 
   <button type="submit" class="btn btn-primary leadform__submit">
     <Icon name="arrow" class="w-4 h-4" />
-    {variant === 'angebot' ? 'Persönliches Angebot erhalten' : 'Anfrage absenden'}
+    {variant === 'angebot' ? 'Persönliches Angebot erhalten' : 'Kostenlose Beratung anfragen'}
   </button>
 
   <p class="leadform__status" role="status" aria-live="polite" data-status hidden></p>

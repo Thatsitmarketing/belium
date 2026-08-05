@@ -1,25 +1,103 @@
 ---
-/** Abschnitt 2: Problem und Einstieg. Maximal drei Sätze. */
+/**
+ * Abschnitt: Problem und gewünschtes Ergebnis.
+ * Klare Gegenüberstellung „ständiges Rasieren" vs. „dauerhaft weniger Haarwuchs".
+ * Kein CTA – der Abschnitt schafft nur Problembewusstsein.
+ */
+import Icon from '@/components/Icon.astro';
+
+const problem = [
+  'Ständiges Rasieren, das nie fertig ist',
+  'Hautreizungen und Rötungen',
+  'Eingewachsene Haare',
+  'Immer wieder Zeit- und Pflegeaufwand',
+];
+const ergebnis = [
+  'Langfristig deutlich weniger Haarwuchs',
+  'Weniger täglicher Pflegeaufwand',
+  'Glatteres, ruhigeres Hautgefühl',
+  'Hautschonende, begleitete Behandlung',
+];
 ---
 <section id="einstieg" class="section-pad problem">
   <div class="container-page">
-    <p class="t-eyebrow reveal">Kennst du das?</p>
-    <h2 class="problem__text reveal">
-      Rasieren, Wachsen, eingewachsene Haare und Rötungen. Kaum ist es glatt, geht es wieder von vorne
-      los. <span class="problem__accent text-gold">Dauerhafte Laser Haarentfernung durchbricht diesen Kreislauf</span>
-      und gibt dir deine Zeit zurück.
-    </h2>
+    <header class="section-head section-head--center reveal">
+      <p class="t-eyebrow t-eyebrow--center">Kennst du das?</p>
+      <h2 class="t-h2">Schluss mit dem <span class="text-gold">ständigen Rasieren</span></h2>
+      <p class="t-lead section-head__lead">
+        Kaum ist die Haut glatt, geht es wieder von vorne los. Die dauerhafte Laser Haarentfernung
+        durchbricht diesen Kreislauf.
+      </p>
+    </header>
+
+    <div class="problem__compare">
+      <article class="pcol pcol--ist reveal" data-reveal="right">
+        <p class="pcol__label">Ohne Laser</p>
+        <ul class="pcol__list">
+          {problem.map((p) => (
+            <li><span class="pcol__ic pcol__ic--x"><Icon name="close" class="w-3.5 h-3.5" /></span>{p}</li>
+          ))}
+        </ul>
+      </article>
+
+      <span class="problem__arrow" aria-hidden="true"><Icon name="arrow" class="w-6 h-6" /></span>
+
+      <article class="pcol pcol--ziel reveal" data-reveal="left">
+        <p class="pcol__label pcol__label--ziel">Mit Belium Beauty</p>
+        <ul class="pcol__list">
+          {ergebnis.map((e) => (
+            <li><span class="pcol__ic pcol__ic--check"><Icon name="check" class="w-3.5 h-3.5" /></span>{e}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
   </div>
 </section>
 
 <style>
   .problem { background: var(--color-cream); }
-  .problem__text {
-    font-size: clamp(1.6rem, 3.6vw, 2.6rem);
-    line-height: 1.28;
-    max-width: 24ch;
-    margin-top: 0.75rem;
+
+  .problem__compare {
+    display: grid; grid-template-columns: 1fr; gap: 1.1rem; align-items: center;
+    max-width: 62rem; margin-inline: auto;
   }
-  @media (min-width: 768px) { .problem__text { max-width: 32ch; } }
-  .problem__accent { color: var(--color-gold-deep); }
+  @media (min-width: 820px) {
+    .problem__compare { grid-template-columns: 1fr auto 1fr; gap: 1.5rem; }
+  }
+
+  .pcol {
+    border-radius: var(--radius-lg); padding: 1.75rem 1.6rem;
+    border: 1px solid var(--color-sand);
+  }
+  .pcol--ist { background: #fff; }
+  .pcol--ziel {
+    background: var(--gradient-ink); color: var(--color-onink);
+    border-color: color-mix(in srgb, var(--color-gold) 26%, transparent);
+    box-shadow: var(--shadow-card);
+  }
+
+  .pcol__label {
+    font-size: 0.74rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--color-mocha); margin-bottom: 1.1rem;
+  }
+  .pcol__label--ziel { color: var(--color-gold-light); }
+
+  .pcol__list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+  .pcol__list li { display: flex; align-items: flex-start; gap: 0.65rem; font-weight: 600; font-size: 0.98rem; }
+  .pcol--ist .pcol__list li { color: var(--color-ink-soft); }
+  .pcol--ziel .pcol__list li { color: #fff; }
+  .pcol__ic {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 1.4rem; height: 1.4rem; border-radius: 50%; margin-top: 0.05rem;
+  }
+  .pcol__ic--x { background: color-mix(in srgb, var(--color-rose) 16%, #fff); color: var(--color-rose); }
+  .pcol__ic--check { background: var(--gradient-gold); color: #2a1c07; }
+
+  .problem__arrow {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3rem; height: 3rem; border-radius: 50%; margin-inline: auto;
+    color: var(--color-gold-deep); background: #fff; border: 1px solid var(--color-sand-deep);
+    box-shadow: var(--shadow-soft); rotate: 90deg;
+  }
+  @media (min-width: 820px) { .problem__arrow { rotate: none; } }
 </style>

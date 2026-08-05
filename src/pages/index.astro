@@ -3,21 +3,19 @@ import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import StickyCta from '@/components/StickyCta.astro';
-import Marquee from '@/components/Marquee.astro';
+import TrustBar from '@/components/TrustBar.astro';
 
 import Hero from '@/components/sections/Hero.astro';
 import Problem from '@/components/sections/Problem.astro';
 import Vorteile from '@/components/sections/Vorteile.astro';
-import Behandlungen from '@/components/sections/Behandlungen.astro';
-import ZonenPreise from '@/components/sections/ZonenPreise.astro';
+import MariaStudio from '@/components/sections/MariaStudio.astro';
+import Geraet from '@/components/sections/Geraet.astro';
+import Behandlungsvorschau from '@/components/sections/Behandlungsvorschau.astro';
 import Ablauf from '@/components/sections/Ablauf.astro';
-import UeberMaria from '@/components/sections/UeberMaria.astro';
-import Raeumlichkeiten from '@/components/sections/Raeumlichkeiten.astro';
+import ZonenPreise from '@/components/sections/ZonenPreise.astro';
 import Bewertungen from '@/components/sections/Bewertungen.astro';
-import Faq from '@/components/sections/Faq.astro';
-import Sicherheit from '@/components/sections/Sicherheit.astro';
+import FaqEignung from '@/components/sections/FaqEignung.astro';
 import Kontakt from '@/components/sections/Kontakt.astro';
-import AbschlussCta from '@/components/sections/AbschlussCta.astro';
 
 // SEO: Title <= 60 Zeichen, Description <= 155 Zeichen
 const title = 'Laser Haarentfernung Gelsenkirchen Buer | Belium Beauty';
@@ -28,20 +26,30 @@ const description =
   <span id="top"></span>
   <Header />
   <main id="hauptinhalt">
+    <!-- 1. Hero: Was & warum, mit klarer CTA-Hierarchie -->
     <Hero />
-    <Marquee tone="dark" />
+    <!-- 2. Ruhige Vertrauensleiste (statisch, kein Laufband) -->
+    <TrustBar />
+    <!-- 3. Problem und gewünschtes Ergebnis -->
     <Problem />
+    <!-- 4. Warum Belium – drei Säulen -->
     <Vorteile />
-    <Behandlungen />
-    <ZonenPreise />
+    <!-- 5. Wer behandelt: Maria & Studio (vor dem Preisrechner) -->
+    <MariaStudio />
+    <!-- 6. Gerät & Technik (Produkt-Showcase mit Punkte-Modul) -->
+    <Geraet />
+    <!-- 7. Behandlungsvorschau: Zonen auf einem Foto (Hotspots) -->
+    <Behandlungsvorschau />
+    <!-- 8. So funktioniert die Behandlung: Technik-Prinzipien + Ablauf -->
     <Ablauf />
-    <UeberMaria />
-    <Raeumlichkeiten />
+    <!-- 9. Preisrechner (übergibt die Auswahl ans Kontaktformular) -->
+    <ZonenPreise />
+    <!-- 10. Kundenstimmen (ohne CTA) -->
     <Bewertungen />
-    <Faq />
-    <Sicherheit />
+    <!-- 11. Eignungscheck & FAQ -->
+    <FaqEignung />
+    <!-- 12. Einziger vollständiger Conversion-Bereich -->
     <Kontakt />
-    <AbschlussCta />
   </main>
   <Footer />
   <StickyCta />

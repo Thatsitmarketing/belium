@@ -1,0 +1,51 @@
+---
+/**
+ * Kompakte, ruhige Vertrauensleiste direkt unter dem Hero.
+ * Bewusst statisch: keine Marquee-/Endlos-Animation, kein CTA – nur ein klares Signal.
+ * Ersetzt das frühere Schlagwort-Laufband.
+ */
+import Icon from '@/components/Icon.astro';
+
+const punkte = [
+  { icon: 'shield', text: 'Zertifiziert' },
+  { icon: 'leaf', text: 'Hautschonend' },
+  { icon: 'target', text: 'Individuell eingestellt' },
+  { icon: 'chat', text: 'Kostenlose Beratung' },
+];
+---
+<div class="trustbar" role="list" aria-label="Vertrauensmerkmale">
+  <div class="container-page trustbar__inner">
+    {punkte.map((p) => (
+      <span class="trustbar__item" role="listitem">
+        <Icon name={p.icon} class="w-4 h-4 trustbar__ic" gradient />
+        {p.text}
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .trustbar {
+    background: var(--color-cream-deep);
+    border-block: 1px solid var(--color-sand);
+  }
+  .trustbar__inner {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+    gap: 0.75rem 2.25rem;
+    padding-block: 1.05rem;
+  }
+  .trustbar__item {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--color-espresso);
+  }
+  .trustbar__item :global(.trustbar__ic) { flex: 0 0 auto; }
+  /* Feine goldene Trennpunkte zwischen den Merkmalen (ab Tablet). */
+  @media (min-width: 640px) {
+    .trustbar__inner { gap: 0.75rem 1.75rem; }
+    .trustbar__item + .trustbar__item::before {
+      content: ""; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--color-sand-deep); margin-right: 1.75rem; margin-left: -0.4rem;
+    }
+  }
+</style>
