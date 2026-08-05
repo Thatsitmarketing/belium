@@ -205,6 +205,13 @@
   .section-head__lead { margin-top: 0.9rem; }
   .section-head .t-h2 { margin-top: 0.7rem; }
 
+  /* Wiederkehrender Abschnitts-CTA (ersetzt den mobilen Sticky-CTA durch mehrere
+     klare Handlungsaufforderungen über die ganze Seite verteilt). */
+  .section-cta { margin-top: clamp(2.25rem, 4vw, 3rem); display: flex; flex-wrap: wrap; gap: 0.75rem 1.1rem; align-items: center; }
+  .section-cta--center { justify-content: center; text-align: center; }
+  .section-cta__hint { font-size: 0.9rem; color: var(--color-mocha); }
+  .section-cta__hint--on-dark { color: var(--color-onink-soft); }
+
   /* Buttons */
   .btn {
     display: inline-flex;

@@ -1,57 +1,45 @@
 ---
 /**
- * „So funktioniert die Behandlung" – neues, offenes Designkonzept ohne Kacheln:
- * oben die drei Technik-Prinzipien als schlichte, mit Haarlinien getrennte Reihe,
- * darunter der Ablauf als durchgehende, nummerierte Prozesslinie (keine Karten).
+ * „So funktioniert die Behandlung" – rein der Ablauf in vier Schritten, visuell mit
+ * eigens erstellten Premium-Icons (Gold-Linienstil). Die früheren Technik-Prinzipien
+ * wurden bewusst herausgelöst, damit der Fokus klar auf dem Weg (1 → 4) liegt.
+ * Die Schritte laufen beim Scrollen gestaffelt ein (Step-Animation).
  */
-import { ablaufSchritte } from '@/data/ablauf';
+import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
+import { ablaufSchritte } from '@/data/ablauf';
+import iconBeratung from '@/assets/images/ablauf-icon-beratung-belium.png';
+import iconBehandlung from '@/assets/images/ablauf-icon-behandlung-belium.png';
+import iconNachsorge from '@/assets/images/ablauf-icon-nachsorge-belium.png';
+import iconIntervall from '@/assets/images/ablauf-icon-intervall-belium.png';
 
-// Icon + Kurz-Meta je Schritt (aus dem vorhandenen Text abgeleitet, keine erfundenen Fakten).
 const meta = [
-  { icon: 'chat', tag: 'Kostenlos & unverbindlich' },
-  { icon: 'laser', tag: 'Wenige Minuten bis ca. 1 Std.' },
-  { icon: 'heart', tag: 'Meist sofort alltagstauglich' },
-  { icon: 'route', tag: 'In der Regel 4–8 Termine' },
-];
-
-const prinzipien = [
-  { icon: 'laser', titel: '808 nm Wellenlänge', text: 'Die Energie wird gezielt über das Farbpigment des Haares aufgenommen.' },
-  { icon: 'snowflake', titel: 'Saphir-Kontaktkühlung', text: 'Die Haut wird im selben Moment gekühlt – spürbar angenehmer.' },
-  { icon: 'target', titel: 'Individuelle Einstellung', text: 'Parameter passend zu Hauttyp, Haarstruktur und Körperzone.' },
+  { icon: iconBeratung, alt: 'Sprechblase mit Herz – kostenloses Beratungsgespräch', tag: 'Kostenlos & unverbindlich' },
+  { icon: iconBehandlung, alt: 'Diodenlaser-Handstück – die eigentliche Behandlung', tag: 'Wenige Minuten bis ca. 1 Std.' },
+  { icon: iconNachsorge, alt: 'Wassertropfen mit Glanz – sanfte Nachsorge der Haut', tag: 'Meist sofort alltagstauglich' },
+  { icon: iconIntervall, alt: 'Kalender mit Wiederhol-Pfeilen – Termine im Intervall', tag: 'In der Regel 4–8 Termine' },
 ];
 ---
 <section id="ablauf" class="section-pad ablauf">
   <div class="container-page">
     <header class="section-head reveal">
       <p class="t-eyebrow">So funktioniert es</p>
-      <h2 class="t-h2">So funktioniert die <span class="text-gold">Behandlung</span></h2>
+      <h2 class="t-h2">Dein Weg in <span class="text-gold">vier Schritten</span></h2>
       <p class="t-lead section-head__lead">
-        Zuerst kurz die Technik dahinter – dann dein Weg in vier verständlichen Schritten. Kein Druck,
-        kein Verkaufsgespräch, immer mit kostenloser Beratung und Testfleck zum Start.
+        Kein Druck, kein Verkaufsgespräch – immer mit kostenloser Beratung und Testfleck zum Start.
+        So läuft deine dauerhafte Laser Haarentfernung Schritt für Schritt ab.
       </p>
     </header>
 
-    <!-- Technik-Prinzipien: offene Reihe, mit Haarlinien getrennt (keine Kacheln) -->
-    <div class="prinzipien reveal" data-reveal-stagger>
-      {prinzipien.map((p) => (
-        <div class="prinzip" data-reveal="up">
-          <span class="prinzip__ic"><Icon name={p.icon} class="w-6 h-6" gradient /></span>
-          <div>
-            <h3 class="prinzip__titel">{p.titel}</h3>
-            <p class="prinzip__text">{p.text}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    <!-- Ablauf: durchgehende, nummerierte Prozesslinie mit Step-Animation (1 → 4) -->
+    <!-- Ablauf: nummerierte Prozesslinie mit Premium-Icons, Step-Animation 1 → 4 -->
     <ol class="steps" data-steps>
       {ablaufSchritte.map((s, i) => (
         <li class="step" data-step>
           <div class="step__head">
+            <span class="step__icon">
+              <Image src={meta[i].icon} alt={meta[i].alt} widths={[96, 160, 220]} sizes="88px" format="avif" quality={82} class="step__icon-img" />
+            </span>
             <span class="step__num num-gold">{s.nummer}</span>
-            <span class="step__ic"><Icon name={meta[i].icon} class="w-4 h-4" gradient /></span>
           </div>
           <h3 class="step__title">{s.titel}</h3>
           <p class="step__text">{s.text}</p>
@@ -59,32 +47,20 @@ const prinzipien = [
         </li>
       ))}
     </ol>
+
+    <div class="section-cta section-cta--center reveal">
+      <a href="#kontakt" class="btn btn-primary" data-track="cta_ablauf">Ersten Schritt gehen – Beratung anfragen</a>
+    </div>
   </div>
+
+  <noscript><style>.ablauf .step{opacity:1 !important;transform:none !important;} .ablauf .step::before{transform:scaleX(1) !important;}</style></noscript>
 </section>
 
 <style>
   .ablauf { background: var(--color-cream); }
 
-  /* Technik-Prinzipien – offen, mit feinen Trennlinien */
-  .prinzipien { display: grid; grid-template-columns: 1fr; gap: 1.6rem; margin-bottom: clamp(2.75rem, 6vw, 4.5rem); }
-  @media (min-width: 760px) { .prinzipien { grid-template-columns: repeat(3, 1fr); gap: 0; } }
-  .prinzip { display: flex; align-items: flex-start; gap: 0.9rem; }
-  @media (min-width: 760px) {
-    .prinzip { padding-inline: clamp(1.25rem, 2.5vw, 2rem); }
-    .prinzip + .prinzip { border-left: 1px solid var(--color-sand-deep); }
-    .prinzip:first-child { padding-left: 0; }
-  }
-  .prinzip__ic {
-    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    width: 2.9rem; height: 2.9rem; border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-gold-soft) 26%, #fff);
-    border: 1px solid var(--color-sand-deep);
-  }
-  .prinzip__titel { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; color: var(--color-ink); }
-  .prinzip__text { margin-top: 0.3rem; color: var(--color-ink-soft); font-size: 0.94rem; }
-
-  /* Ablauf – durchgehende Prozesslinie mit großen Gold-Ziffern, ohne Karten */
-  .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2.25rem; }
+  /* Prozesslinie mit großen Gold-Ziffern und Premium-Icons, ohne Karten */
+  .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
   @media (min-width: 860px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 2.5rem; } }
 
   /* Step-Animation: die Schritte laufen nacheinander (1 → 4) ein –
@@ -106,15 +82,12 @@ const prinzipien = [
     .step { opacity: 1; transform: none; transition: none; }
     .step::before { transform: scaleX(1); transition: none; }
   }
+
   .step__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .step__icon { flex: 0 0 auto; display: inline-flex; }
+  .step__icon-img { width: 3.4rem; height: 3.4rem; object-fit: contain; }
   .step__num { font-family: var(--font-display); font-weight: 700; font-size: 2.7rem; line-height: 1; }
-  .step__ic {
-    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    width: 2.3rem; height: 2.3rem; border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--color-gold-soft) 26%, #fff);
-    border: 1px solid var(--color-sand-deep);
-  }
-  .step__title { font-size: 1.35rem; margin-top: 0.85rem; }
+  .step__title { font-size: 1.35rem; margin-top: 0.9rem; }
   .step__text { margin-top: 0.45rem; color: var(--color-ink-soft); font-size: 0.97rem; }
   .step__tag {
     display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.8rem;

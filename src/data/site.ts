@@ -54,6 +54,11 @@ export const site = {
     instagram: 'https://instagram.com/beliumbeautybymaria/',
   },
 
+  // Link zum Google-Unternehmensprofil / zu den Google-Bewertungen (für den Trust-Effekt im Hero).
+  // TODO: Sobald das Profil final steht, hier die direkte Profil-URL eintragen. Bewusst OHNE
+  // erfundene Sternebewertung/Anzahl – erst mit echten, freigegebenen Zahlen ergänzen.
+  googleReviewUrl: 'https://www.google.com/maps/search/?api=1&query=Belium+Beauty+Gelsenkirchen+Buer',
+
   // Preisspanne für JSON-LD priceRange (grobe Einordnung, keine konkreten Preise)
   priceRange: '€€',
 

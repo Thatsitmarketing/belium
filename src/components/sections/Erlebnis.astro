@@ -24,26 +24,34 @@ const karten = [
     <h2 class="erlebnis__title">Fühl dich erneuert –<br />vom ersten Termin an</h2>
   </div>
 
-  <ul class="erlebnis__strip" data-reveal="up">
+  <ul class="erlebnis__strip" data-reveal-stagger>
     {karten.map((k) => (
-      <li class="ecard">
+      <li class="ecard" data-reveal="up">
         <div class="ecard__media">
           <Image
             src={k.src}
             alt={k.alt}
             widths={[360, 560, 760]}
-            sizes="(min-width: 1000px) 26vw, 78vw"
+            sizes="(min-width: 1000px) 26vw, 92vw"
             loading="lazy"
             format="avif"
             quality={64}
             class="ecard__img"
           />
         </div>
-        <h3 class="ecard__label">{k.label}</h3>
-        <p class="ecard__text">{k.text}</p>
+        <div class="ecard__body">
+          <h3 class="ecard__label">{k.label}</h3>
+          <p class="ecard__text">{k.text}</p>
+        </div>
       </li>
     ))}
   </ul>
+
+  <div class="container-page erlebnis__cta">
+    <div class="section-cta reveal">
+      <a href="#kontakt" class="btn btn-primary" data-track="cta_erlebnis">Kostenlose Beratung anfragen</a>
+    </div>
+  </div>
 </section>
 
 <style>
@@ -57,34 +65,31 @@ const karten = [
     letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-gold-deep);
   }
 
-  /* Mobil: horizontale Reihe mit „hervorlugendem" nächsten Bild */
+  /* Mobil & Tablet: Karten untereinander (mit Scroll-Reveal über [data-reveal]) */
   .erlebnis__strip {
-    list-style: none; display: flex; gap: clamp(0.9rem, 2vw, 1.5rem);
-    overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
-    padding-inline: max(1.25rem, 8%); padding-block: 0.25rem 0.5rem;
-    -ms-overflow-style: none; scrollbar-width: none;
+    list-style: none; display: grid; grid-template-columns: 1fr;
+    gap: clamp(1.75rem, 4vw, 2.5rem);
+    padding-inline: max(1.25rem, 15%); padding-block: 0.25rem;
   }
-  .erlebnis__strip::-webkit-scrollbar { display: none; }
-
-  .ecard { flex: 0 0 78%; scroll-snap-align: start; }
-  @media (min-width: 640px) { .ecard { flex-basis: 44%; } }
+  @media (max-width: 640px) { .erlebnis__strip { padding-inline: 1.5rem; } }
 
   /* Desktop: zentrierte Galerie – alle Bilder auf einen Blick, mittig gesetzt */
   @media (min-width: 1000px) {
     .erlebnis__strip {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: clamp(1rem, 2vw, 1.6rem); overflow: visible;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(1rem, 2vw, 1.6rem);
       justify-content: center; align-items: start;
-      padding-inline: max(1.25rem, 15%);
     }
-    .ecard { flex: initial; }
   }
 
+  .erlebnis__cta { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+
   .ecard__media {
-    border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 3 / 4;
+    border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 3 / 2;
     box-shadow: var(--shadow-card); border: 1px solid var(--color-sand);
     background: var(--color-sand);
   }
+  @media (min-width: 1000px) { .ecard__media { aspect-ratio: 3 / 4; } }
   .ecard__img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
   .ecard:hover .ecard__img { transform: scale(1.04); }
 

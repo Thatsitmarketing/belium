@@ -56,7 +56,6 @@ const year = 2026;
       <ul class="footer__links">
         <li><a href="/impressum">Impressum</a></li>
         <li><a href="/datenschutz">Datenschutz</a></li>
-        <li><button type="button" class="footer__consent" onclick="window.openConsent && window.openConsent()">Cookie-Einstellungen</button></li>
       </ul>
     </nav>
   </div>
@@ -73,7 +72,7 @@ const year = 2026;
     background: var(--color-ink);
     color: color-mix(in srgb, var(--color-cream) 80%, transparent);
     padding-top: clamp(3.5rem, 7vw, 5.5rem);
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
     /* Dezente Rundung am oberen Rand (Overlap-Effekt bleibt, aber zurückhaltender) */
     border-radius: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem) 0 0;
     border-top: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
@@ -108,9 +107,13 @@ const year = 2026;
 
   .footer__rule { margin-block: clamp(2rem, 4vw, 3rem); opacity: 0.7; }
 
-  .footer__grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-  @media (min-width: 640px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
+  /* Mobil: Kontakt volle Breite, darunter „Seite" und „Rechtliches" nebeneinander. */
+  .footer__grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1.5rem; row-gap: 2rem; }
+  .footer__col--wide { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .footer__grid { grid-template-columns: 1.6fr 1fr 1fr; column-gap: 2rem; }
+    .footer__col--wide { grid-column: auto; }
+  }
 
   .footer__h {
     font-family: var(--font-sans);

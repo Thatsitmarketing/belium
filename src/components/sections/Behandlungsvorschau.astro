@@ -30,17 +30,19 @@ const spots: Spot[] = [
     <div class="bv__stage" data-reveal="up">
       <div class="hs" data-bv>
         <div class="hs__media">
-          <Image
-            src={person}
-            alt="Frau mit glatter, hautschonend behandelter Haut in einem hellen Studio – Vorschau der behandelbaren Zonen"
-            widths={[640, 960, 1280, 1600]}
-            sizes="(min-width: 1000px) 64vw, 92vw"
-            loading="lazy"
-            format="avif"
-            quality={64}
-            class="hs__img"
-          />
-          <div class="hs__scrim" aria-hidden="true"></div>
+          <div class="hs__frame">
+            <Image
+              src={person}
+              alt="Frau mit glatter, hautschonend behandelter Haut in einem hellen Studio – Vorschau der behandelbaren Zonen"
+              widths={[640, 960, 1280, 1600]}
+              sizes="(min-width: 1000px) 64vw, 92vw"
+              loading="lazy"
+              format="avif"
+              quality={64}
+              class="hs__img"
+            />
+            <div class="hs__scrim" aria-hidden="true"></div>
+          </div>
 
           {spots.map((s, i) => (
             <button
@@ -82,9 +84,12 @@ const spots: Spot[] = [
   .bv__lead { margin-top: 0.9rem; color: var(--color-onink-soft); font-size: 1.05rem; max-width: 46ch; }
 
   .hs { position: relative; }
-  .hs__media {
-    position: relative; border-radius: var(--radius-lg); overflow: hidden;
-    aspect-ratio: 3 / 2; box-shadow: var(--shadow-float);
+  /* Medienbox clippt NICHT mehr – so werden die (aktiven) Punkte samt Ring/Glow
+     nicht abgeschnitten. Das Bild selbst wird im inneren Rahmen gerundet/geclippt. */
+  .hs__media { position: relative; aspect-ratio: 3 / 2; }
+  .hs__frame {
+    position: absolute; inset: 0; overflow: hidden;
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-float);
     border: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
   }
   .hs__img { width: 100%; height: 100%; object-fit: cover; }
@@ -95,25 +100,27 @@ const spots: Spot[] = [
 
   .hs__dot {
     position: absolute; z-index: 3; translate: -50% -50%;
-    width: 2.2rem; height: 2.2rem; border-radius: 50%; cursor: pointer;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center;
-    background: color-mix(in srgb, var(--color-ink) 55%, transparent);
-    backdrop-filter: blur(4px);
-    border: 1.5px solid color-mix(in srgb, var(--color-gold) 60%, transparent);
-    color: var(--color-gold-light); font-size: 0.72rem; font-weight: 800;
-    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    background: color-mix(in srgb, var(--color-ink) 68%, transparent);
+    backdrop-filter: blur(5px);
+    border: 1.5px solid color-mix(in srgb, var(--color-gold) 70%, transparent);
+    color: var(--color-gold-light); font-size: 0.8rem; font-weight: 800;
+    box-shadow: 0 6px 18px -6px rgba(10, 7, 4, 0.55);
+    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
+  .hs__dot-n { position: relative; z-index: 1; line-height: 1; }
   .hs__dot:hover, .hs__dot.is-active {
-    background: var(--gradient-gold); color: #2a1c07; border-color: transparent;
-    transform: translate(-50%, -50%) scale(1.12);
+    background: var(--gradient-gold); color: #2a1c07; border-color: #fff;
+    transform: translate(-50%, -50%) scale(1.16);
+    box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--color-gold) 70%, transparent);
   }
   .hs__dot-ring {
-    position: absolute; inset: -6px; border-radius: 50%;
-    border: 1.5px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
-    animation: bv-pulse 2.4s ease-out infinite;
+    position: absolute; inset: -7px; border-radius: 50%; opacity: 0;
+    border: 2px solid color-mix(in srgb, var(--color-gold) 55%, transparent);
   }
-  .hs__dot.is-active .hs__dot-ring { border-color: color-mix(in srgb, var(--color-gold) 70%, transparent); }
-  @keyframes bv-pulse { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(1.7); opacity: 0; } }
+  .hs__dot.is-active .hs__dot-ring { opacity: 1; animation: bv-pulse 2.4s ease-out infinite; }
+  @keyframes bv-pulse { 0% { transform: scale(0.85); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .hs__dot-ring { animation: none; } }
 
   .hs__card {

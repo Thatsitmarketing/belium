@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
+import { site } from '@/data/site';
 import heroImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
 
 /**
@@ -52,6 +53,22 @@ const checks = [
           <Icon name="euro" class="w-5 h-5" /> Preise ansehen
         </a>
       </div>
+
+      <a class="hero__trust" href={site.googleReviewUrl} target="_blank" rel="noopener" data-track="google_reviews" data-hero-el>
+        <span class="hero__trust-g" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="20" height="20">
+            <path fill="#4285F4" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/>
+            <path fill="#34A853" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+            <path fill="#FBBC05" d="M12.7 28.1c-.4-1.3-.7-2.7-.7-4.1s.3-2.8.7-4.1l-6.5-5C4.8 17.6 4 20.7 4 24s.8 6.4 2.2 9.1l6.5-5z"/>
+            <path fill="#EA4335" d="M24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.2 4 9.5 8.4 6.2 14.9l6.5 5C14.4 15.3 18.8 12 24 12z"/>
+          </svg>
+        </span>
+        <span class="hero__trust-stars" role="img" aria-label="Top bewertet auf Google">
+          {Array.from({ length: 5 }).map(() => <Icon name="star" class="w-4 h-4" />)}
+        </span>
+        <span class="hero__trust-label">Bewertungen auf Google</span>
+        <Icon name="arrow-up-right" class="w-3.5 h-3.5 hero__trust-go" />
+      </a>
     </div>
 
     <!-- Visual -->
@@ -162,6 +179,20 @@ const checks = [
   }
   .hero__secondary :global(svg) { color: var(--color-gold-deep); }
   .hero__secondary:hover { color: var(--color-gold-deep); border-color: var(--color-gold); }
+
+  /* Google-Bewertungen – Trust-Element, verlinkt aufs Google-Unternehmensprofil */
+  .hero__trust {
+    display: inline-flex; align-items: center; gap: 0.55rem; margin-top: 1.5rem;
+    width: max-content; max-width: 100%; text-decoration: none; color: var(--color-espresso);
+    padding: 0.5rem 0.9rem; border: 1px solid var(--color-sand-deep); border-radius: var(--radius-sm);
+    background: color-mix(in srgb, #fff 72%, transparent); backdrop-filter: blur(4px);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hero__trust:hover { border-color: var(--color-gold); transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+  .hero__trust-g { flex: 0 0 auto; display: inline-flex; }
+  .hero__trust-stars { display: inline-flex; gap: 0.08rem; color: var(--color-gold); }
+  .hero__trust-label { font-size: 0.86rem; font-weight: 700; }
+  .hero__trust :global(.hero__trust-go) { color: var(--color-mocha); flex: 0 0 auto; }
 
   /* ---- Visual ---- */
   .hero__visual { position: relative; }
