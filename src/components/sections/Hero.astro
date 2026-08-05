@@ -196,8 +196,9 @@ const checks = [
 
   /* ---- Visual ---- */
   .hero__visual { position: relative; }
+  /* Bild etwas weiter nach links: mittig in seiner Spalte statt rechtsbündig. */
   .hero__frame { position: relative; max-width: 30rem; margin-inline: auto; }
-  @media (min-width: 1000px) { .hero__frame { margin-right: 0; } }
+  @media (min-width: 1000px) { .hero__frame { margin-inline: 0 auto; } }
 
   .hero__img-wrap {
     position: relative; overflow: hidden;

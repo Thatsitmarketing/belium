@@ -35,12 +35,9 @@ const meta = [
     <ol class="steps" data-steps>
       {ablaufSchritte.map((s, i) => (
         <li class="step" data-step>
-          <div class="step__head">
-            <span class="step__icon">
-              <Image src={meta[i].icon} alt={meta[i].alt} widths={[96, 160, 220]} sizes="88px" format="avif" quality={82} class="step__icon-img" />
-            </span>
-            <span class="step__num num-gold">{s.nummer}</span>
-          </div>
+          <span class="step__icon">
+            <Image src={meta[i].icon} alt={meta[i].alt} widths={[120, 200, 280]} sizes="120px" format="avif" quality={82} class="step__icon-img" />
+          </span>
           <h3 class="step__title">{s.titel}</h3>
           <p class="step__text">{s.text}</p>
           <p class="step__tag"><Icon name="clock" class="w-3.5 h-3.5" /> {meta[i].tag}</p>
@@ -59,9 +56,9 @@ const meta = [
 <style>
   .ablauf { background: var(--color-cream); }
 
-  /* Prozesslinie mit großen Gold-Ziffern und Premium-Icons, ohne Karten */
-  .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
-  @media (min-width: 860px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 2.5rem; } }
+  /* Prozesslinie – große Premium-Icons, ohne Ziffern, mit mehr Abstand */
+  .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: clamp(2.75rem, 6vw, 4.5rem); }
+  @media (min-width: 860px) { .steps { grid-template-columns: repeat(4, 1fr); gap: clamp(2.5rem, 4vw, 4rem); } }
 
   /* Step-Animation: die Schritte laufen nacheinander (1 → 4) ein –
      Inhalt blendet auf & steigt, die Gold-Linie „zeichnet" sich von links. */
@@ -83,11 +80,16 @@ const meta = [
     .step::before { transform: scaleX(1); transition: none; }
   }
 
-  .step__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-  .step__icon { flex: 0 0 auto; display: inline-flex; }
-  .step__icon-img { width: 3.4rem; height: 3.4rem; object-fit: contain; }
-  .step__num { font-family: var(--font-display); font-weight: 700; font-size: 2.7rem; line-height: 1; }
-  .step__title { font-size: 1.35rem; margin-top: 0.9rem; }
+  .step__icon { display: inline-flex; }
+  .step__icon-img {
+    width: 5.4rem; height: 5.4rem; object-fit: contain;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1) 0.08s, opacity 0.5s ease 0.05s;
+  }
+  /* Icon „pops" beim Einlaufen zusätzlich sanft hoch */
+  .step .step__icon-img { transform: translateY(10px) scale(0.94); opacity: 0; }
+  .step.is-in .step__icon-img { transform: none; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .step .step__icon-img { transform: none; opacity: 1; } }
+  .step__title { font-size: 1.35rem; margin-top: 1.1rem; }
   .step__text { margin-top: 0.45rem; color: var(--color-ink-soft); font-size: 0.97rem; }
   .step__tag {
     display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.8rem;
@@ -97,24 +99,29 @@ const meta = [
 </style>
 
 <script>
-  // Step-Animation: sobald die Prozesslinie sichtbar wird, laufen die vier
-  // Schritte gestaffelt nacheinander ein (1 → 4). Respektiert reduced motion.
+  // Step-Animation: die vier Schritte laufen beim Eintritt in den Viewport gestaffelt
+  // ein (1 → 4) und animieren beim Verlassen wieder aus – so „lebt" der Abschnitt bei
+  // jedem Vorbeiscrollen neu. Rein über IntersectionObserver + CSS-Transitions, damit
+  // das Scrollen selbst nie blockiert/verzögert wird. Respektiert reduced motion.
   const list = document.querySelector<HTMLElement>('[data-steps]');
   if (list) {
     const steps = Array.from(list.querySelectorAll<HTMLElement>('[data-step]'));
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const revealAll = () => steps.forEach((s) => s.classList.add('is-in'));
     if (reduce || !('IntersectionObserver' in window)) {
-      revealAll();
+      steps.forEach((s) => s.classList.add('is-in'));
     } else {
+      let timers: number[] = [];
+      const clear = () => { timers.forEach((t) => clearTimeout(t)); timers = []; };
       const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {
+          clear();
           if (e.isIntersecting) {
-            steps.forEach((s, i) => setTimeout(() => s.classList.add('is-in'), i * 180));
-            io.disconnect();
+            steps.forEach((s, i) => { timers.push(window.setTimeout(() => s.classList.add('is-in'), i * 170)); });
+          } else {
+            steps.forEach((s) => s.classList.remove('is-in'));
           }
         });
-      }, { threshold: 0.3 });
+      }, { threshold: 0.2 });
       io.observe(list);
     }
   }

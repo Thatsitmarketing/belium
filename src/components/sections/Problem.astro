@@ -65,10 +65,11 @@ const ergebnis = [
 
   .problem__compare {
     display: grid; grid-template-columns: 1fr; gap: 1.1rem; align-items: center;
-    max-width: 62rem; margin-inline: auto;
+    max-width: 66rem; margin-inline: auto;
   }
   @media (min-width: 820px) {
-    .problem__compare { grid-template-columns: 1fr auto 1fr; gap: 1.5rem; }
+    /* Mehr Luft um den Pfeil, damit er erkennbar frei zwischen den Karten steht. */
+    .problem__compare { grid-template-columns: 1fr auto 1fr; gap: clamp(2rem, 5vw, 4rem); }
   }
 
   .pcol {
