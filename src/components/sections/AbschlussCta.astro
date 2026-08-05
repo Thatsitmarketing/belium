@@ -2,10 +2,12 @@
 /** Abschnitt 14: Abschluss-CTA. Letzter klarer Handlungsaufruf. */
 import { whatsappLink, telLink, site } from '@/data/site';
 import Icon from '@/components/Icon.astro';
+import Atmosphere from '@/components/Atmosphere.astro';
 ---
 <section id="abschluss" class="section-pad abschluss">
   <div class="container-page">
     <div class="abschluss__box grain reveal">
+      <Atmosphere tone="dark" opacity={0.42} />
       <div class="abschluss__glow" aria-hidden="true"></div>
       <p class="t-eyebrow t-eyebrow--center t-eyebrow--on-dark abschluss__eyebrow">Bereit für glatte Haut?</p>
       <h2 class="abschluss__title">Starte mit einer <span class="text-gold">kostenlosen Beratung.</span></h2>

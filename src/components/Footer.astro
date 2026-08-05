@@ -2,9 +2,11 @@
 import { site, telLink, whatsappLink } from '@/data/site';
 import Icon from '@/components/Icon.astro';
 import Wordmark from '@/components/Wordmark.astro';
+import Atmosphere from '@/components/Atmosphere.astro';
 const year = 2026;
 ---
 <footer class="footer">
+  <Atmosphere tone="dark" opacity={0.32} class="footer__atmo" />
   <div class="container-page footer__grid">
     <div class="footer__brand">
       <Wordmark size="md" class="footer__wm" />
@@ -61,11 +63,16 @@ const year = 2026;
 
 <style>
   .footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     background: var(--color-ink);
     color: color-mix(in srgb, var(--color-cream) 82%, transparent);
     padding-top: clamp(3rem, 6vw, 4.5rem);
     padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
   }
+  .footer :global(.footer__atmo) { z-index: -1; }
+  .footer > .container-page { position: relative; z-index: 1; }
   @media (min-width: 1024px) { .footer { padding-bottom: 2.5rem; } }
   .footer__grid {
     display: grid;

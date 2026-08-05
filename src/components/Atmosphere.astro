@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import darkTexture from '@/assets/images/atmosphere-gold-dunkel-belium.png';
+import lightTexture from '@/assets/images/atmosphere-gold-hell-belium.png';
+
+/**
+ * Dezente Gold-Atmosphaeren-Ebene als Hintergrund.
+ * Rein dekorativ (aria-hidden). Ersetzt KEINE echten Studio-/Produktfotos –
+ * dient nur als stimmungsvolle Textur hinter Farbflaechen.
+ *
+ * tone="dark"  -> tiefes Anthrazit mit Goldstaub (fuer dunkle Flaechen)
+ * tone="light" -> zartes Bokeh auf Creme (fuer helle Flaechen)
+ */
+interface Props {
+  tone?: 'dark' | 'light';
+  /** Deckkraft der Textur (0–1). Bewusst niedrig fuer Lesbarkeit. */
+  opacity?: number;
+  class?: string;
+}
+const { tone = 'dark', opacity = tone === 'dark' ? 0.5 : 0.55, class: className = '' } = Astro.props;
+const src = tone === 'dark' ? darkTexture : lightTexture;
+---
+<div class:list={['atmosphere', `atmosphere--${tone}`, className]} aria-hidden="true" style={`--atmo-opacity:${opacity}`}>
+  <Image
+    src={src}
+    alt=""
+    widths={[768, 1200, 1800]}
+    sizes="100vw"
+    loading="lazy"
+    format="avif"
+    quality={58}
+  />
+</div>
+
+<style>
+  .atmosphere > :global(img) {
+    opacity: var(--atmo-opacity);
+  }
+  /* Weiche Kanten, damit die Textur in die Flaeche zerfliesst statt hart abzuschneiden. */
+  .atmosphere--dark {
+    -webkit-mask-image: radial-gradient(120% 120% at 50% 40%, #000 55%, transparent 100%);
+    mask-image: radial-gradient(120% 120% at 50% 40%, #000 55%, transparent 100%);
+  }
+  /* Helle Variante: Normal-Blend auf gleicher Creme-Basis -> nur zarte Goldpartikel,
+     zusaetzlich weich zu den Raendern ausgeblendet, damit Text lesbar bleibt. */
+  .atmosphere--light {
+    -webkit-mask-image: radial-gradient(100% 100% at 50% 50%, #000 40%, transparent 92%);
+    mask-image: radial-gradient(100% 100% at 50% 50%, #000 40%, transparent 92%);
+  }
+</style>
