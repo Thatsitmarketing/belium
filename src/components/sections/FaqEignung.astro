@@ -24,46 +24,50 @@ const eingeschraenkt = [
 ---
 <section id="faq" class="section-pad faqe">
   <div class="container-page">
-    <header class="section-head section-head--center reveal">
+    <header class="section-head reveal">
       <Ornament />
-      <p class="t-eyebrow t-eyebrow--center">Eignung &amp; FAQ</p>
+      <p class="t-eyebrow">Eignung &amp; FAQ</p>
       <h2 class="t-h2">Ist die Laserbehandlung <span class="text-gold">für mich geeignet?</span></h2>
       <p class="t-lead section-head__lead">
-        Wir sind ehrlich: Nicht für jeden ist die Behandlung sinnvoll. Hier siehst du auf einen Blick,
-        wann sie gut funktioniert – und wann wir abraten oder warten.
+        Wir sind ehrlich: Nicht für jeden ist die Behandlung sinnvoll. Links siehst du auf einen Blick,
+        wann sie gut funktioniert – rechts beantworten wir die häufigsten Fragen.
       </p>
     </header>
 
-    <div class="eignung reveal">
-      <article class="eignung__col eignung__col--ja" data-reveal="right">
-        <h3 class="eignung__h"><span class="eignung__badge eignung__badge--ja"><Icon name="check" class="w-4 h-4" /></span> Häufig gut geeignet</h3>
-        <ul class="eignung__list">
-          {geeignet.map((g) => (
-            <li><Icon name="check-circle" class="w-5 h-5 eignung__ic eignung__ic--ja" />{g}</li>
-          ))}
-        </ul>
-      </article>
+    <div class="fe__grid">
+      <!-- Links: Eignung -->
+      <div class="fe__eignung reveal" data-reveal="right">
+        <article class="eignung__col eignung__col--ja">
+          <h3 class="eignung__h"><span class="eignung__badge eignung__badge--ja"><Icon name="check" class="w-4 h-4" /></span> Häufig gut geeignet</h3>
+          <ul class="eignung__list">
+            {geeignet.map((g) => (
+              <li><Icon name="check-circle" class="w-5 h-5 eignung__ic eignung__ic--ja" />{g}</li>
+            ))}
+          </ul>
+        </article>
 
-      <article class="eignung__col eignung__col--nein" data-reveal="left">
-        <h3 class="eignung__h"><span class="eignung__badge eignung__badge--nein"><Icon name="info" class="w-4 h-4" /></span> Nicht oder nur eingeschränkt</h3>
-        <ul class="eignung__list">
-          {eingeschraenkt.map((e) => (
-            <li><Icon name="info" class="w-5 h-5 eignung__ic eignung__ic--nein" />{e}</li>
-          ))}
-        </ul>
-      </article>
-    </div>
+        <article class="eignung__col eignung__col--nein">
+          <h3 class="eignung__h"><span class="eignung__badge eignung__badge--nein"><Icon name="info" class="w-4 h-4" /></span> Nicht oder nur eingeschränkt</h3>
+          <ul class="eignung__list">
+            {eingeschraenkt.map((e) => (
+              <li><Icon name="info" class="w-5 h-5 eignung__ic eignung__ic--nein" />{e}</li>
+            ))}
+          </ul>
+        </article>
+      </div>
 
-    <div class="faqe__list reveal">
-      {faqItems.map((item, i) => (
-        <details class="faq__item" name="faq" open={i === 0}>
-          <summary class="faq__summary">
-            <h3 class="faq__frage">{item.frage}</h3>
-            <span class="faq__icon"><Icon name="chevron" class="w-5 h-5" /></span>
-          </summary>
-          <div class="faq__antwort"><p>{item.antwort}</p></div>
-        </details>
-      ))}
+      <!-- Rechts: FAQ -->
+      <div class="fe__faq reveal" data-reveal="left">
+        {faqItems.map((item, i) => (
+          <details class="faq__item" name="faq" open={i === 0}>
+            <summary class="faq__summary">
+              <h3 class="faq__frage">{item.frage}</h3>
+              <span class="faq__icon"><Icon name="chevron" class="w-5 h-5" /></span>
+            </summary>
+            <div class="faq__antwort"><p>{item.antwort}</p></div>
+          </details>
+        ))}
+      </div>
     </div>
   </div>
 </section>
@@ -71,9 +75,12 @@ const eingeschraenkt = [
 <style>
   .faqe { background: var(--color-cream); }
 
-  /* Eignungscheck */
-  .eignung { display: grid; grid-template-columns: 1fr; gap: 1.25rem; max-width: 62rem; margin: 0 auto clamp(2.5rem, 5vw, 3.5rem); }
-  @media (min-width: 760px) { .eignung { grid-template-columns: 1fr 1fr; } }
+  /* Zweispaltiger, linksbündiger Aufbau: links Eignung, rechts FAQ. Mobil untereinander. */
+  .fe__grid { display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: start; }
+  @media (min-width: 900px) { .fe__grid { grid-template-columns: 1fr 1fr; gap: clamp(2rem, 4vw, 3rem); } }
+
+  /* Eignungscheck (links) */
+  .fe__eignung { display: flex; flex-direction: column; gap: 1.25rem; }
   .eignung__col { border-radius: var(--radius-lg); padding: 1.75rem 1.6rem; border: 1px solid var(--color-sand); background: #fff; box-shadow: var(--shadow-soft); }
   .eignung__col--ja { border-color: color-mix(in srgb, var(--color-gold) 34%, var(--color-sand)); }
   .eignung__h { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-sans); font-size: 1rem; font-weight: 800; margin-bottom: 1.1rem; }
@@ -89,8 +96,8 @@ const eingeschraenkt = [
   .eignung__ic--ja { color: var(--color-gold-deep); }
   .eignung__ic--nein { color: var(--color-rose); }
 
-  /* FAQ */
-  .faqe__list { max-width: 52rem; margin-inline: auto; display: flex; flex-direction: column; gap: 0.6rem; }
+  /* FAQ (rechts) */
+  .fe__faq { display: flex; flex-direction: column; gap: 0.6rem; }
   .faq__item { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; }
   .faq__item[open] { border-color: var(--color-gold-soft); box-shadow: var(--shadow-soft); }
   .faq__summary {

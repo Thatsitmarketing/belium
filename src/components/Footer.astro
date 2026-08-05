@@ -69,15 +69,18 @@ const year = 2026;
 
 <style>
   .footer {
-    position: relative; isolation: isolate; overflow: hidden;
+    position: relative; z-index: 1; isolation: isolate; overflow: hidden;
     background: var(--color-ink);
     color: color-mix(in srgb, var(--color-cream) 80%, transparent);
     padding-top: clamp(3.5rem, 7vw, 5.5rem);
     padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
     /* Weiche, editoriale Rundung am oberen Rand (Referenz-Impuls) */
-    border-radius: clamp(1.75rem, 4vw, 3rem) clamp(1.75rem, 4vw, 3rem) 0 0;
+    border-radius: clamp(2rem, 4.5vw, 3.5rem) clamp(2rem, 4.5vw, 3.5rem) 0 0;
     border-top: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
-    margin-top: -1px;
+    /* Der Footer schiebt sich als abgerundete Fläche über den Abschnitt darüber –
+       dessen Hintergrund bleibt in den Rundungen sichtbar und wirkt „dahinter liegend". */
+    margin-top: calc(-1 * clamp(2rem, 5vw, 4rem));
+    box-shadow: 0 -30px 60px -34px rgba(8, 5, 3, 0.6);
   }
   .footer :global(.footer__atmo) { z-index: -1; }
   .footer > .container-page { position: relative; z-index: 1; }

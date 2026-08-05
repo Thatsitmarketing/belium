@@ -1,6 +1,7 @@
 ---
 /**
- * Bewertungen – horizontale Kartenreihe, die eine dunkle Bande ueberlappt (Ref-Stil).
+ * Bewertungen – durchlaufender (auto-scrollender) Kundenstimmen-Slider auf heller Fläche.
+ * Kein dunkler Balken mehr im Hintergrund; die Karten laufen als ruhige Endlos-Schleife.
  * Inhalte aus src/data/reviews.ts (PLATZHALTER, siehe dortige Hinweise) – vor Livegang
  * durch echte, freigegebene Bewertungen oder das Google/ProvenExpert-Widget ersetzen.
  */
@@ -12,33 +13,36 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
   <div class="container-page rev__head" data-reveal="up">
     <Ornament class="rev__ornament" />
     <p class="t-eyebrow t-eyebrow--center">Kundenstimmen</p>
-    <h2 class="t-h2">Das sagen <span class="text-gold">unsere Kundinnen &amp; Kunden</span></h2>
+    <h2 class="t-h2 rev__title">Das sagen <span class="text-gold">unsere Kundinnen &amp; Kunden</span></h2>
   </div>
 
-  <div class="rev__stage">
-    <div class="rev__band" aria-hidden="true"></div>
-    <ul class="rev__track" data-rev-track>
-      {reviews.map((r) => (
-        <li class="rev__item">
-          <article class="rcard">
-            <span class="rcard__quote" aria-hidden="true"><Icon name="quote" class="w-6 h-6" /></span>
-            <div class="rcard__stars" role="img" aria-label={`${r.stars} von 5 Sternen`}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Icon name="star" class={`w-4 h-4 rcard__star${i < r.stars ? ' is-on' : ''}`} />
-              ))}
-            </div>
-            <p class="rcard__text">{r.text}</p>
-            <footer class="rcard__foot">
-              <span class="rcard__avatar" aria-hidden="true">{r.name.charAt(0)}</span>
-              <span class="rcard__meta">
-                <span class="rcard__name">{r.name}</span>
-                <span class="rcard__zone">{r.zone}</span>
-              </span>
-            </footer>
-          </article>
-        </li>
+  <div class="rev__viewport" data-rev-viewport>
+    <div class="rev__track" data-rev-track>
+      {[0, 1].map((copy) => (
+        <ul class="rev__group" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {reviews.map((r) => (
+            <li class="rev__item">
+              <article class="rcard">
+                <span class="rcard__quote" aria-hidden="true"><Icon name="quote" class="w-6 h-6" /></span>
+                <div class="rcard__stars" role="img" aria-label={`${r.stars} von 5 Sternen`}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Icon name="star" class={`w-4 h-4 rcard__star${i < r.stars ? ' is-on' : ''}`} />
+                  ))}
+                </div>
+                <p class="rcard__text">{r.text}</p>
+                <footer class="rcard__foot">
+                  <span class="rcard__avatar" aria-hidden="true">{r.name.charAt(0)}</span>
+                  <span class="rcard__meta">
+                    <span class="rcard__name">{r.name}</span>
+                    <span class="rcard__zone">{r.zone}</span>
+                  </span>
+                </footer>
+              </article>
+            </li>
+          ))}
+        </ul>
       ))}
-    </ul>
+    </div>
   </div>
 
   <div class="container-page rev__foot" data-reveal="up">
@@ -56,32 +60,39 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
 
 <style>
   .rev { background: var(--color-cream-deep); padding-block: clamp(3.75rem, 8vw, 7rem); overflow: hidden; }
-  .rev__head { text-align: center; max-width: 46rem; margin-inline: auto; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  /* Headline breiter gesetzt, damit sie nicht in viele kurze Zeilen umbricht. */
+  .rev__head { text-align: center; max-width: 58rem; margin-inline: auto; margin-bottom: clamp(2rem, 4vw, 3rem); }
   .rev :global(.rev__ornament) { margin-bottom: 1rem; }
-  .rev__head .t-h2 { margin-top: 0.7rem; }
+  .rev__head .rev__title { margin-top: 0.7rem; text-wrap: pretty; }
 
-  .rev__stage { position: relative; }
-  /* dunkle Bande, die die Kartenunterkante hinterlegt */
-  .rev__band {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 46%;
-    background: var(--gradient-ink);
+  /* Durchlaufender Slider (Endlos-Schleife) */
+  .rev__viewport { position: relative; overflow: hidden; padding-block: 0.5rem 2rem; }
+  /* Weiche Ränder links/rechts, damit die Karten sanft ein- und ausblenden */
+  .rev__viewport {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .rev__track { display: flex; width: max-content; gap: 1.15rem; }
+  .rev__group {
+    list-style: none; display: flex; gap: 1.15rem; flex: 0 0 auto;
+    padding-block: 0.25rem;
+    animation: rev-marquee 46s linear infinite;
+  }
+  .rev__viewport:hover .rev__group,
+  .rev__viewport:focus-within .rev__group { animation-play-state: paused; }
+
+  @keyframes rev-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - 1.15rem)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rev__viewport { overflow-x: auto; scrollbar-width: none; }
+    .rev__viewport::-webkit-scrollbar { display: none; }
+    .rev__group { animation: none; }
+    .rev__group[aria-hidden="true"] { display: none; }
   }
 
-  .rev__track {
-    position: relative; z-index: 1;
-    list-style: none; display: flex; gap: 1.15rem;
-    overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
-    padding-block: 0.5rem 2.4rem;
-    padding-inline: max(1.25rem, 10%);
-    -ms-overflow-style: none; scrollbar-width: none; cursor: grab;
-  }
-  .rev__track::-webkit-scrollbar { display: none; }
-  .rev__track.is-dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
-
-  .rev__item { flex: 0 0 84%; scroll-snap-align: start; }
-  @media (min-width: 620px) { .rev__item { flex-basis: 46%; } }
-  @media (min-width: 1000px) { .rev__item { flex-basis: 31%; } }
-  @media (min-width: 1280px) { .rev__item { flex-basis: 27%; } }
+  .rev__item { flex: 0 0 clamp(17rem, 24vw, 20.5rem); }
 
   .rcard {
     position: relative; height: 100%;
@@ -119,23 +130,3 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
   .rev__note :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; }
   .rev__links { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
 </style>
-
-<script>
-  const track = document.querySelector<HTMLElement>('[data-rev-track]');
-  if (track) {
-    let down = false, startX = 0, startLeft = 0, moved = 0;
-    track.addEventListener('pointerdown', (e) => {
-      down = true; moved = 0; startX = e.clientX; startLeft = track.scrollLeft;
-      track.classList.add('is-dragging');
-    });
-    track.addEventListener('pointermove', (e) => {
-      if (!down) return;
-      const dx = e.clientX - startX; moved = Math.max(moved, Math.abs(dx));
-      track.scrollLeft = startLeft - dx;
-    });
-    const end = () => { down = false; track.classList.remove('is-dragging'); };
-    track.addEventListener('pointerup', end);
-    track.addEventListener('pointerleave', end);
-    track.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
-  }
-</script>

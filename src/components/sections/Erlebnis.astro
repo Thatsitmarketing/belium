@@ -57,18 +57,28 @@ const karten = [
     letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-gold-deep);
   }
 
-  /* Horizontale Reihe mit „hervorlugendem" nächsten Bild */
+  /* Mobil: horizontale Reihe mit „hervorlugendem" nächsten Bild */
   .erlebnis__strip {
     list-style: none; display: flex; gap: clamp(0.9rem, 2vw, 1.5rem);
     overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
-    padding-inline: max(1.25rem, 10%); padding-block: 0.25rem 0.5rem;
+    padding-inline: max(1.25rem, 8%); padding-block: 0.25rem 0.5rem;
     -ms-overflow-style: none; scrollbar-width: none;
   }
   .erlebnis__strip::-webkit-scrollbar { display: none; }
 
   .ecard { flex: 0 0 78%; scroll-snap-align: start; }
   @media (min-width: 640px) { .ecard { flex-basis: 44%; } }
-  @media (min-width: 1000px) { .ecard { flex-basis: 26%; } }
+
+  /* Desktop: zentrierte Galerie – alle Bilder auf einen Blick, mittig gesetzt */
+  @media (min-width: 1000px) {
+    .erlebnis__strip {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(1rem, 2vw, 1.6rem); overflow: visible;
+      justify-content: center; align-items: start;
+      padding-inline: max(1.25rem, 15%);
+    }
+    .ecard { flex: initial; }
+  }
 
   .ecard__media {
     border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 3 / 4;

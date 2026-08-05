@@ -128,9 +128,13 @@ const spots: Spot[] = [
   .hs__card-text { margin-top: 0.55rem; color: var(--color-onink-soft); font-size: 0.98rem; max-width: 52ch; }
 
   @media (min-width: 1000px) {
+    /* Schmaler und flacher: das große Bild passt so ~auf halbe Bildschirmhöhe (50vh). */
+    .bv__stage { max-width: 58rem; margin-inline: auto; }
+    .hs__media { aspect-ratio: auto; height: min(50vh, 32rem); }
+
     .hs__card {
       position: absolute; left: 1.5rem; bottom: 1.5rem; margin-top: 0;
-      max-width: 24rem; backdrop-filter: blur(8px);
+      max-width: 22rem; backdrop-filter: blur(8px);
       background: color-mix(in srgb, var(--color-ink) 82%, transparent);
     }
   }
