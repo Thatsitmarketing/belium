@@ -5,6 +5,7 @@
  * auf jeweils einen klaren Punkt pro Säule.
  */
 import Icon from '@/components/Icon.astro';
+import Ornament from '@/components/Ornament.astro';
 
 const saeulen = [
   {
@@ -42,6 +43,7 @@ const saeulen = [
 <section id="vorteile" class="section-pad vorteile">
   <div class="container-page">
     <header class="section-head section-head--center reveal">
+      <Ornament />
       <p class="t-eyebrow t-eyebrow--center">Warum Belium</p>
       <h2 class="t-h2">Drei Gründe, uns zu <span class="text-gold">vertrauen</span></h2>
       <p class="t-lead section-head__lead">
@@ -67,7 +69,7 @@ const saeulen = [
 </section>
 
 <style>
-  .vorteile { background: var(--color-cream-deep); }
+  .vorteile { background: var(--color-cream); }
 
   .vorteile__grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
   @media (min-width: 700px) { .vorteile__grid { grid-template-columns: 1fr 1fr; } }

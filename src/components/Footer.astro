@@ -74,6 +74,10 @@ const year = 2026;
     color: color-mix(in srgb, var(--color-cream) 80%, transparent);
     padding-top: clamp(3.5rem, 7vw, 5.5rem);
     padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
+    /* Weiche, editoriale Rundung am oberen Rand (Referenz-Impuls) */
+    border-radius: clamp(1.75rem, 4vw, 3rem) clamp(1.75rem, 4vw, 3rem) 0 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+    margin-top: -1px;
   }
   .footer :global(.footer__atmo) { z-index: -1; }
   .footer > .container-page { position: relative; z-index: 1; }

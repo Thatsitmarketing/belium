@@ -1,0 +1,28 @@
+---
+/**
+ * Dezentes dekoratives Ornament (Flourish) für zentrierte Sektionsköpfe.
+ * Inspiriert von der editorialen Serif-Bildsprache der Referenzen – rein dekorativ.
+ */
+interface Props { class?: string }
+const { class: className = '' } = Astro.props;
+---
+<svg class:list={['ornament', className]} viewBox="0 0 120 24" fill="none" aria-hidden="true" role="presentation">
+  <g stroke="url(#ornament-grad)" stroke-width="1.4" stroke-linecap="round">
+    <path d="M60 4v16" opacity="0.9" />
+    <path d="M60 6c-3 3-8 4-14 4M60 6c3 3 8 4 14 4" />
+    <path d="M46 10c-6 0-10 1-14 2M74 10c6 0 10 1 14 2" opacity="0.75" />
+    <path d="M32 12c-5 0-8 .8-11 1.6M88 12c5 0 8 .8 11 1.6" opacity="0.5" />
+  </g>
+  <circle cx="60" cy="12" r="2.4" fill="url(#ornament-grad)" />
+  <defs>
+    <linearGradient id="ornament-grad" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e6b25a" stop-opacity="0.35" />
+      <stop offset="0.5" stop-color="#c9902f" />
+      <stop offset="1" stop-color="#e6b25a" stop-opacity="0.35" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<style>
+  .ornament { display: block; width: 7.5rem; height: auto; margin-inline: auto; }
+</style>

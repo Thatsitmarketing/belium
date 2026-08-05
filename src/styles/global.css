@@ -196,6 +196,7 @@
   /* Standard-Sektionskopf */
   .section-head { max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3.25rem); }
   .section-head--center { margin-inline: auto; text-align: center; }
+  .section-head--center .ornament { margin-bottom: 1rem; }
   .section-head__lead { margin-top: 0.9rem; }
   .section-head .t-h2 { margin-top: 0.7rem; }
 
