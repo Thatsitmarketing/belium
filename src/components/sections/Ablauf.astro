@@ -45,10 +45,10 @@ const prinzipien = [
       ))}
     </div>
 
-    <!-- Ablauf: durchgehende, nummerierte Prozesslinie -->
-    <ol class="steps">
+    <!-- Ablauf: durchgehende, nummerierte Prozesslinie mit Step-Animation (1 → 4) -->
+    <ol class="steps" data-steps>
       {ablaufSchritte.map((s, i) => (
-        <li class="step reveal" data-reveal="up">
+        <li class="step" data-step>
           <div class="step__head">
             <span class="step__num num-gold">{s.nummer}</span>
             <span class="step__ic"><Icon name={meta[i].icon} class="w-4 h-4" gradient /></span>
@@ -87,7 +87,25 @@ const prinzipien = [
   .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2.25rem; }
   @media (min-width: 860px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 2.5rem; } }
 
-  .step { position: relative; padding-top: 1.6rem; border-top: 2px solid color-mix(in srgb, var(--color-gold) 55%, transparent); }
+  /* Step-Animation: die Schritte laufen nacheinander (1 → 4) ein –
+     Inhalt blendet auf & steigt, die Gold-Linie „zeichnet" sich von links. */
+  .step {
+    position: relative; padding-top: 1.6rem;
+    opacity: 0; transform: translateY(26px);
+    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+  }
+  .step::before {
+    content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 100%;
+    background: color-mix(in srgb, var(--color-gold) 55%, transparent);
+    transform-origin: left; transform: scaleX(0);
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  }
+  .step.is-in { opacity: 1; transform: none; }
+  .step.is-in::before { transform: scaleX(1); }
+  @media (prefers-reduced-motion: reduce) {
+    .step { opacity: 1; transform: none; transition: none; }
+    .step::before { transform: scaleX(1); transition: none; }
+  }
   .step__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
   .step__num { font-family: var(--font-display); font-weight: 700; font-size: 2.7rem; line-height: 1; }
   .step__ic {
@@ -104,3 +122,27 @@ const prinzipien = [
   }
   .step__tag :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; }
 </style>
+
+<script>
+  // Step-Animation: sobald die Prozesslinie sichtbar wird, laufen die vier
+  // Schritte gestaffelt nacheinander ein (1 → 4). Respektiert reduced motion.
+  const list = document.querySelector<HTMLElement>('[data-steps]');
+  if (list) {
+    const steps = Array.from(list.querySelectorAll<HTMLElement>('[data-step]'));
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealAll = () => steps.forEach((s) => s.classList.add('is-in'));
+    if (reduce || !('IntersectionObserver' in window)) {
+      revealAll();
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            steps.forEach((s, i) => setTimeout(() => s.classList.add('is-in'), i * 180));
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(list);
+    }
+  }
+</script>

@@ -104,9 +104,11 @@ const studio = [
 
   /* --- Intro: Bild neben Text, ruhig & parallel (keine Überlappung) --- */
   .maria__grid { display: grid; grid-template-columns: 1fr; gap: 2.25rem; align-items: center; margin-bottom: clamp(3rem, 6vw, 4.5rem); }
-  @media (min-width: 900px) { .maria__grid { grid-template-columns: 0.9fr 1.1fr; gap: clamp(2.5rem, 5vw, 4rem); } }
+  @media (min-width: 900px) { .maria__grid { grid-template-columns: 0.62fr 1.38fr; gap: clamp(2.5rem, 5vw, 4rem); } }
 
-  .maria__media { position: relative; }
+  /* Bild bewusst kompakt gehalten, damit es neben dem Text nicht zu groß wirkt. */
+  .maria__media { position: relative; max-width: 22rem; }
+  @media (min-width: 900px) { .maria__media { max-width: 100%; } }
   .maria__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
   .maria__badge {
     position: absolute; left: 0.9rem; bottom: 0.9rem;
@@ -134,7 +136,7 @@ const studio = [
   .mslider__track { display: flex; width: max-content; }
   .mslider__group {
     display: flex; flex: 0 0 auto; gap: 0.9rem; padding: 1rem 0.45rem;
-    animation: mslider-run 55s linear infinite;
+    animation: mslider-run 85s linear infinite;
   }
   .mslider:hover .mslider__group { animation-play-state: paused; }
   @keyframes mslider-run {
