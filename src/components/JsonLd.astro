@@ -1,0 +1,90 @@
+---
+import { site } from '@/data/site';
+import { faqItems } from '@/data/faq';
+
+/**
+ * Strukturierte Daten (JSON-LD).
+ * type "home" => LocalBusiness (HealthAndBeautyBusiness) + FAQPage + BreadcrumbList
+ * type "legal" => nur BreadcrumbList
+ */
+interface Props {
+  type?: 'home' | 'legal';
+  breadcrumb?: { name: string; path: string }[];
+}
+const { type = 'home', breadcrumb } = Astro.props;
+
+const businessId = `${site.url}/#business`;
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthAndBeautyBusiness',
+  '@id': businessId,
+  name: site.name,
+  legalName: site.legalName,
+  description:
+    'Studio für dauerhafte Laser Haarentfernung mit Diodenlaser in Gelsenkirchen Buer. Beratung, Behandlung und Nachsorge durch eine zertifizierte Laserschutzbeauftragte.',
+  url: site.url,
+  telephone: site.contact.phoneIntl,
+  email: site.contact.email,
+  image: new URL('/og-belium-beauty.jpg', site.url).href,
+  priceRange: site.priceRange,
+  currenciesAccepted: 'EUR',
+  founder: { '@type': 'Person', name: site.owner },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.zip,
+    addressLocality: site.address.city,
+    addressRegion: 'Nordrhein-Westfalen',
+    addressCountry: site.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: site.address.geo.lat,
+    longitude: site.address.geo.lng,
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Gelsenkirchen' },
+    { '@type': 'Place', name: 'Gelsenkirchen Buer' },
+    { '@type': 'City', name: 'Gladbeck' },
+    { '@type': 'City', name: 'Herten' },
+    { '@type': 'City', name: 'Bottrop' },
+  ],
+  sameAs: [site.social.facebook, site.social.instagram],
+  // Öffnungszeiten sind Platzhalter (nach Vereinbarung). Sobald echte Zeiten vorliegen,
+  // hier openingHoursSpecification mit dayOfWeek/opens/closes ergänzen.
+  makesOffer: {
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: 'Dauerhafte Laser Haarentfernung',
+      serviceType: 'Diodenlaser Haarentfernung',
+    },
+  },
+};
+
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((f) => ({
+    '@type': 'Question',
+    name: f.frage,
+    acceptedAnswer: { '@type': 'Answer', text: f.antwort },
+  })),
+};
+
+const crumbs = breadcrumb ?? [{ name: 'Start', path: '/' }];
+const breadcrumbList = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: new URL(c.path, site.url).href,
+  })),
+};
+
+const graphs = type === 'home' ? [localBusiness, faqPage, breadcrumbList] : [breadcrumbList];
+---
+{graphs.map((g) => <script type="application/ld+json" set:html={JSON.stringify(g)} />)}

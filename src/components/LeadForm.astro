@@ -1,0 +1,206 @@
+---
+import { site } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+
+/**
+ * Wiederverwendbares Lead-/Kontaktformular.
+ * Versendet an die Cloudflare Pages Function /api/lead.
+ * Spam-Schutz: Honeypot-Feld ("website") + optional Cloudflare Turnstile (kein reCAPTCHA).
+ *
+ * variant "full"  => Kontaktabschnitt, alle Felder sichtbar
+ * variant "angebot" => Schritt "Persönliches Angebot" im Zonenwähler (kompakt)
+ */
+interface Props {
+  id: string;
+  variant?: 'full' | 'angebot';
+  eventName?: string;
+}
+const { id, variant = 'full', eventName = 'formular_absenden' } = Astro.props;
+const hasTurnstile = Boolean(site.turnstileSiteKey);
+---
+<form
+  class="leadform"
+  id={id}
+  data-event={eventName}
+  novalidate
+>
+  <!-- Honeypot: fuer Menschen unsichtbar, Bots fuellen es aus -->
+  <div class="hp" aria-hidden="true">
+    <label>Bitte dieses Feld frei lassen
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <!-- Von JS befuellte Zonenauswahl (aus dem Zonenwaehler) -->
+  <input type="hidden" name="zonen" value="" />
+  <input type="hidden" name="summe" value="" />
+  <input type="hidden" name="quelle" value={variant} />
+
+  {variant === 'angebot' && (
+    <div class="leadform__zonen" data-zonen-summary hidden>
+      <span class="leadform__zonen-label">Deine Auswahl:</span>
+      <span data-zonen-text>—</span>
+    </div>
+  )}
+
+  <div class="leadform__row">
+    <div class="field">
+      <label for={`${id}-name`}>Name<span class="req" aria-hidden="true">*</span></label>
+      <input id={`${id}-name`} name="name" type="text" required autocomplete="name" placeholder="Vor- und Nachname" />
+    </div>
+  </div>
+
+  <div class="leadform__row leadform__row--2">
+    <div class="field">
+      <label for={`${id}-email`}>E-Mail</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" placeholder="name@beispiel.de" />
+    </div>
+    <div class="field">
+      <label for={`${id}-telefon`}>Telefon</label>
+      <input id={`${id}-telefon`} name="telefon" type="tel" autocomplete="tel" placeholder="Für einen Rückruf" />
+    </div>
+  </div>
+  <p class="field__hint">Gib mindestens E-Mail oder Telefon an, damit wir dich erreichen können.</p>
+
+  {variant === 'full' && (
+    <div class="leadform__row leadform__row--2">
+      <div class="field">
+        <label for={`${id}-zone`}>Wunschzone</label>
+        <input id={`${id}-zone`} name="wunschzone" type="text" placeholder="z. B. Achseln, Bikinizone" />
+      </div>
+      <div class="field">
+        <label for={`${id}-termin`}>Wunschtermin</label>
+        <input id={`${id}-termin`} name="wunschtermin" type="text" placeholder="z. B. werktags nachmittags" />
+      </div>
+    </div>
+  )}
+
+  <div class="leadform__row">
+    <div class="field">
+      <label for={`${id}-nachricht`}>Nachricht</label>
+      <textarea id={`${id}-nachricht`} name="nachricht" rows={variant === 'angebot' ? 2 : 4} placeholder="Worum geht es? Fragen? Wunschtermin?"></textarea>
+    </div>
+  </div>
+
+  <div class="field field--check">
+    <label class="checkbox">
+      <input type="checkbox" name="datenschutz" required />
+      <span>Ich habe die <a href="/datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Kontaktaufnahme einverstanden.<span class="req" aria-hidden="true">*</span></span>
+    </label>
+  </div>
+
+  {hasTurnstile && (
+    <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-theme="light"></div>
+  )}
+
+  <button type="submit" class="btn btn-primary leadform__submit">
+    <Icon name="arrow" class="w-4 h-4" />
+    {variant === 'angebot' ? 'Persönliches Angebot erhalten' : 'Anfrage absenden'}
+  </button>
+
+  <p class="leadform__status" role="status" aria-live="polite" data-status hidden></p>
+</form>
+
+<style>
+  .leadform { display: flex; flex-direction: column; gap: 0.9rem; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .leadform__row--2 { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+  @media (min-width: 560px) { .leadform__row--2 { grid-template-columns: 1fr 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 0.35rem; }
+  .field label { font-size: 0.9rem; font-weight: 700; color: var(--color-ink); }
+  .req { color: var(--color-rose); margin-left: 0.15rem; }
+  .field input, .field textarea {
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--color-sand-deep);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 0.9rem;
+    font: inherit;
+    font-size: 0.98rem;
+    color: var(--color-ink);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: color-mix(in srgb, var(--color-mocha) 75%, transparent); }
+  .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 25%, transparent);
+  }
+  .field textarea { resize: vertical; min-height: 3rem; }
+  .field__hint { font-size: 0.82rem; color: var(--color-mocha); margin-top: -0.3rem; }
+
+  .field--check { margin-top: 0.2rem; }
+  .checkbox { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 500; font-size: 0.88rem; color: var(--color-ink-soft); cursor: pointer; }
+  .checkbox input { margin-top: 0.15rem; width: 1.1rem; height: 1.1rem; flex: 0 0 auto; accent-color: var(--color-gold); }
+  .checkbox a { color: var(--color-gold-deep); text-decoration: underline; }
+
+  .leadform__zonen {
+    background: color-mix(in srgb, var(--color-gold-soft) 22%, #fff);
+    border: 1px solid var(--color-sand-deep);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.9rem;
+    font-size: 0.92rem;
+  }
+  .leadform__zonen-label { font-weight: 700; margin-right: 0.35rem; }
+
+  .leadform__submit { margin-top: 0.4rem; align-self: flex-start; }
+  .leadform__status { font-size: 0.92rem; font-weight: 600; padding: 0.6rem 0; }
+  .leadform__status.is-ok { color: #2f7a43; }
+  .leadform__status.is-error { color: #b23b3b; }
+  .leadform.is-sending .leadform__submit { opacity: 0.65; pointer-events: none; }
+</style>
+
+<script>
+  // Client-Logik fuer alle LeadForm-Instanzen
+  document.querySelectorAll<HTMLFormElement>('form.leadform').forEach((form) => {
+    const statusEl = form.querySelector<HTMLElement>('[data-status]');
+    const setStatus = (msg: string, kind: 'ok' | 'error' | '') => {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.hidden = !msg;
+      statusEl.classList.remove('is-ok', 'is-error');
+      if (kind === 'ok') statusEl.classList.add('is-ok');
+      if (kind === 'error') statusEl.classList.add('is-error');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+
+      // Honeypot
+      if ((data.get('website') as string)?.length) return;
+
+      const name = (data.get('name') as string)?.trim();
+      const email = (data.get('email') as string)?.trim();
+      const telefon = (data.get('telefon') as string)?.trim();
+      const datenschutz = data.get('datenschutz');
+
+      if (!name) return setStatus('Bitte gib deinen Namen an.', 'error');
+      if (!email && !telefon) return setStatus('Bitte gib E-Mail oder Telefon an.', 'error');
+      if (!datenschutz) return setStatus('Bitte stimme der Datenschutzerklärung zu.', 'error');
+
+      form.classList.add('is-sending');
+      setStatus('Wird gesendet …', '');
+      (window as any).trackEvent?.(form.dataset.event || 'formular_absenden', {
+        quelle: data.get('quelle'),
+      });
+
+      try {
+        const res = await fetch('/api/lead', { method: 'POST', body: data });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.ok) {
+          form.reset();
+          form.querySelectorAll<HTMLElement>('[data-zonen-summary]').forEach((el) => (el.hidden = true));
+          setStatus('Danke! Deine Anfrage ist bei uns. Wir melden uns zeitnah.', 'ok');
+        } else {
+          setStatus(json.error || 'Es gab ein Problem. Bitte ruf uns kurz an, wir helfen sofort.', 'error');
+        }
+      } catch (err) {
+        setStatus('Verbindung fehlgeschlagen. Bitte ruf uns an oder schreib per WhatsApp.', 'error');
+      } finally {
+        form.classList.remove('is-sending');
+      }
+    });
+  });
+</script>

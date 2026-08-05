@@ -1,0 +1,109 @@
+---
+import { site, telLink, whatsappLink } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+const year = 2026;
+---
+<footer class="footer">
+  <div class="container-page footer__grid">
+    <div class="footer__brand">
+      <span class="wordmark__name footer__name">Belium</span>
+      <p class="footer__tag">Dauerhafte Laser Haarentfernung in Gelsenkirchen Buer.</p>
+      <div class="footer__social">
+        <a href={site.social.instagram} target="_blank" rel="noopener me" aria-label="Instagram">
+          <Icon name="instagram" class="w-5 h-5" />
+        </a>
+        <a href={site.social.facebook} target="_blank" rel="noopener me" aria-label="Facebook">
+          <Icon name="facebook" class="w-5 h-5" />
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__col">
+      <h2 class="footer__h">Kontakt</h2>
+      <address class="footer__addr">
+        {site.address.street}<br />
+        {site.address.zip} {site.address.city} {site.address.district}<br />
+        <a href={telLink()} data-track="telefon_klick">{site.contact.phone}</a><br />
+        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+      </address>
+      <a href={whatsappLink()} class="footer__wa" target="_blank" rel="noopener" data-track="whatsapp_klick">
+        <Icon name="whatsapp" class="w-4 h-4" /> Per WhatsApp schreiben
+      </a>
+    </div>
+
+    <nav class="footer__col" aria-label="Weitere Seiten">
+      <h2 class="footer__h">Seite</h2>
+      <ul class="footer__links">
+        <li><a href="/#vorteile">Vorteile</a></li>
+        <li><a href="/#preise">Zonen &amp; Preise</a></li>
+        <li><a href="/#ablauf">Ablauf</a></li>
+        <li><a href="/#faq">FAQ</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__col" aria-label="Rechtliches">
+      <h2 class="footer__h">Rechtliches</h2>
+      <ul class="footer__links">
+        <li><a href="/impressum">Impressum</a></li>
+        <li><a href="/datenschutz">Datenschutz</a></li>
+        <li><button type="button" class="footer__consent" onclick="window.openConsent && window.openConsent()">Cookie-Einstellungen</button></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container-page footer__bottom">
+    <p>© {year} {site.name}. Alle Rechte vorbehalten.</p>
+    <p class="footer__note">Inhaberin: {site.owner}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-ink);
+    color: color-mix(in srgb, var(--color-cream) 82%, transparent);
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
+  }
+  @media (min-width: 1024px) { .footer { padding-bottom: 2.5rem; } }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+  @media (min-width: 640px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; } }
+
+  .footer__name { color: #fff; font-size: 1.6rem; }
+  .footer__tag { margin-top: 0.5rem; max-width: 32ch; font-size: 0.95rem; }
+  .footer__social { display: flex; gap: 0.6rem; margin-top: 1rem; }
+  .footer__social a {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--color-cream) 30%, transparent);
+    color: var(--color-cream); transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .footer__social a:hover { background: var(--color-gold); border-color: var(--color-gold); color: #fff; }
+
+  .footer__h {
+    font-family: var(--font-sans);
+    font-size: 0.78rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--color-gold-soft); margin-bottom: 0.9rem;
+  }
+  .footer__addr { font-style: normal; font-size: 0.95rem; line-height: 1.8; }
+  .footer__addr a:hover, .footer__links a:hover { color: #fff; text-decoration: underline; }
+  .footer__wa { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-size: 0.92rem; }
+  .footer__wa:hover { color: #fff; }
+  .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
+  .footer__consent {
+    background: none; border: 0; color: inherit; cursor: pointer; padding: 0; font: inherit; text-align: left;
+  }
+  .footer__consent:hover { color: #fff; text-decoration: underline; }
+
+  .footer__bottom {
+    margin-top: 2.5rem; padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-cream) 16%, transparent);
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; justify-content: space-between;
+    font-size: 0.85rem; color: color-mix(in srgb, var(--color-cream) 60%, transparent);
+  }
+</style>

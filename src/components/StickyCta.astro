@@ -1,0 +1,53 @@
+---
+import { whatsappLink, telLink } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+/**
+ * Dauerhaft sichtbarer Sticky-Button auf Mobil (Termin + WhatsApp).
+ * Auf Desktop ausgeblendet – dort sitzt der CTA in der Navigation.
+ */
+---
+<div class="sticky-cta" aria-label="Schnellkontakt">
+  <a href="#kontakt" class="btn btn-primary sticky-cta__btn" data-track="cta_sticky">
+    <Icon name="arrow" class="w-4 h-4" /> Termin anfragen
+  </a>
+  <a
+    href={whatsappLink()}
+    class="btn btn-whatsapp sticky-cta__btn sticky-cta__btn--wa"
+    target="_blank"
+    rel="noopener"
+    data-track="whatsapp_klick"
+    aria-label="WhatsApp öffnen"
+  >
+    <Icon name="whatsapp" class="w-5 h-5" /> <span class="sticky-cta__wa-label">WhatsApp</span>
+  </a>
+  <a href={telLink()} class="sticky-cta__phone" data-track="telefon_klick" aria-label="Anrufen">
+    <Icon name="phone" class="w-5 h-5" />
+  </a>
+</div>
+
+<style>
+  .sticky-cta {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 70;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem calc(0.6rem + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--color-cream) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 70%, transparent);
+  }
+  .sticky-cta__btn { flex: 1 1 0; min-height: 3rem; padding-inline: 0.75rem; font-size: 0.95rem; }
+  .sticky-cta__btn--wa { flex: 0 0 auto; }
+  .sticky-cta__wa-label { display: none; }
+  @media (min-width: 400px) { .sticky-cta__wa-label { display: inline; } }
+  .sticky-cta__phone {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3rem; height: 3rem; border-radius: var(--radius-sm);
+    color: var(--color-ink); border: 1.5px solid var(--color-sand-deep); background: #fff;
+  }
+  @media (min-width: 1024px) {
+    .sticky-cta { display: none; }
+  }
+</style>
