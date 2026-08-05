@@ -1,0 +1,49 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  heading: string;
+}
+const { title, description, path, heading } = Astro.props;
+---
+<Layout
+  title={title}
+  description={description}
+  path={path}
+  jsonLdType="legal"
+  breadcrumb={[{ name: 'Start', path: '/' }, { name: heading, path }]}
+>
+  <Header />
+  <main id="hauptinhalt" class="legal">
+    <div class="container-page legal__inner">
+      <p class="t-eyebrow"><a href="/" class="legal__back">&larr; Zurück zur Startseite</a></p>
+      <h1 class="legal__title">{heading}</h1>
+      <div class="legal__prose">
+        <slot />
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .legal { padding-top: clamp(2.5rem, 5vw, 4rem); padding-bottom: clamp(3rem, 6vw, 5rem); background: var(--color-cream); }
+  .legal__inner { max-width: 52rem; }
+  .legal__back { color: var(--color-gold-deep); font-weight: 700; text-decoration: none; }
+  .legal__back:hover { text-decoration: underline; }
+  .legal__title { font-size: clamp(2rem, 5vw, 3rem); margin: 0.75rem 0 1.5rem; }
+  .legal__prose { color: var(--color-ink-soft); line-height: 1.7; }
+  .legal__prose :global(h2) { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 0.6rem; color: var(--color-ink); }
+  .legal__prose :global(h3) { font-size: 1.15rem; font-family: var(--font-sans); font-weight: 800; margin-top: 1.4rem; margin-bottom: 0.35rem; color: var(--color-ink); }
+  .legal__prose :global(p) { margin-bottom: 0.9rem; }
+  .legal__prose :global(ul) { margin: 0.5rem 0 1rem 1.25rem; list-style: disc; }
+  .legal__prose :global(li) { margin-bottom: 0.35rem; }
+  .legal__prose :global(a) { color: var(--color-gold-deep); text-decoration: underline; }
+  .legal__prose :global(strong) { color: var(--color-ink); }
+  .legal__prose :global(address) { font-style: normal; }
+</style>

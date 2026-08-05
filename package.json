@@ -1,0 +1,24 @@
+{
+  "name": "belium-beauty",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Konversionsoptimierte Onepage für Belium Beauty – Laser Haarentfernung in Gelsenkirchen Buer",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/mulish": "^5.1.1",
+    "@fontsource/cormorant-garamond": "^5.1.1",
+    "astro": "^5.1.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}

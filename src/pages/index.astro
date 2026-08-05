@@ -1,0 +1,48 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import StickyCta from '@/components/StickyCta.astro';
+
+import Hero from '@/components/sections/Hero.astro';
+import Problem from '@/components/sections/Problem.astro';
+import Vorteile from '@/components/sections/Vorteile.astro';
+import ZonenPreise from '@/components/sections/ZonenPreise.astro';
+import Ablauf from '@/components/sections/Ablauf.astro';
+import Technologie from '@/components/sections/Technologie.astro';
+import Ergebnisse from '@/components/sections/Ergebnisse.astro';
+import UeberMaria from '@/components/sections/UeberMaria.astro';
+import Raeumlichkeiten from '@/components/sections/Raeumlichkeiten.astro';
+import Bewertungen from '@/components/sections/Bewertungen.astro';
+import Faq from '@/components/sections/Faq.astro';
+import Sicherheit from '@/components/sections/Sicherheit.astro';
+import Kontakt from '@/components/sections/Kontakt.astro';
+import AbschlussCta from '@/components/sections/AbschlussCta.astro';
+
+// SEO: Title <= 60 Zeichen, Description <= 155 Zeichen
+const title = 'Laser Haarentfernung Gelsenkirchen Buer | Belium Beauty';
+const description =
+  'Dauerhafte Laser Haarentfernung in Gelsenkirchen Buer. Gekühlter VIKINI Diodenlaser, schmerzarm, zertifiziert. Jetzt kostenlose Beratung sichern.';
+---
+<Layout title={title} description={description} path="/">
+  <span id="top"></span>
+  <Header />
+  <main id="hauptinhalt">
+    <Hero />
+    <Problem />
+    <Vorteile />
+    <ZonenPreise />
+    <Ablauf />
+    <Technologie />
+    <Ergebnisse />
+    <UeberMaria />
+    <Raeumlichkeiten />
+    <Bewertungen />
+    <Faq />
+    <Sicherheit />
+    <Kontakt />
+    <AbschlussCta />
+  </main>
+  <Footer />
+  <StickyCta />
+</Layout>

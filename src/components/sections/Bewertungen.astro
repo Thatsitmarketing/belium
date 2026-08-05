@@ -1,0 +1,89 @@
+---
+/**
+ * Abschnitt 10: Bewertungen (Google & ProvenExpert).
+ * Einbindung ohne Layoutsprung: Der Container hat eine feste Mindesthöhe. Vor Einwilligung
+ * wird KEIN externes Widget geladen (Datenschutz) – stattdessen ein Ladehinweis.
+ * PLATZHALTER: Es liegen keine belegten Bewertungszahlen vor. Es werden bewusst KEINE Sterne
+ * oder Zahlen erfunden. Sobald die echten Widget-URLs/IDs von Google und ProvenExpert vorliegen,
+ * hier einbinden (das Nachladen erst nach `belium:consent granted=true`).
+ */
+import Icon from '@/components/Icon.astro';
+---
+<section id="bewertungen" class="section-pad bewertungen">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Das sagen Kundinnen und Kunden</p>
+      <h2 class="t-h2">Bewertungen</h2>
+      <p class="t-lead section-head__lead">
+        Deine Meinung zählt. Lies echte Rückmeldungen bei Google und ProvenExpert, oder hinterlasse
+        nach deiner Behandlung selbst eine Bewertung.
+      </p>
+    </header>
+
+    <div class="bewertungen__slot reveal" data-reviews>
+      <!-- Vor Einwilligung: Ladehinweis (kein externes Skript) -->
+      <div class="bewertungen__gate" data-reviews-gate>
+        <Icon name="star" class="w-8 h-8" />
+        <p class="bewertungen__gate-text">
+          Die Bewertungs-Widgets von Google und ProvenExpert werden aus Datenschutzgründen erst nach
+          deiner Einwilligung geladen.
+        </p>
+        <button type="button" class="btn btn-ghost" data-reviews-load>Bewertungen laden</button>
+      </div>
+
+      <!-- Nach Einwilligung: hier werden die Widgets eingehängt (Platzhalter bis IDs vorliegen) -->
+      <div class="bewertungen__widgets" data-reviews-widgets hidden>
+        <p class="bewertungen__placeholder">
+          Widget-Einbindung folgt, sobald die Google- und ProvenExpert-Profil-IDs vorliegen.
+        </p>
+      </div>
+    </div>
+
+    <div class="bewertungen__links reveal">
+      <a href="https://www.google.com/search?q=Belium+Beauty+Gelsenkirchen+Buer" target="_blank" rel="noopener" class="btn btn-ghost">
+        Bei Google ansehen
+      </a>
+      <a href="https://www.provenexpert.com/" target="_blank" rel="noopener" class="btn btn-ghost">
+        ProvenExpert
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bewertungen { background: var(--color-cream-deep); }
+  .bewertungen__slot {
+    /* Feste Mindesthöhe verhindert Layout Shift beim Nachladen */
+    min-height: 220px;
+    display: grid; place-items: center;
+    background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-lg);
+    padding: 2rem 1.5rem; box-shadow: var(--shadow-soft);
+  }
+  .bewertungen__gate { display: flex; flex-direction: column; align-items: center; gap: 1rem; text-align: center; max-width: 44ch; }
+  .bewertungen__gate :global(svg) { color: var(--color-gold); }
+  .bewertungen__gate-text { color: var(--color-ink-soft); font-size: 0.95rem; }
+  .bewertungen__placeholder { color: var(--color-mocha); text-align: center; font-size: 0.95rem; }
+  .bewertungen__links { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
+</style>
+
+<script>
+  const slot = document.querySelector<HTMLElement>('[data-reviews]');
+  if (slot) {
+    const gate = slot.querySelector<HTMLElement>('[data-reviews-gate]');
+    const widgets = slot.querySelector<HTMLElement>('[data-reviews-widgets]');
+    const loadBtn = slot.querySelector<HTMLButtonElement>('[data-reviews-load]');
+
+    function reveal() {
+      if (gate) gate.hidden = true;
+      if (widgets) widgets.hidden = false;
+      // Hier würden nach Einwilligung die echten Widgets (Google/ProvenExpert) nachgeladen.
+    }
+
+    // Auf globale Einwilligung reagieren
+    if ((window as any).__beliumConsent === 'all') reveal();
+    window.addEventListener('belium:consent', (e: any) => { if (e.detail?.granted) reveal(); });
+
+    // Direkter Klick lädt nur diesen Bereich (implizite Einwilligung für Bewertungen)
+    loadBtn?.addEventListener('click', reveal);
+  }
+</script>

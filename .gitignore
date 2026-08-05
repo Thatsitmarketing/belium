@@ -1,0 +1,24 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# generated types
+.astro/
+
+# environment
+.env
+.env.production
+.dev.vars
+
+# cloudflare
+.wrangler/
+
+# logs & os
+npm-debug.log*
+.DS_Store
+
+# testing artifacts (screenshots werden separat unter docs/screenshots gepflegt)
+*.log

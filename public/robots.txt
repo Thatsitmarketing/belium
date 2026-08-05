@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap (von @astrojs/sitemap generiert)
+Sitemap: https://www.belium.de/sitemap-index.xml

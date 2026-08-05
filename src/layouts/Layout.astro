@@ -1,0 +1,95 @@
+---
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/600.css';
+import '@fontsource/cormorant-garamond/700.css';
+import '@fontsource-variable/mulish';
+import '@/styles/global.css';
+
+import BaseHead from '@/components/BaseHead.astro';
+import JsonLd from '@/components/JsonLd.astro';
+import ConsentBanner from '@/components/ConsentBanner.astro';
+import { site } from '@/data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  jsonLdType?: 'home' | 'legal';
+  breadcrumb?: { name: string; path: string }[];
+}
+const { title, description, path, jsonLdType = 'home', breadcrumb } = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <BaseHead title={title} description={description} path={path} />
+    <JsonLd type={jsonLdType} breadcrumb={breadcrumb} />
+    {/* Cloudflare Turnstile (Spam-Schutz) – lädt nur, wenn ein Site-Key konfiguriert ist. */}
+    {site.turnstileSiteKey && (
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    )}
+    <script is:inline>
+      // Consent-aware dataLayer. Es werden KEINE externen Skripte/Pixel automatisch geladen.
+      // Ereignisse werden gepuffert und können später serverseitig ausgewertet werden.
+      window.dataLayer = window.dataLayer || [];
+      window.trackEvent = function (name, detail) {
+        try {
+          window.dataLayer.push(Object.assign({ event: name, ts: Date.now() }, detail || {}));
+        } catch (e) {}
+      };
+    </script>
+  </head>
+  <body>
+    <a href="#hauptinhalt" class="skip-link">Zum Inhalt springen</a>
+    <slot />
+    <ConsentBanner />
+
+    <style>
+      .skip-link {
+        position: fixed;
+        left: 1rem;
+        top: -4rem;
+        z-index: 100;
+        background: var(--color-ink);
+        color: var(--color-cream);
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--radius-sm);
+        transition: top 0.2s ease;
+        font-weight: 600;
+      }
+      .skip-link:focus {
+        top: 1rem;
+      }
+    </style>
+
+    <script>
+      // Zentrales Klick-Tracking: jedes Element mit [data-track] feuert genau ein dataLayer-Event.
+      document.addEventListener('click', (e) => {
+        const el = (e.target as HTMLElement)?.closest('[data-track]');
+        if (el) (window as any).trackEvent?.(el.getAttribute('data-track'));
+      });
+    </script>
+
+    <script>
+      // Scroll-Reveal via IntersectionObserver (leichtgewichtig, respektiert reduced motion).
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll('.reveal');
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

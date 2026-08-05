@@ -1,0 +1,47 @@
+---
+/** Abschnitt 12: Sicherheit und Ausschlusskriterien. Baut Vertrauen durch Ehrlichkeit. */
+import { ausschlussKriterien } from '@/data/inhalt';
+import Icon from '@/components/Icon.astro';
+---
+<section id="sicherheit" class="section-pad sicherheit">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Ehrlich beraten</p>
+      <h2 class="t-h2">Wann eine Behandlung nicht sinnvoll ist</h2>
+      <p class="t-lead section-head__lead">
+        Wir verkaufen nicht jedem alles. In diesen Fällen raten wir ab oder warten, bis der richtige
+        Zeitpunkt gekommen ist. Deine Sicherheit steht vor dem Ergebnis.
+      </p>
+    </header>
+
+    <div class="sicherheit__grid">
+      {ausschlussKriterien.map((k) => (
+        <article class="sicherheit__item reveal">
+          <span class="sicherheit__icon"><Icon name="info" class="w-5 h-5" /></span>
+          <div>
+            <h3 class="sicherheit__titel">{k.titel}</h3>
+            <p class="sicherheit__text">{k.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sicherheit { background: var(--color-cream-deep); }
+  .sicherheit__grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; }
+  @media (min-width: 700px) { .sicherheit__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1050px) { .sicherheit__grid { grid-template-columns: repeat(3, 1fr); } }
+  .sicherheit__item {
+    display: flex; gap: 0.8rem; align-items: flex-start;
+    background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); padding: 1.2rem;
+  }
+  .sicherheit__icon {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.25rem; height: 2.25rem; border-radius: 50%;
+    background: color-mix(in srgb, var(--color-rose) 15%, #fff); color: var(--color-rose);
+  }
+  .sicherheit__titel { font-family: var(--font-sans); font-size: 1rem; font-weight: 800; }
+  .sicherheit__text { margin-top: 0.3rem; font-size: 0.92rem; color: var(--color-ink-soft); }
+</style>

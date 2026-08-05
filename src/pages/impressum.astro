@@ -1,0 +1,74 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { site } from '@/data/site';
+---
+<LegalLayout
+  title="Impressum | Belium Beauty Gelsenkirchen"
+  description="Impressum von Belium Beauty, Studio für Laser Haarentfernung in Gelsenkirchen Buer. Anbieterkennzeichnung nach § 5 DDG."
+  path="/impressum"
+  heading="Impressum"
+>
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <p>
+    <strong>{site.legalName}</strong><br />
+    Inhaberin: {site.owner}<br />
+    {site.address.street}<br />
+    {site.address.zip} {site.address.city} {site.address.district}
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>
+    Telefon: <a href={`tel:${site.contact.phoneIntl}`}>{site.contact.phone}</a><br />
+    Mobil: {site.contact.mobile}<br />
+    Fax: {site.contact.fax}<br />
+    E-Mail: <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+  </p>
+
+  <h2>Umsatzsteuer bzw. Steuernummer</h2>
+  <p>
+    Steuernummer: 319/5148/5608
+  </p>
+  <p>
+    {/*
+      HINWEIS FÜR DEN KUNDEN (nicht öffentlich relevant, aber wichtig):
+      Die auf der Altseite als "USt-IdNr" geführte Nummer 319/5148/5608 entspricht dem Format nach
+      einer Steuernummer, nicht einer Umsatzsteuer-Identifikationsnummer (Format: DE + 9 Ziffern).
+      Bitte klären, ob eine USt-IdNr existiert. Sie wurde hier daher als "Steuernummer" ausgewiesen.
+    */}
+  </p>
+
+  <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+  <p>
+    {site.owner}<br />
+    {site.address.street}, {site.address.zip} {site.address.city}
+  </p>
+
+  <h2>Verbraucherstreitbeilegung</h2>
+  <p>
+    Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+    Verbraucherschlichtungsstelle teilzunehmen.
+  </p>
+
+  <h2>Haftung für Inhalte</h2>
+  <p>
+    Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den
+    allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht
+    verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+    zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+  </p>
+
+  <h2>Haftung für Links</h2>
+  <p>
+    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben.
+    Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der
+    verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.
+  </p>
+
+  <h2>Urheberrecht</h2>
+  <p>
+    Die durch die Seitenbetreiberin erstellten Inhalte und Werke auf diesen Seiten unterliegen dem
+    deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Eine Vervielfältigung,
+    Bearbeitung oder Verbreitung außerhalb der Grenzen des Urheberrechts bedarf der schriftlichen
+    Zustimmung der jeweiligen Autorin oder des Erstellers.
+  </p>
+</LegalLayout>

@@ -1,0 +1,63 @@
+---
+import { site } from '@/data/site';
+
+/**
+ * <head> mit vollständigem SEO-Meta-Set.
+ * Title max. 60 Zeichen, Description max. 155 Zeichen (bitte beim Pflegen einhalten).
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** relativer Pfad, z. B. "/" oder "/impressum" */
+  path?: string;
+  /** OG-Bild relativ zu /public */
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+  ogImage = '/og-belium-beauty.jpg',
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(path, site.url).href;
+const ogImageUrl = new URL(ogImage, site.url).href;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+<meta name="theme-color" content="#faf6f0" />
+<meta name="author" content={site.owner} />
+<meta name="geo.region" content="DE-NW" />
+<meta name="geo.placename" content="Gelsenkirchen Buer" />
+<meta name="geo.position" content={`${site.address.geo.lat};${site.address.geo.lng}`} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="de_DE" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Belium Beauty, Studio für Laser Haarentfernung in Gelsenkirchen Buer" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />

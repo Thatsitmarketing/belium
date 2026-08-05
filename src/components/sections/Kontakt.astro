@@ -1,0 +1,151 @@
+---
+/** Abschnitt 13: Standort und Kontakt. Karte (consent-gated), Adresse, Anfahrt, Öffnungszeiten, Formular. */
+import { site, telLink, whatsappLink } from '@/data/site';
+import LeadForm from '@/components/LeadForm.astro';
+import Icon from '@/components/Icon.astro';
+
+const mapEmbed = `https://www.google.com/maps?q=${site.address.mapsQuery}&output=embed`;
+const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.mapsQuery}`;
+---
+<section id="kontakt" class="section-pad kontakt">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Standort &amp; Kontakt</p>
+      <h2 class="t-h2">Dein Termin in Gelsenkirchen Buer</h2>
+      <p class="t-lead section-head__lead">
+        Stell deine Anfrage, ruf uns an oder schreib per WhatsApp. Wir melden uns zeitnah und finden
+        gemeinsam einen Termin für deine kostenlose Beratung.
+      </p>
+    </header>
+
+    <div class="kontakt__grid">
+      <!-- Formular -->
+      <div class="kontakt__form card reveal">
+        <h3 class="t-h3 kontakt__form-title">Anfrage senden</h3>
+        <LeadForm id="leadform-kontakt" variant="full" />
+      </div>
+
+      <!-- Infos -->
+      <div class="kontakt__info reveal">
+        <div class="kontakt__card">
+          <h3 class="kontakt__h">Adresse</h3>
+          <address class="kontakt__addr">
+            <Icon name="map" class="w-5 h-5" />
+            <span>{site.address.street}<br />{site.address.zip} {site.address.city} {site.address.district}</span>
+          </address>
+          <div class="kontakt__row">
+            <a href={telLink()} class="kontakt__link" data-track="telefon_klick"><Icon name="phone" class="w-5 h-5" /> {site.contact.phone}</a>
+            <a href={`mailto:${site.contact.email}`} class="kontakt__link"><Icon name="mail" class="w-5 h-5" /> {site.contact.email}</a>
+          </div>
+          <a href={whatsappLink()} class="btn btn-whatsapp kontakt__wa" target="_blank" rel="noopener" data-track="whatsapp_klick">
+            <Icon name="whatsapp" class="w-5 h-5" /> Direkt per WhatsApp schreiben
+          </a>
+        </div>
+
+        <div class="kontakt__card">
+          <h3 class="kontakt__h">Öffnungszeiten</h3>
+          <ul class="kontakt__hours">
+            {site.openingHours.map((d) => (
+              <li><span>{d.day}</span><span>{d.hours}</span></li>
+            ))}
+          </ul>
+          <p class="kontakt__note"><Icon name="info" class="w-4 h-4" /> Termine nach Vereinbarung.</p>
+        </div>
+
+        <div class="kontakt__card">
+          <h3 class="kontakt__h">Anfahrt &amp; Parken</h3>
+          <ul class="kontakt__anfahrt">
+            <li><Icon name="parking" class="w-5 h-5" /> Parkmöglichkeiten in der direkten Umgebung der Beckeradstraße.</li>
+            <li><Icon name="car" class="w-5 h-5" /> Zentral in Buer, gut aus Gelsenkirchen, Gladbeck und Herten erreichbar.</li>
+          </ul>
+        </div>
+
+        <!-- Karte: erst nach Einwilligung -->
+        <div class="kontakt__map" data-map>
+          <div class="kontakt__map-gate" data-map-gate>
+            <Icon name="map" class="w-8 h-8" />
+            <p>Die Google-Karte wird erst nach deiner Einwilligung geladen.</p>
+            <div class="kontakt__map-actions">
+              <button type="button" class="btn btn-ghost" data-map-load>Karte laden</button>
+              <a href={mapLink} target="_blank" rel="noopener" class="btn btn-ghost">In Google Maps öffnen</a>
+            </div>
+          </div>
+          <div class="kontakt__map-frame" data-map-frame hidden data-embed={mapEmbed}></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .kontakt { background: var(--color-cream); }
+  .kontakt__grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 960px) { .kontakt__grid { grid-template-columns: 1.05fr 0.95fr; gap: 2rem; align-items: start; } }
+
+  .kontakt__form { padding: clamp(1.25rem, 3vw, 2rem); }
+  .kontakt__form-title { margin-bottom: 1.1rem; }
+
+  .kontakt__info { display: flex; flex-direction: column; gap: 1rem; }
+  .kontakt__card { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); padding: 1.25rem 1.35rem; box-shadow: var(--shadow-soft); }
+  .kontakt__h { font-family: var(--font-sans); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-mocha); margin-bottom: 0.8rem; }
+  .kontakt__addr { display: flex; gap: 0.6rem; font-style: normal; font-size: 1rem; line-height: 1.5; }
+  .kontakt__addr :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.15rem; }
+  .kontakt__row { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.9rem; }
+  .kontakt__link { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+  .kontakt__link :global(svg) { color: var(--color-gold-deep); }
+  .kontakt__link:hover { color: var(--color-gold-deep); }
+  .kontakt__wa { margin-top: 1.1rem; width: 100%; }
+
+  .kontakt__hours { list-style: none; display: flex; flex-direction: column; }
+  .kontakt__hours li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0; border-bottom: 1px solid color-mix(in srgb, var(--color-sand) 70%, transparent); font-size: 0.94rem; }
+  .kontakt__hours li:last-child { border-bottom: 0; }
+  .kontakt__hours span:last-child { color: var(--color-mocha); }
+  .kontakt__note { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-mocha); }
+
+  .kontakt__anfahrt { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .kontakt__anfahrt li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.95rem; }
+  .kontakt__anfahrt :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
+
+  .kontakt__map { border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; background: #fff; }
+  .kontakt__map-gate {
+    min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.9rem; text-align: center; padding: 1.5rem;
+    background:
+      linear-gradient(color-mix(in srgb, var(--color-cream-deep) 70%, transparent), color-mix(in srgb, var(--color-cream-deep) 70%, transparent)),
+      repeating-linear-gradient(0deg, var(--color-sand) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(90deg, var(--color-sand) 0 1px, transparent 1px 26px);
+  }
+  .kontakt__map-gate :global(svg) { color: var(--color-gold); }
+  .kontakt__map-gate p { color: var(--color-ink-soft); font-size: 0.9rem; max-width: 34ch; }
+  .kontakt__map-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+  .kontakt__map-frame { min-height: 260px; }
+  .kontakt__map-frame :global(iframe) { width: 100%; height: 320px; border: 0; display: block; }
+</style>
+
+<script>
+  const map = document.querySelector<HTMLElement>('[data-map]');
+  if (map) {
+    const gate = map.querySelector<HTMLElement>('[data-map-gate]');
+    const frameWrap = map.querySelector<HTMLElement>('[data-map-frame]');
+    const loadBtn = map.querySelector<HTMLButtonElement>('[data-map-load]');
+    const embed = frameWrap?.dataset.embed;
+
+    function loadMap() {
+      if (!frameWrap || !embed || frameWrap.dataset.loaded) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = embed;
+      iframe.loading = 'lazy';
+      iframe.title = 'Standort von Belium Beauty auf Google Maps';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.setAttribute('allowfullscreen', '');
+      frameWrap.appendChild(iframe);
+      frameWrap.dataset.loaded = '1';
+      frameWrap.hidden = false;
+      if (gate) gate.hidden = true;
+    }
+
+    if ((window as any).__beliumConsent === 'all') loadMap();
+    window.addEventListener('belium:consent', (e: any) => { if (e.detail?.granted) loadMap(); });
+    loadBtn?.addEventListener('click', loadMap);
+  }
+</script>

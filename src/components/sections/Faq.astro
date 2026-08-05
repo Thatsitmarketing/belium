@@ -1,0 +1,53 @@
+---
+/** Abschnitt 11: FAQ als Akkordeon (Fragen als H3). Wird auch im FAQPage-JSON-LD gespiegelt. */
+import { faqItems } from '@/data/faq';
+import Icon from '@/components/Icon.astro';
+---
+<section id="faq" class="section-pad faq">
+  <div class="container-page faq__grid">
+    <header class="section-head faq__head reveal">
+      <p class="t-eyebrow">Häufige Fragen</p>
+      <h2 class="t-h2">Gut zu wissen</h2>
+      <p class="t-lead section-head__lead">
+        Die wichtigsten Fragen rund um die Laser Haarentfernung, ehrlich beantwortet. Ist deine Frage
+        nicht dabei? Ruf uns an oder schreib uns.
+      </p>
+    </header>
+
+    <div class="faq__list reveal">
+      {faqItems.map((item, i) => (
+        <details class="faq__item" name="faq" open={i === 0}>
+          <summary class="faq__summary">
+            <h3 class="faq__frage">{item.frage}</h3>
+            <span class="faq__icon"><Icon name="chevron" class="w-5 h-5" /></span>
+          </summary>
+          <div class="faq__antwort"><p>{item.antwort}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { background: var(--color-cream); }
+  .faq__grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  @media (min-width: 960px) { .faq__grid { grid-template-columns: 0.8fr 1.2fr; gap: 3rem; align-items: start; } }
+  @media (min-width: 960px) { .faq__head { position: sticky; top: 6rem; } }
+
+  .faq__list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .faq__item { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; }
+  .faq__item[open] { border-color: var(--color-gold-soft); box-shadow: var(--shadow-soft); }
+  .faq__summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1.1rem 1.25rem; cursor: pointer; list-style: none;
+  }
+  .faq__summary::-webkit-details-marker { display: none; }
+  .faq__frage { font-size: 1.1rem; font-weight: 600; }
+  .faq__icon { flex: 0 0 auto; color: var(--color-gold-deep); transition: transform 0.25s ease; }
+  .faq__item[open] .faq__icon { transform: rotate(180deg); }
+  .faq__antwort { padding: 0 1.25rem 1.25rem; color: var(--color-ink-soft); font-size: 0.97rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .faq__antwort { animation: faq-in 0.3s ease; }
+    @keyframes faq-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  }
+</style>

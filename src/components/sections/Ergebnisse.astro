@@ -1,0 +1,60 @@
+---
+/**
+ * Abschnitt 7: Vorher-Nachher-Galerie.
+ * PLATZHALTER-KOMPONENTE: Es liegt noch kein echtes Vorher-Nachher-Material vor.
+ * Sobald Fotos vorhanden sind (mit Angabe von Zone und Anzahl Sitzungen), hier einbinden
+ * und `ergebnisseVorhanden` in src/data/inhalt.ts auf true setzen.
+ */
+import { ergebnisseVorhanden, ergebnissePlatzhalter } from '@/data/inhalt';
+import Icon from '@/components/Icon.astro';
+---
+<section id="ergebnisse" class="section-pad ergebnisse">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Ergebnisse</p>
+      <h2 class="t-h2">Vorher und nachher</h2>
+      <p class="t-lead section-head__lead">
+        Echte Verläufe sagen mehr als Worte. Jedes Bild zeigt die Zone und die Anzahl der Sitzungen.
+      </p>
+    </header>
+
+    {ergebnisseVorhanden ? (
+      <p>{/* TODO: echte Vorher-Nachher-Galerie hier einbinden */}</p>
+    ) : (
+      <div class="ergebnisse__grid reveal">
+        {ergebnissePlatzhalter.map((e) => (
+          <figure class="ergebnisse__card">
+            <div class="ergebnisse__ph" role="img" aria-label={`Platzhalter: Vorher-Nachher-Bild ${e.zone}`}>
+              <Icon name="sparkle" class="w-7 h-7" />
+              <span>Bild folgt</span>
+            </div>
+            <figcaption class="ergebnisse__cap">
+              <strong>{e.zone}</strong><span>{e.sitzungen}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+
+    <p class="ergebnisse__note reveal">
+      Fotos deiner eigenen Behandlung entstehen selbstverständlich nur mit deiner ausdrücklichen Einwilligung.
+    </p>
+  </div>
+</section>
+
+<style>
+  .ergebnisse { background: var(--color-cream); }
+  .ergebnisse__grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  @media (min-width: 640px) { .ergebnisse__grid { grid-template-columns: repeat(3, 1fr); } }
+  .ergebnisse__card { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); }
+  .ergebnisse__ph {
+    aspect-ratio: 4 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+    background:
+      repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-sand) 60%, #fff) 0 12px, #fff 12px 24px);
+    color: var(--color-mocha); font-weight: 600; font-size: 0.85rem;
+  }
+  .ergebnisse__cap { display: flex; flex-direction: column; padding: 0.85rem 1rem; }
+  .ergebnisse__cap strong { font-size: 1.05rem; }
+  .ergebnisse__cap span { font-size: 0.85rem; color: var(--color-mocha); }
+  .ergebnisse__note { margin-top: 1.5rem; font-size: 0.85rem; color: var(--color-mocha); }
+</style>

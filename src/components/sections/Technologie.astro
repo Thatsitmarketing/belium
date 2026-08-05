@@ -1,0 +1,51 @@
+---
+/** Abschnitt 6: Technologie. Kurz, als Beweis positioniert. */
+import { Image } from 'astro:assets';
+import { technikFakten } from '@/data/inhalt';
+import laserImg from '@/assets/images/vikini-diodenlaser-handstueck-808nm-belium-gelsenkirchen.png';
+---
+<section id="technologie" class="section-pad technologie">
+  <div class="container-page technologie__grid">
+    <div class="technologie__media reveal">
+      <Image
+        src={laserImg}
+        alt="Handstück des VIKINI Diodenlasers mit gekühlter Saphirspitze für die Haarentfernung bei Belium Beauty"
+        widths={[420, 640, 840]}
+        sizes="(min-width: 900px) 40vw, 92vw"
+        loading="lazy"
+        format="avif"
+        quality={68}
+        class="technologie__img"
+      />
+    </div>
+    <div class="technologie__content reveal">
+      <p class="t-eyebrow">Die Technik</p>
+      <h2 class="t-h2">VIKINI Diodenlaser mit 808 nm und Kontaktkühlung</h2>
+      <p class="t-lead technologie__lead">
+        Der Diodenlaser sendet Lichtimpulse mit 808 Nanometern gezielt auf das Farbpigment im Haar.
+        Die Saphirspitze kühlt die Haut im selben Moment. So arbeitet der Laser wirkungsvoll und bleibt
+        dabei angenehm für dich.
+      </p>
+      <dl class="technologie__facts">
+        {technikFakten.map((f) => (
+          <div class="technologie__fact">
+            <dt>{f.label}</dt>
+            <dd>{f.wert}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .technologie { background: var(--color-cream-deep); }
+  .technologie__grid { display: grid; grid-template-columns: 1fr; gap: 2.25rem; align-items: center; }
+  @media (min-width: 900px) { .technologie__grid { grid-template-columns: 0.9fr 1.1fr; gap: 3rem; } }
+  .technologie__img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+  .technologie__lead { margin-top: 1rem; }
+  .technologie__facts { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .technologie__fact { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-sm); padding: 0.8rem 0.95rem; }
+  .technologie__fact dt { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-mocha); }
+  .technologie__fact dd { font-weight: 700; margin-top: 0.15rem; }
+</style>

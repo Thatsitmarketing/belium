@@ -1,0 +1,50 @@
+---
+/** Abschnitt 3: Vorteile als Karten (H3). */
+import { vorteile } from '@/data/vorteile';
+import Icon from '@/components/Icon.astro';
+---
+<section id="vorteile" class="section-pad vorteile">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Deine Vorteile</p>
+      <h2 class="t-h2">Warum Laser statt immer wieder rasieren</h2>
+      <p class="t-lead section-head__lead">
+        Sechs Gründe, warum unsere Kundinnen und Kunden auf die dauerhafte Methode umsteigen.
+      </p>
+    </header>
+
+    <div class="vorteile__grid">
+      {vorteile.map((v) => (
+        <article class="card vorteil reveal">
+          <div class="vorteil__icon"><Icon name={v.icon} class="w-7 h-7" /></div>
+          <h3 class="t-h3 vorteil__titel">{v.titel}</h3>
+          <p class="vorteil__text">{v.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .vorteile { background: var(--color-cream-deep); }
+  .section-head { max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .section-head__lead { margin-top: 0.85rem; }
+
+  .vorteile__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 620px) { .vorteile__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) { .vorteile__grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+
+  .vorteil { padding: 1.6rem 1.5rem; }
+  .vorteil__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3.25rem; height: 3.25rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-gold-soft) 32%, #fff);
+    color: var(--color-gold-deep); margin-bottom: 1.1rem;
+  }
+  .vorteil__titel { font-size: 1.35rem; }
+  .vorteil__text { margin-top: 0.55rem; color: var(--color-ink-soft); font-size: 0.98rem; }
+</style>

@@ -1,0 +1,171 @@
+---
+import { navItems } from '@/data/inhalt';
+import { telLink } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+---
+<header id="siteheader" class="siteheader">
+  <div class="container-page siteheader__inner">
+    <a href="#top" class="wordmark" aria-label="Belium Beauty Startseite">
+      <span class="wordmark__name">Belium</span>
+      <span class="wordmark__sub">Beauty</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Hauptnavigation">
+      {navItems.map((item) => (
+        <a href={item.href} class="nav-desktop__link">{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="siteheader__cta">
+      <a href={telLink()} class="nav-phone" data-track="telefon_klick" aria-label="Anrufen">
+        <Icon name="phone" class="w-5 h-5" />
+      </a>
+      <a href="#kontakt" class="btn btn-primary btn--sm">Termin anfragen</a>
+    </div>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      id="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-mobile"
+      aria-label="Menü öffnen"
+    >
+      <Icon name="menu" class="w-6 h-6 nav-toggle__open" />
+      <Icon name="close" class="w-6 h-6 nav-toggle__close" />
+    </button>
+  </div>
+
+  <div class="nav-mobile" id="nav-mobile" hidden>
+    <nav aria-label="Mobile Navigation" class="container-page nav-mobile__list">
+      {navItems.map((item) => (
+        <a href={item.href} class="nav-mobile__link" data-nav-close>{item.label}</a>
+      ))}
+      <a href="#kontakt" class="btn btn-primary nav-mobile__cta" data-nav-close>Termin anfragen</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .siteheader {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    background: color-mix(in srgb, var(--color-cream) 88%, transparent);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  .siteheader.is-scrolled {
+    border-bottom-color: color-mix(in srgb, var(--color-sand-deep) 70%, transparent);
+    background: color-mix(in srgb, var(--color-cream) 96%, transparent);
+  }
+  .siteheader__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.5rem;
+    gap: 1rem;
+  }
+  .wordmark { display: inline-flex; align-items: baseline; gap: 0.4rem; text-decoration: none; }
+  .wordmark__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--color-ink);
+    letter-spacing: 0.01em;
+  }
+  .wordmark__sub {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-gold-deep);
+  }
+
+  .nav-desktop { display: none; gap: 1.6rem; }
+  .nav-desktop__link {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    text-decoration: none;
+    position: relative;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+  }
+  .nav-desktop__link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: var(--color-gold);
+    transition: width 0.25s ease;
+  }
+  .nav-desktop__link:hover { color: var(--color-ink); }
+  .nav-desktop__link:hover::after { width: 100%; }
+
+  .siteheader__cta { display: none; align-items: center; gap: 0.85rem; }
+  .nav-phone {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    color: var(--color-ink); border: 1.5px solid var(--color-sand-deep);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .nav-phone:hover { border-color: var(--color-gold); color: var(--color-gold-deep); }
+  .btn--sm { padding: 0.7rem 1.15rem; min-height: 2.75rem; font-size: 0.92rem; }
+
+  .nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; color: var(--color-ink); background: transparent; border: 0;
+  }
+  .nav-toggle :global(.nav-toggle__close) { display: none; }
+  .nav-toggle[aria-expanded='true'] :global(.nav-toggle__open) { display: none; }
+  .nav-toggle[aria-expanded='true'] :global(.nav-toggle__close) { display: block; }
+
+  .nav-mobile {
+    border-top: 1px solid color-mix(in srgb, var(--color-sand-deep) 70%, transparent);
+    background: var(--color-cream);
+  }
+  .nav-mobile__list { display: flex; flex-direction: column; padding-block: 1rem 1.5rem; gap: 0.25rem; }
+  .nav-mobile__link {
+    font-size: 1.05rem; font-weight: 600; color: var(--color-ink);
+    text-decoration: none; padding: 0.85rem 0.25rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-sand) 80%, transparent);
+  }
+  .nav-mobile__cta { margin-top: 1rem; }
+
+  @media (min-width: 1024px) {
+    .nav-desktop { display: flex; }
+    .siteheader__cta { display: flex; }
+    .nav-toggle { display: none; }
+    .nav-mobile { display: none; }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('siteheader');
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-mobile');
+
+  function setMenu(open: boolean) {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    menu.hidden = !open;
+  }
+
+  toggle?.addEventListener('click', () => {
+    setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  menu?.querySelectorAll('[data-nav-close]').forEach((el) =>
+    el.addEventListener('click', () => setMenu(false))
+  );
+
+  // Header-Schatten beim Scrollen
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Klick-Tracking läuft zentral über die Delegation im Layout.
+</script>
