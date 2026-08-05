@@ -1,0 +1,174 @@
+---
+/**
+ * Behandlungen als interaktives Karussell (ziehbar + Scroll-Snap + Pfeile + Fortschritt).
+ * Editorial-Stil, inspiriert von Premium-Beauty-Seiten. Bilder sind Platzhalter.
+ */
+import { behandlungen } from '@/data/behandlungen';
+import Placeholder from '@/components/Placeholder.astro';
+import Icon from '@/components/Icon.astro';
+---
+<section id="behandlungen" class="section-pad behandlungen">
+  <div class="container-page">
+    <div class="behandlungen__head reveal">
+      <div>
+        <p class="t-eyebrow">Behandlungen</p>
+        <h2 class="t-h2">Für jede Zone die <span class="text-gold">passende Sitzung</span></h2>
+        <p class="t-lead section-head__lead">
+          Von der Oberlippe bis zum Rücken – zieh dich durch unsere Bereiche und stell dir
+          im Rechner dein persönliches Paket zusammen.
+        </p>
+      </div>
+      <div class="behandlungen__arrows" aria-hidden="true">
+        <button type="button" class="caro-arrow" data-prev aria-label="Vorherige Behandlung"><Icon name="arrow" class="w-5 h-5 caro-arrow__ic--prev" /></button>
+        <button type="button" class="caro-arrow" data-next aria-label="Nächste Behandlung"><Icon name="arrow" class="w-5 h-5" /></button>
+      </div>
+    </div>
+
+    <div class="caro reveal">
+      <ul class="caro__track" data-track>
+        {behandlungen.map((b) => (
+          <li class="caro__item" data-slide>
+            <article class="tcard">
+              <div class="tcard__media">
+                <Placeholder ratio="portrait" label={b.name} icon={b.icon} tone="dark" note="Motiv folgt" />
+                <span class="tcard__dauer"><Icon name="clock" class="w-3.5 h-3.5" /> {b.dauer}</span>
+              </div>
+              <div class="tcard__body">
+                <h3 class="tcard__title">{b.name}</h3>
+                <p class="tcard__text">{b.text}</p>
+                <a href="#preise" class="tcard__link" data-track="cta_behandlung">
+                  Im Rechner ansehen <Icon name="arrow-up-right" class="w-4 h-4" />
+                </a>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="caro__progress reveal" aria-hidden="true">
+      <span class="caro__progress-bar" data-caro-bar></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .behandlungen { background: var(--color-cream); }
+  .behandlungen__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; max-width: 100%; margin-bottom: clamp(1.75rem, 4vw, 2.75rem); }
+  .behandlungen__head > div { max-width: 46rem; }
+
+  .behandlungen__arrows { display: none; gap: 0.6rem; flex: 0 0 auto; }
+  @media (min-width: 760px) { .behandlungen__arrows { display: flex; } }
+  .caro-arrow {
+    width: 3rem; height: 3rem; border-radius: 50%; cursor: pointer;
+    background: #fff; border: 1.5px solid var(--color-sand-deep); color: var(--color-ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .caro-arrow:hover { border-color: var(--color-gold); color: var(--color-gold-deep); transform: translateY(-2px); }
+  .caro-arrow:disabled { opacity: 0.4; pointer-events: none; }
+  .caro-arrow__ic--prev { transform: rotate(180deg); }
+
+  /* Track */
+  .caro { position: relative; margin-inline: calc(-1 * 1.25rem); padding-inline: 1.25rem; }
+  @media (min-width: 768px) { .caro { margin-inline: calc(-1 * 2rem); padding-inline: 2rem; } }
+  .caro__track {
+    list-style: none; display: flex; gap: 1.1rem;
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    scroll-behavior: smooth; padding-bottom: 0.5rem;
+    -ms-overflow-style: none; scrollbar-width: none; cursor: grab;
+  }
+  .caro__track::-webkit-scrollbar { display: none; }
+  .caro__track.is-dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
+  .caro__item { flex: 0 0 78%; scroll-snap-align: start; }
+  @media (min-width: 560px) { .caro__item { flex-basis: 46%; } }
+  @media (min-width: 900px) { .caro__item { flex-basis: 31.5%; } }
+  @media (min-width: 1200px) { .caro__item { flex-basis: 24%; } }
+
+  .tcard {
+    background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-lg);
+    overflow: hidden; box-shadow: var(--shadow-soft); height: 100%;
+    display: flex; flex-direction: column;
+    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+  .tcard:hover { transform: translateY(-5px); box-shadow: var(--shadow-card); border-color: var(--color-gold-soft); }
+  .tcard__media { position: relative; }
+  .tcard__media :global(.ph) { border-radius: 0; border-left: 0; border-right: 0; border-top: 0; }
+  .tcard__dauer {
+    position: absolute; left: 0.8rem; bottom: 0.8rem;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.72rem; font-weight: 700; color: #2a1c07;
+    background: var(--gradient-gold); border-radius: 999px; padding: 0.3rem 0.7rem;
+  }
+  .tcard__body { padding: 1.2rem 1.3rem 1.4rem; display: flex; flex-direction: column; flex: 1 1 auto; }
+  .tcard__title { font-size: 1.35rem; }
+  .tcard__text { margin-top: 0.45rem; color: var(--color-ink-soft); font-size: 0.94rem; flex: 1 1 auto; }
+  .tcard__link {
+    display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem;
+    font-weight: 700; font-size: 0.9rem; color: var(--color-gold-deep); text-decoration: none;
+    align-self: flex-start;
+  }
+  .tcard__link:hover { color: var(--color-gold-darker); }
+  .tcard__link :global(svg) { transition: transform 0.2s ease; }
+  .tcard__link:hover :global(svg) { transform: translate(2px, -2px); }
+
+  /* Fortschrittsleiste */
+  .caro__progress { margin-top: 1.4rem; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--color-sand-deep) 60%, transparent); overflow: hidden; }
+  .caro__progress-bar { display: block; height: 100%; width: 25%; border-radius: 999px; background: var(--gradient-gold); transition: width 0.2s ease, margin-left 0.2s ease; }
+</style>
+
+<script>
+  const caro = document.querySelector<HTMLElement>('.caro');
+  const track = document.querySelector<HTMLElement>('[data-track]');
+  const bar = document.querySelector<HTMLElement>('[data-caro-bar]');
+  const prev = document.querySelector<HTMLButtonElement>('[data-prev]');
+  const next = document.querySelector<HTMLButtonElement>('[data-next]');
+
+  if (track) {
+    const stepBy = () => {
+      const first = track.querySelector<HTMLElement>('[data-slide]');
+      const gap = parseFloat(getComputedStyle(track).columnGap || '16') || 16;
+      return first ? first.offsetWidth + gap : track.clientWidth * 0.8;
+    };
+
+    const updateProgress = () => {
+      if (!bar) return;
+      const max = track.scrollWidth - track.clientWidth;
+      const ratio = max > 0 ? track.scrollLeft / max : 0;
+      const visible = track.clientWidth / track.scrollWidth;
+      bar.style.width = Math.max(12, visible * 100).toFixed(1) + '%';
+      bar.style.marginLeft = (ratio * (100 - Math.max(12, visible * 100))).toFixed(1) + '%';
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= max - 2;
+    };
+
+    prev?.addEventListener('click', () => track.scrollBy({ left: -stepBy(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left: stepBy(), behavior: 'smooth' }));
+    track.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+
+    // Ziehen mit Maus (Pointer)
+    let down = false, startX = 0, startLeft = 0, moved = 0;
+    track.addEventListener('pointerdown', (e) => {
+      down = true; moved = 0;
+      startX = e.clientX; startLeft = track.scrollLeft;
+      track.classList.add('is-dragging');
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      moved = Math.max(moved, Math.abs(dx));
+      track.scrollLeft = startLeft - dx;
+    });
+    const end = () => {
+      if (!down) return;
+      down = false; track.classList.remove('is-dragging');
+    };
+    track.addEventListener('pointerup', end);
+    track.addEventListener('pointerleave', end);
+    // Klicks nach echtem Ziehen unterdrücken
+    track.addEventListener('click', (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+    updateProgress();
+  }
+</script>

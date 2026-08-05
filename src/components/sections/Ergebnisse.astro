@@ -1,40 +1,54 @@
 ---
 /**
- * Abschnitt 7: Vorher-Nachher-Galerie.
- * PLATZHALTER-KOMPONENTE: Es liegt noch kein echtes Vorher-Nachher-Material vor.
- * Sobald Fotos vorhanden sind (mit Angabe von Zone und Anzahl Sitzungen), hier einbinden
- * und `ergebnisseVorhanden` in src/data/inhalt.ts auf true setzen.
+ * Ergebnisse: interaktiver Vorher/Nachher-Schieberegler.
+ * Ehrlich als Platzhalter markiert – es werden KEINE echten/erfundenen Fotos gezeigt.
+ * Sobald dokumentiertes Material (Zone + Sitzungsanzahl, mit Einwilligung) vorliegt,
+ * die beiden Platzhalter-Flächen durch echte <Image>-Motive ersetzen.
  */
-import { ergebnisseVorhanden, ergebnissePlatzhalter } from '@/data/inhalt';
+import { ergebnissePlatzhalter } from '@/data/inhalt';
+import Placeholder from '@/components/Placeholder.astro';
 import Icon from '@/components/Icon.astro';
 ---
 <section id="ergebnisse" class="section-pad ergebnisse">
   <div class="container-page">
-    <header class="section-head reveal">
-      <p class="t-eyebrow">Ergebnisse</p>
-      <h2 class="t-h2">Vorher und nachher</h2>
+    <header class="section-head section-head--center reveal">
+      <p class="t-eyebrow t-eyebrow--center">Ergebnisse</p>
+      <h2 class="t-h2">Vorher &amp; <span class="text-gold">nachher</span></h2>
       <p class="t-lead section-head__lead">
-        Echte Verläufe sagen mehr als Worte. Jedes Bild zeigt die Zone und die Anzahl der Sitzungen.
+        Zieh den Regler und sieh den Unterschied. Sobald dokumentierte Verläufe vorliegen,
+        zeigen wir hier echte Ergebnisse – jeweils mit Zone und Anzahl der Sitzungen.
       </p>
     </header>
 
-    {ergebnisseVorhanden ? (
-      <p>{/* TODO: echte Vorher-Nachher-Galerie hier einbinden */}</p>
-    ) : (
-      <div class="ergebnisse__grid reveal">
-        {ergebnissePlatzhalter.map((e) => (
-          <figure class="ergebnisse__card">
-            <div class="ergebnisse__ph" role="img" aria-label={`Platzhalter: Vorher-Nachher-Bild ${e.zone}`}>
-              <Icon name="sparkle" class="w-7 h-7" />
-              <span>Bild folgt</span>
-            </div>
-            <figcaption class="ergebnisse__cap">
-              <strong>{e.zone}</strong><span>{e.sitzungen}</span>
-            </figcaption>
-          </figure>
-        ))}
+    <div class="ba reveal" data-ba>
+      <div class="ba__stage" data-ba-stage>
+        <!-- Nachher (Hintergrund) -->
+        <div class="ba__layer ba__after">
+          <Placeholder ratio="wide" label="Nachher" icon="spark" tone="light" note="Ergebnis-Motiv folgt" />
+          <span class="ba__tag ba__tag--after">Nachher</span>
+        </div>
+        <!-- Vorher (beschnitten via clip) -->
+        <div class="ba__layer ba__before" data-ba-before>
+          <Placeholder ratio="wide" label="Vorher" icon="droplet" tone="dark" note="Ausgangs-Motiv folgt" />
+          <span class="ba__tag ba__tag--before">Vorher</span>
+        </div>
+        <!-- Griff -->
+        <div class="ba__handle" data-ba-handle style="left:50%">
+          <span class="ba__line"></span>
+          <button type="button" class="ba__knob" data-ba-knob aria-label="Vorher-Nachher-Regler ziehen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" role="slider">
+            <Icon name="arrow" class="w-4 h-4 ba__knob-l" />
+            <Icon name="arrow" class="w-4 h-4 ba__knob-r" />
+          </button>
+        </div>
       </div>
-    )}
+      <p class="ba__hint"><Icon name="info" class="w-4 h-4" /> Illustrativer Platzhalter – noch keine echten Behandlungsfotos.</p>
+    </div>
+
+    <ul class="ergebnisse__examples reveal" aria-label="Mögliche Beispielverläufe">
+      {ergebnissePlatzhalter.map((e) => (
+        <li class="ex-chip"><Icon name="check-circle" class="w-4 h-4" /> {e.zone} <span>· {e.sitzungen}</span></li>
+      ))}
+    </ul>
 
     <p class="ergebnisse__note reveal">
       Fotos deiner eigenen Behandlung entstehen selbstverständlich nur mit deiner ausdrücklichen Einwilligung.
@@ -43,18 +57,86 @@ import Icon from '@/components/Icon.astro';
 </section>
 
 <style>
-  .ergebnisse { background: var(--color-cream); }
-  .ergebnisse__grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
-  @media (min-width: 640px) { .ergebnisse__grid { grid-template-columns: repeat(3, 1fr); } }
-  .ergebnisse__card { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-soft); }
-  .ergebnisse__ph {
-    aspect-ratio: 4 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
-    background:
-      repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-sand) 60%, #fff) 0 12px, #fff 12px 24px);
-    color: var(--color-mocha); font-weight: 600; font-size: 0.85rem;
+  .ergebnisse { background: var(--color-cream-deep); }
+
+  .ba { max-width: 60rem; margin-inline: auto; }
+  .ba__stage {
+    position: relative; border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow-card); border: 1px solid var(--color-sand);
+    user-select: none; touch-action: pan-y;
   }
-  .ergebnisse__cap { display: flex; flex-direction: column; padding: 0.85rem 1rem; }
-  .ergebnisse__cap strong { font-size: 1.05rem; }
-  .ergebnisse__cap span { font-size: 0.85rem; color: var(--color-mocha); }
-  .ergebnisse__note { margin-top: 1.5rem; font-size: 0.85rem; color: var(--color-mocha); }
+  .ba__layer { position: absolute; inset: 0; }
+  .ba__layer :global(.ph) { height: 100%; border-radius: 0; border: 0; }
+  .ba__after { position: relative; } /* bestimmt die Hoehe */
+  .ba__before { clip-path: inset(0 50% 0 0); }
+  .ba__tag {
+    position: absolute; top: 0.9rem; z-index: 3;
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.3rem 0.7rem; border-radius: 999px;
+  }
+  .ba__tag--after { right: 0.9rem; background: #fff; color: var(--color-ink); border: 1px solid var(--color-sand-deep); }
+  .ba__tag--before { left: 0.9rem; background: var(--gradient-gold); color: #2a1c07; }
+
+  .ba__handle { position: absolute; top: 0; bottom: 0; width: 0; z-index: 4; transform: translateX(-1px); }
+  .ba__line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%); background: color-mix(in srgb, #fff 85%, var(--color-gold)); box-shadow: 0 0 0 1px rgba(0,0,0,0.06); }
+  .ba__knob {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 3.1rem; height: 3.1rem; border-radius: 50%; cursor: ew-resize;
+    background: #fff; border: 2px solid var(--color-gold);
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.1rem;
+    box-shadow: var(--shadow-card); color: var(--color-gold-deep);
+  }
+  .ba__knob-l { transform: rotate(180deg); }
+  .ba__knob:active { transform: translate(-50%, -50%) scale(0.96); }
+
+  .ba__hint { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 0.9rem; font-size: 0.82rem; color: var(--color-mocha); }
+  .ba__hint :global(svg) { color: var(--color-gold-deep); }
+
+  .ergebnisse__examples { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1.75rem; }
+  .ex-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: #fff; border: 1px solid var(--color-sand-deep); border-radius: 999px;
+    padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600; color: var(--color-ink);
+  }
+  .ex-chip span { color: var(--color-mocha); font-weight: 500; }
+  .ex-chip :global(svg) { color: var(--color-gold-deep); }
+  .ergebnisse__note { margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--color-mocha); }
 </style>
+
+<script>
+  const ba = document.querySelector<HTMLElement>('[data-ba]');
+  if (ba) {
+    const stage = ba.querySelector<HTMLElement>('[data-ba-stage]')!;
+    const before = ba.querySelector<HTMLElement>('[data-ba-before]')!;
+    const handle = ba.querySelector<HTMLElement>('[data-ba-handle]')!;
+    const knob = ba.querySelector<HTMLElement>('[data-ba-knob]')!;
+    let dragging = false;
+
+    function setPos(clientX: number) {
+      const r = stage.getBoundingClientRect();
+      let pct = ((clientX - r.left) / r.width) * 100;
+      pct = Math.min(100, Math.max(0, pct));
+      handle.style.left = pct + '%';
+      before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      knob.setAttribute('aria-valuenow', String(Math.round(pct)));
+    }
+
+    const start = (e: PointerEvent) => { dragging = true; knob.setPointerCapture?.(e.pointerId); setPos(e.clientX); };
+    const move = (e: PointerEvent) => { if (dragging) setPos(e.clientX); };
+    const end = () => { dragging = false; };
+
+    knob.addEventListener('pointerdown', start);
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', end);
+    // Tap/Klick auf die Bühne springt zur Position
+    stage.addEventListener('pointerdown', (e) => { if (e.target !== knob) setPos((e as PointerEvent).clientX); });
+
+    // Tastaturbedienung
+    knob.addEventListener('keydown', (e) => {
+      const cur = Number(knob.getAttribute('aria-valuenow') || 50);
+      const r = stage.getBoundingClientRect();
+      if (e.key === 'ArrowLeft') { e.preventDefault(); setPos(r.left + (r.width * (cur - 4)) / 100); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); setPos(r.left + (r.width * (cur + 4)) / 100); }
+    });
+  }
+</script>

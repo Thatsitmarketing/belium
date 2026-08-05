@@ -1,0 +1,42 @@
+---
+/**
+ * Laufband/Marquee mit Schlagworten – dezenter Editorial-Akzent zwischen Sektionen.
+ * Endlos-Loop (dupliziert), pausiert bei prefers-reduced-motion.
+ */
+interface Props {
+  items?: string[];
+  tone?: 'dark' | 'light';
+}
+const {
+  items = ['Dauerhafte Haarreduktion', 'Schmerzarm', 'Zertifiziert', 'VIKINI Diodenlaser 808 nm', 'Gekühlter Laserkopf', 'Gelsenkirchen Buer', 'Ehrliche Beratung'],
+  tone = 'dark',
+} = Astro.props;
+const loop = [...items, ...items];
+---
+<div class:list={['marquee', `marquee--${tone}`]} aria-hidden="true">
+  <div class="marquee__track">
+    {loop.map((t) => (
+      <span class="marquee__item"><span class="marquee__dot"></span>{t}</span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee { overflow: hidden; padding-block: 1.1rem; border-block: 1px solid transparent; }
+  .marquee--dark { background: var(--color-ink); border-color: color-mix(in srgb, var(--color-gold) 20%, transparent); }
+  .marquee--light { background: var(--color-cream-deep); border-color: var(--color-sand); }
+
+  .marquee__track { display: inline-flex; align-items: center; white-space: nowrap; will-change: transform; animation: marquee-scroll 34s linear infinite; }
+  .marquee__item {
+    display: inline-flex; align-items: center; gap: 1.1rem;
+    font-family: var(--font-display); font-size: clamp(1.1rem, 2.2vw, 1.6rem); font-weight: 600;
+    padding-inline: 1.1rem;
+  }
+  .marquee--dark .marquee__item { color: color-mix(in srgb, var(--color-onink) 88%, transparent); }
+  .marquee--light .marquee__item { color: var(--color-espresso); }
+  .marquee__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--gradient-gold); flex: 0 0 auto; }
+
+  @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+</style>

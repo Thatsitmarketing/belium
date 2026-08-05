@@ -3,10 +3,12 @@ import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import StickyCta from '@/components/StickyCta.astro';
+import Marquee from '@/components/Marquee.astro';
 
 import Hero from '@/components/sections/Hero.astro';
 import Problem from '@/components/sections/Problem.astro';
 import Vorteile from '@/components/sections/Vorteile.astro';
+import Behandlungen from '@/components/sections/Behandlungen.astro';
 import ZonenPreise from '@/components/sections/ZonenPreise.astro';
 import Ablauf from '@/components/sections/Ablauf.astro';
 import Technologie from '@/components/sections/Technologie.astro';
@@ -29,8 +31,10 @@ const description =
   <Header />
   <main id="hauptinhalt">
     <Hero />
+    <Marquee tone="dark" />
     <Problem />
     <Vorteile />
+    <Behandlungen />
     <ZonenPreise />
     <Ablauf />
     <Technologie />

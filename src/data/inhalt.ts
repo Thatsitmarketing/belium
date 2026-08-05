@@ -55,7 +55,8 @@ export const ergebnissePlatzhalter: { zone: string; sitzungen: string }[] = [
 /** Ankernavigation (Abschnitt-IDs müssen mit den Sektionen übereinstimmen). */
 export const navItems: { href: string; label: string }[] = [
   { href: '#vorteile', label: 'Vorteile' },
-  { href: '#preise', label: 'Zonen & Preise' },
+  { href: '#behandlungen', label: 'Behandlungen' },
+  { href: '#preise', label: 'Preise' },
   { href: '#ablauf', label: 'Ablauf' },
   { href: '#ueber-maria', label: 'Über Maria' },
   { href: '#faq', label: 'FAQ' },
