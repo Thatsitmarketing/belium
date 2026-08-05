@@ -1,7 +1,8 @@
 ---
 /**
- * „So funktioniert die Behandlung" – Technik-Prinzipien und Ablauf in einem Abschnitt.
- * Oben drei kompakte Prinzipien (Technik), darunter die vier Schritte als Gold-Timeline.
+ * „So funktioniert die Behandlung" – neues, offenes Designkonzept ohne Kacheln:
+ * oben die drei Technik-Prinzipien als schlichte, mit Haarlinien getrennte Reihe,
+ * darunter der Ablauf als durchgehende, nummerierte Prozesslinie (keine Karten).
  */
 import { ablaufSchritte } from '@/data/ablauf';
 import Icon from '@/components/Icon.astro';
@@ -31,32 +32,30 @@ const prinzipien = [
       </p>
     </header>
 
+    <!-- Technik-Prinzipien: offene Reihe, mit Haarlinien getrennt (keine Kacheln) -->
     <div class="prinzipien reveal" data-reveal-stagger>
       {prinzipien.map((p) => (
-        <article class="prinzip" data-reveal="up">
+        <div class="prinzip" data-reveal="up">
           <span class="prinzip__ic"><Icon name={p.icon} class="w-6 h-6" gradient /></span>
-          <h3 class="prinzip__titel">{p.titel}</h3>
-          <p class="prinzip__text">{p.text}</p>
-        </article>
+          <div>
+            <h3 class="prinzip__titel">{p.titel}</h3>
+            <p class="prinzip__text">{p.text}</p>
+          </div>
+        </div>
       ))}
     </div>
 
-    <ol class="timeline">
-      <span class="timeline__rail" aria-hidden="true"><span class="timeline__rail-fill" data-rail-fill></span></span>
+    <!-- Ablauf: durchgehende, nummerierte Prozesslinie -->
+    <ol class="steps">
       {ablaufSchritte.map((s, i) => (
-        <li class="timeline__item reveal">
-          <div class="timeline__node" aria-hidden="true">
-            <span class="timeline__node-ring"></span>
-            <Icon name={meta[i].icon} class="w-5 h-5" gradient />
+        <li class="step reveal" data-reveal="up">
+          <div class="step__head">
+            <span class="step__num num-gold">{s.nummer}</span>
+            <span class="step__ic"><Icon name={meta[i].icon} class="w-4 h-4" gradient /></span>
           </div>
-          <div class="timeline__card">
-            <div class="timeline__top">
-              <span class="timeline__num num-gold">{s.nummer}</span>
-              <span class="timeline__tag"><Icon name="clock" class="w-3.5 h-3.5" /> {meta[i].tag}</span>
-            </div>
-            <h3 class="timeline__title">{s.titel}</h3>
-            <p class="timeline__text">{s.text}</p>
-          </div>
+          <h3 class="step__title">{s.titel}</h3>
+          <p class="step__text">{s.text}</p>
+          <p class="step__tag"><Icon name="clock" class="w-3.5 h-3.5" /> {meta[i].tag}</p>
         </li>
       ))}
     </ol>
@@ -66,87 +65,42 @@ const prinzipien = [
 <style>
   .ablauf { background: var(--color-cream); }
 
-  /* Technik-Prinzipien */
-  .prinzipien { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: clamp(2.25rem, 5vw, 3.25rem); }
-  @media (min-width: 720px) { .prinzipien { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
-  .prinzip { background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md); padding: 1.5rem 1.4rem; box-shadow: var(--shadow-soft); }
+  /* Technik-Prinzipien – offen, mit feinen Trennlinien */
+  .prinzipien { display: grid; grid-template-columns: 1fr; gap: 1.6rem; margin-bottom: clamp(2.75rem, 6vw, 4.5rem); }
+  @media (min-width: 760px) { .prinzipien { grid-template-columns: repeat(3, 1fr); gap: 0; } }
+  .prinzip { display: flex; align-items: flex-start; gap: 0.9rem; }
+  @media (min-width: 760px) {
+    .prinzip { padding-inline: clamp(1.25rem, 2.5vw, 2rem); }
+    .prinzip + .prinzip { border-left: 1px solid var(--color-sand-deep); }
+    .prinzip:first-child { padding-left: 0; }
+  }
   .prinzip__ic {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 3rem; height: 3rem; border-radius: var(--radius-sm); margin-bottom: 0.9rem;
-    background: color-mix(in srgb, var(--color-gold-soft) 30%, #fff);
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.9rem; height: 2.9rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-gold-soft) 26%, #fff);
     border: 1px solid var(--color-sand-deep);
   }
   .prinzip__titel { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; color: var(--color-ink); }
-  .prinzip__text { margin-top: 0.4rem; color: var(--color-ink-soft); font-size: 0.94rem; }
+  .prinzip__text { margin-top: 0.3rem; color: var(--color-ink-soft); font-size: 0.94rem; }
 
-  .timeline { list-style: none; position: relative; margin-top: 0.5rem; padding-left: 3.5rem; }
-  @media (min-width: 760px) { .timeline { padding-left: 4.25rem; } }
+  /* Ablauf – durchgehende Prozesslinie mit großen Gold-Ziffern, ohne Karten */
+  .steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 2.25rem; }
+  @media (min-width: 860px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 2.5rem; } }
 
-  /* Gold-Schiene */
-  .timeline__rail {
-    position: absolute; left: 1.6rem; top: 0.6rem; bottom: 0.6rem; width: 2px;
-    background: color-mix(in srgb, var(--color-sand-deep) 75%, transparent);
-    border-radius: 2px; overflow: hidden;
+  .step { position: relative; padding-top: 1.6rem; border-top: 2px solid color-mix(in srgb, var(--color-gold) 55%, transparent); }
+  .step__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .step__num { font-family: var(--font-display); font-weight: 700; font-size: 2.7rem; line-height: 1; }
+  .step__ic {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.3rem; height: 2.3rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-gold-soft) 26%, #fff);
+    border: 1px solid var(--color-sand-deep);
   }
-  @media (min-width: 760px) { .timeline__rail { left: 1.95rem; } }
-  .timeline__rail-fill { position: absolute; inset: 0 0 auto 0; height: 0; background: var(--gradient-gold); transition: height 0.1s linear; }
-
-  .timeline__item { position: relative; padding-bottom: 2rem; }
-  .timeline__item:last-child { padding-bottom: 0; }
-
-  .timeline__node {
-    position: absolute; left: -3.5rem; top: 0;
-    width: 3.2rem; height: 3.2rem; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    background:
-      linear-gradient(#fff, #fff) padding-box,
-      var(--gradient-gold) border-box;
-    border: 2px solid transparent; box-shadow: var(--shadow-soft); z-index: 1;
+  .step__title { font-size: 1.35rem; margin-top: 0.85rem; }
+  .step__text { margin-top: 0.45rem; color: var(--color-ink-soft); font-size: 0.97rem; }
+  .step__tag {
+    display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.8rem;
+    font-size: 0.78rem; font-weight: 700; color: var(--color-espresso);
   }
-  @media (min-width: 760px) { .timeline__node { left: -4.25rem; width: 3.9rem; height: 3.9rem; } }
-  .timeline__node-ring {
-    position: absolute; inset: -6px; border-radius: 50%;
-    border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent); opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  .timeline__item:hover .timeline__node-ring { opacity: 1; transform: scale(1.05); }
-
-  .timeline__card {
-    background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md);
-    padding: 1.4rem 1.5rem; box-shadow: var(--shadow-soft);
-    transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-  .timeline__item:hover .timeline__card { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--color-gold-soft); }
-  .timeline__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; }
-  .timeline__num { font-size: 1.9rem; line-height: 1; }
-  .timeline__tag {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    font-size: 0.74rem; font-weight: 700; color: var(--color-espresso);
-    background: color-mix(in srgb, var(--color-gold-soft) 34%, #fff);
-    border: 1px solid var(--color-sand-deep); border-radius: 999px; padding: 0.28rem 0.7rem;
-  }
-  .timeline__tag :global(svg) { color: var(--color-gold-deep); }
-  .timeline__title { font-size: 1.3rem; }
-  .timeline__text { margin-top: 0.5rem; color: var(--color-ink-soft); font-size: 0.97rem; }
+  .step__tag :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; }
 </style>
-
-<script>
-  // Gold-Schiene fuellt sich passend zum Scroll (dezent, respektiert reduced motion).
-  const rail = document.querySelector<HTMLElement>('[data-rail-fill]');
-  const tl = document.querySelector<HTMLElement>('.timeline');
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (rail && tl && !prefersReduced) {
-    const onScroll = () => {
-      const r = tl.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const total = r.height;
-      const progress = Math.min(1, Math.max(0, (vh * 0.6 - r.top) / total));
-      rail.style.height = (progress * 100).toFixed(1) + '%';
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-  } else if (rail) {
-    rail.style.height = '100%';
-  }
-</script>

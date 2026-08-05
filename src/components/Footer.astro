@@ -74,8 +74,8 @@ const year = 2026;
     color: color-mix(in srgb, var(--color-cream) 80%, transparent);
     padding-top: clamp(3.5rem, 7vw, 5.5rem);
     padding-bottom: calc(6rem + env(safe-area-inset-bottom)); /* Platz für Sticky-CTA auf Mobil */
-    /* Weiche, editoriale Rundung am oberen Rand (Referenz-Impuls) */
-    border-radius: clamp(2rem, 4.5vw, 3.5rem) clamp(2rem, 4.5vw, 3.5rem) 0 0;
+    /* Dezente Rundung am oberen Rand (Overlap-Effekt bleibt, aber zurückhaltender) */
+    border-radius: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 2.5vw, 1.75rem) 0 0;
     border-top: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
     /* Der Footer schiebt sich als abgerundete Fläche über den Abschnitt darüber –
        dessen Hintergrund bleibt in den Rundungen sichtbar und wirkt „dahinter liegend". */
