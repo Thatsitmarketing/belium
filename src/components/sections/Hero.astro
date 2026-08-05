@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import heroImg from '@/assets/images/behandlungsraum-belium-gelsenkirchen-buer.png';
+
+const trust = [
+  { icon: 'shield', text: 'Zertifizierte Laserschutzbeauftragte' },
+  { icon: 'snowflake', text: 'Gekühlter Laserkopf, schmerzarm' },
+  { icon: 'map', text: 'Mitten in Gelsenkirchen Buer' },
+];
+---
+<section id="hero" class="hero">
+  <div class="container-page hero__grid">
+    <div class="hero__content">
+      <p class="t-eyebrow reveal">Belium Beauty · Gelsenkirchen Buer</p>
+      <h1 class="hero__title reveal">
+        Dauerhaft glatte Haut. Laser Haarentfernung in Gelsenkirchen Buer.
+      </h1>
+      <p class="t-lead hero__lead reveal">
+        Schluss mit Rasieren und Wachsen. Mit dem gekühlten VIKINI Diodenlaser reduzieren wir deine
+        Haare dauerhaft, schmerzarm und von einer zertifizierten Laserschutzbeauftragten begleitet.
+      </p>
+
+      <ul class="hero__trust reveal" aria-label="Vertrauensmerkmale">
+        {trust.map((t) => (
+          <li class="hero__trust-item">
+            <Icon name={t.icon} class="w-5 h-5 hero__trust-icon" />
+            <span>{t.text}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="hero__actions reveal">
+        <a href="#kontakt" class="btn btn-primary" data-track="cta_hero">Kostenlose Beratung sichern</a>
+        <a href="#preise" class="btn btn-ghost">Zonen &amp; Preise ansehen</a>
+      </div>
+    </div>
+
+    <div class="hero__media reveal">
+      <Image
+        src={heroImg}
+        alt="Heller, gepflegter Behandlungsraum von Belium Beauty in Gelsenkirchen Buer mit Diodenlaser und Behandlungsliege"
+        widths={[480, 720, 960, 1200]}
+        sizes="(min-width: 1024px) 42vw, 92vw"
+        loading="eager"
+        fetchpriority="high"
+        format="avif"
+        quality={70}
+        class="hero__img"
+      />
+      <div class="hero__badge">
+        <span class="hero__badge-num">808&nbsp;nm</span>
+        <span class="hero__badge-label">VIKINI Diodenlaser</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+    padding-bottom: clamp(3rem, 7vw, 5rem);
+    background:
+      radial-gradient(120% 80% at 100% 0%, var(--color-cream-deep) 0%, transparent 55%),
+      linear-gradient(180deg, var(--color-cream) 0%, var(--color-cream) 100%);
+    overflow: hidden;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .hero__title {
+    font-size: clamp(2.4rem, 6vw, 4.1rem);
+    line-height: 1.04;
+    margin-top: 0.9rem;
+  }
+  .hero__lead { margin-top: 1.25rem; max-width: 46ch; }
+
+  .hero__trust { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.75rem; }
+  .hero__trust-item { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 0.98rem; }
+  .hero__trust-item :global(.hero__trust-icon) { color: var(--color-gold-deep); flex: 0 0 auto; }
+
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2rem; }
+  .hero__actions .btn { flex: 1 1 auto; }
+
+  .hero__media { position: relative; }
+  .hero__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+  .hero__badge {
+    position: absolute;
+    left: -0.5rem; bottom: -0.75rem;
+    background: #fff;
+    border: 1px solid var(--color-sand);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    padding: 0.75rem 1.1rem;
+    display: flex; flex-direction: column; line-height: 1.15;
+  }
+  .hero__badge-num { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--color-gold-deep); }
+  .hero__badge-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-espresso); }
+
+  @media (min-width: 480px) {
+    .hero__actions .btn { flex: 0 0 auto; }
+  }
+  @media (min-width: 1024px) {
+    .hero__grid { grid-template-columns: 1.05fr 0.95fr; gap: 3.5rem; }
+    .hero__img { aspect-ratio: 5 / 6; }
+  }
+</style>

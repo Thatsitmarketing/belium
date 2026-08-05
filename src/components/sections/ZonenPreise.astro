@@ -1,0 +1,308 @@
+---
+/** Abschnitt 4: Behandlungszonen & Preise mit interaktivem Zonenwähler. Wichtigster neuer Abschnitt. */
+import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/data/zonen';
+import LeadForm from '@/components/LeadForm.astro';
+import Icon from '@/components/Icon.astro';
+---
+<section id="preise" class="section-pad preise">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Zonen &amp; Preise</p>
+      <h2 class="t-h2">Stell dir deine Zonen zusammen</h2>
+      <p class="t-lead section-head__lead">
+        Wähle die Bereiche aus, die dich interessieren. Der Rechner zeigt dir sofort eine Übersicht.
+        Danach bekommst du in wenigen Schritten dein persönliches Angebot.
+      </p>
+    </header>
+
+    {preisePlatzhalter && (
+      <p class="preise__hinweis reveal" role="note">
+        <Icon name="info" class="w-5 h-5" />
+        <span><strong>Hinweis:</strong> Die angezeigten Preise sind Platzhalter zur Veranschaulichung.
+        Die verbindlichen Preise erhältst du im kostenlosen Beratungsgespräch.</span>
+      </p>
+    )}
+
+    <div class="zw reveal" data-zonenwaehler>
+      <!-- Tabs Damen / Herren -->
+      <div class="zw__tabs" role="tablist" aria-label="Damen oder Herren">
+        {zonenGruppen.map((g, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${g.id}`}
+            aria-controls={`panel-${g.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            class:list={['zw__tab', { 'is-active': i === 0 }]}
+            data-tab={g.id}
+          >{g.label}</button>
+        ))}
+      </div>
+
+      <div class="zw__body">
+        <!-- Panels -->
+        <div class="zw__panels">
+          {zonenGruppen.map((g, i) => (
+            <div
+              id={`panel-${g.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${g.id}`}
+              class="zw__panel"
+              hidden={i !== 0}
+            >
+              <div class="zw__zonen" role="group" aria-label={`Zonen ${g.label}`}>
+                {g.zonen.map((z) => (
+                  <button
+                    type="button"
+                    class="zone"
+                    aria-pressed="false"
+                    data-zone
+                    data-name={z.name}
+                    data-einzel={z.einzel}
+                    data-paket={z.paket}
+                  >
+                    <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
+                    <span class="zone__info">
+                      <span class="zone__name">{z.name}</span>
+                      {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
+                    </span>
+                    <span class="zone__preis">
+                      <span class="zone__paket">{formatEuro(z.paket)}<span class="zone__paket-tag"> / Paket</span></span>
+                      <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Zusammenfassung -->
+        <aside class="zw__summary" aria-live="polite">
+          <div class="zw__summary-head">
+            <span class="zw__summary-count"><span data-count>0</span> Zonen gewählt</span>
+          </div>
+          <ul class="zw__chosen" data-chosen>
+            <li class="zw__empty" data-empty>Noch keine Zone gewählt. Tippe oben auf deine Wunschbereiche.</li>
+          </ul>
+          <dl class="zw__totals">
+            <div class="zw__total-row">
+              <dt>Paketpreis (ca. {paketSitzungen} Sitzungen)</dt>
+              <dd data-total-paket>{formatEuro(0)}</dd>
+            </div>
+            <div class="zw__total-row zw__total-row--muted">
+              <dt>Summe Einzelsitzungen</dt>
+              <dd data-total-einzel>{formatEuro(0)}</dd>
+            </div>
+          </dl>
+          <button type="button" class="btn btn-primary zw__cta" data-angebot-open disabled>
+            Persönliches Angebot erhalten
+          </button>
+          <p class="zw__reset"><button type="button" data-reset>Auswahl zurücksetzen</button></p>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Schritt 2: Angebot-Formular (erscheint nach Klick) -->
+    <div class="zw__angebot" id="angebot" data-angebot hidden>
+      <div class="zw__angebot-inner card">
+        <h3 class="t-h3">Fast geschafft: dein persönliches Angebot</h3>
+        <p class="zw__angebot-lead">
+          Hinterlasse uns Name und Kontakt. Wir schicken dir ein unverbindliches Angebot für deine
+          gewählten Zonen und schlagen dir einen Termin für die kostenlose Beratung vor.
+        </p>
+        <LeadForm id="leadform-angebot" variant="angebot" eventName="zonenwaehler_abschluss" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .preise { background: var(--color-cream); }
+  .preise__hinweis {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    background: color-mix(in srgb, var(--color-gold-soft) 20%, #fff);
+    border: 1px solid var(--color-sand-deep);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem; margin-bottom: 1.75rem; font-size: 0.92rem; color: var(--color-ink-soft);
+  }
+  .preise__hinweis :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
+
+  .zw { border: 1px solid var(--color-sand); border-radius: var(--radius-lg); background: #fff; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .zw__tabs { display: flex; gap: 0.25rem; padding: 0.5rem; background: var(--color-cream-deep); border-bottom: 1px solid var(--color-sand); }
+  .zw__tab {
+    flex: 1 1 0; padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 0;
+    background: transparent; font-weight: 700; font-size: 1rem; color: var(--color-mocha); cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .zw__tab.is-active { background: #fff; color: var(--color-ink); box-shadow: var(--shadow-soft); }
+
+  .zw__body { display: grid; grid-template-columns: 1fr; gap: 0; }
+  @media (min-width: 900px) { .zw__body { grid-template-columns: 1.5fr 1fr; } }
+
+  .zw__panels { padding: 1.1rem; }
+  .zw__zonen { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
+  @media (min-width: 520px) { .zw__zonen { grid-template-columns: 1fr 1fr; } }
+
+  .zone {
+    display: flex; align-items: center; gap: 0.75rem; text-align: left;
+    padding: 0.75rem 0.85rem; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--color-sand-deep); background: #fff; cursor: pointer;
+    transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.1s ease;
+  }
+  .zone:hover { border-color: var(--color-gold-soft); }
+  .zone:active { transform: scale(0.99); }
+  .zone__check {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem; border-radius: 6px; border: 1.5px solid var(--color-sand-deep);
+    color: transparent; transition: all 0.18s ease;
+  }
+  .zone__info { flex: 1 1 auto; display: flex; flex-direction: column; line-height: 1.2; }
+  .zone__name { font-weight: 700; font-size: 0.98rem; }
+  .zone__hinweis { font-size: 0.76rem; color: var(--color-mocha); }
+  .zone__preis { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+  .zone__paket { font-weight: 800; font-size: 0.95rem; color: var(--color-ink); }
+  .zone__paket-tag { font-weight: 500; font-size: 0.72rem; color: var(--color-mocha); }
+  .zone__einzel { font-size: 0.74rem; color: var(--color-mocha); }
+
+  .zone[aria-pressed='true'] { border-color: var(--color-gold); background: color-mix(in srgb, var(--color-gold-soft) 16%, #fff); }
+  .zone[aria-pressed='true'] .zone__check { background: var(--color-gold); border-color: var(--color-gold); color: #fff; }
+
+  .zw__summary {
+    padding: 1.25rem; background: var(--color-cream-deep);
+    border-top: 1px solid var(--color-sand);
+    display: flex; flex-direction: column;
+  }
+  @media (min-width: 900px) { .zw__summary { border-top: 0; border-left: 1px solid var(--color-sand); } }
+  .zw__summary-count { font-weight: 700; font-size: 0.95rem; }
+  .zw__chosen { list-style: none; margin: 0.9rem 0; display: flex; flex-wrap: wrap; gap: 0.4rem; min-height: 2rem; }
+  .zw__chosen li.chip {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #fff; border: 1px solid var(--color-sand-deep); border-radius: 999px;
+    padding: 0.3rem 0.7rem; font-size: 0.82rem; font-weight: 600;
+  }
+  .zw__chosen li.chip button { border: 0; background: none; cursor: pointer; color: var(--color-mocha); font-size: 1rem; line-height: 1; padding: 0; }
+  .zw__empty { font-size: 0.86rem; color: var(--color-mocha); }
+  .zw__totals { margin-top: auto; border-top: 1px solid var(--color-sand); padding-top: 0.9rem; }
+  .zw__total-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.2rem 0; }
+  .zw__total-row dt { font-size: 0.9rem; color: var(--color-ink-soft); }
+  .zw__total-row dd { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; color: var(--color-ink); }
+  .zw__total-row--muted dd { font-size: 1rem; font-family: var(--font-sans); color: var(--color-mocha); }
+  .zw__cta { margin-top: 1.1rem; width: 100%; }
+  .zw__cta:disabled { opacity: 0.5; pointer-events: none; }
+  .zw__reset { text-align: center; margin-top: 0.6rem; }
+  .zw__reset button { background: none; border: 0; color: var(--color-mocha); text-decoration: underline; cursor: pointer; font-size: 0.82rem; }
+
+  .zw__angebot { margin-top: 1.5rem; }
+  .zw__angebot-inner { padding: clamp(1.25rem, 3vw, 2rem); }
+  .zw__angebot-lead { margin: 0.6rem 0 1.25rem; color: var(--color-ink-soft); max-width: 60ch; }
+</style>
+
+<script>
+  import { formatEuro } from '@/data/zonen';
+
+  const root = document.querySelector<HTMLElement>('[data-zonenwaehler]');
+  if (root) {
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-tab]');
+    const panels = root.querySelectorAll<HTMLElement>('.zw__panel');
+    const zones = root.querySelectorAll<HTMLButtonElement>('[data-zone]');
+    const chosenList = root.querySelector<HTMLElement>('[data-chosen]');
+    const emptyEl = root.querySelector<HTMLElement>('[data-empty]');
+    const countEl = root.querySelector<HTMLElement>('[data-count]');
+    const totalPaketEl = root.querySelector<HTMLElement>('[data-total-paket]');
+    const totalEinzelEl = root.querySelector<HTMLElement>('[data-total-einzel]');
+    const ctaOpen = root.querySelector<HTMLButtonElement>('[data-angebot-open]');
+    const resetBtn = root.querySelector<HTMLButtonElement>('[data-reset]');
+
+    const angebot = document.querySelector<HTMLElement>('[data-angebot]');
+    const angebotForm = document.getElementById('leadform-angebot') as HTMLFormElement | null;
+    const zonenField = angebotForm?.querySelector<HTMLInputElement>('input[name="zonen"]') ?? null;
+    const summeField = angebotForm?.querySelector<HTMLInputElement>('input[name="summe"]') ?? null;
+    const zonenSummary = angebotForm?.querySelector<HTMLElement>('[data-zonen-summary]') ?? null;
+    const zonenText = angebotForm?.querySelector<HTMLElement>('[data-zonen-text]') ?? null;
+
+    // Map: name -> {einzel, paket, btn}
+    const selected = new Map<string, { einzel: number; paket: number; btn: HTMLButtonElement }>();
+    let started = false;
+
+    function fmt(n: number) { return formatEuro(n); }
+
+    function render() {
+      if (!chosenList) return;
+      // Chips neu aufbauen
+      chosenList.querySelectorAll('.chip').forEach((c) => c.remove());
+      let paket = 0, einzel = 0;
+      selected.forEach((v, name) => {
+        paket += v.paket; einzel += v.einzel;
+        const li = document.createElement('li');
+        li.className = 'chip';
+        li.innerHTML = `<span>${name}</span>`;
+        const x = document.createElement('button');
+        x.type = 'button';
+        x.setAttribute('aria-label', `${name} entfernen`);
+        x.textContent = '×';
+        x.addEventListener('click', () => toggle(v.btn, name));
+        li.appendChild(x);
+        chosenList.appendChild(li);
+      });
+      const count = selected.size;
+      if (emptyEl) emptyEl.style.display = count ? 'none' : '';
+      if (countEl) countEl.textContent = String(count);
+      if (totalPaketEl) totalPaketEl.textContent = fmt(paket);
+      if (totalEinzelEl) totalEinzelEl.textContent = fmt(einzel);
+      if (ctaOpen) ctaOpen.disabled = count === 0;
+
+      // Formular-Felder aktualisieren
+      const names = Array.from(selected.keys());
+      if (zonenField) zonenField.value = names.join(', ');
+      if (summeField) summeField.value = String(paket);
+      if (zonenText) zonenText.textContent = names.length ? `${names.join(', ')} · Paketpreis ca. ${fmt(paket)}` : '—';
+      if (zonenSummary) zonenSummary.hidden = names.length === 0;
+    }
+
+    function toggle(btn: HTMLButtonElement, name: string) {
+      const einzel = Number(btn.dataset.einzel || 0);
+      const paket = Number(btn.dataset.paket || 0);
+      if (selected.has(name)) {
+        selected.delete(name);
+        btn.setAttribute('aria-pressed', 'false');
+      } else {
+        selected.set(name, { einzel, paket, btn });
+        btn.setAttribute('aria-pressed', 'true');
+        if (!started) { started = true; (window as any).trackEvent?.('zonenwaehler_start'); }
+      }
+      render();
+    }
+
+    zones.forEach((btn) => {
+      const name = btn.dataset.name || '';
+      btn.addEventListener('click', () => toggle(btn, name));
+    });
+
+    // Tabs
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.tab;
+        tabs.forEach((t) => { t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', String(t === tab)); });
+        panels.forEach((p) => { p.hidden = p.id !== `panel-${id}`; });
+      });
+    });
+
+    // Angebot öffnen
+    ctaOpen?.addEventListener('click', () => {
+      if (angebot) {
+        angebot.hidden = false;
+        angebot.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        angebotForm?.querySelector<HTMLInputElement>('input[name="name"]')?.focus({ preventScroll: true });
+      }
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      selected.forEach((v) => v.btn.setAttribute('aria-pressed', 'false'));
+      selected.clear();
+      render();
+    });
+
+    render();
+  }
+</script>

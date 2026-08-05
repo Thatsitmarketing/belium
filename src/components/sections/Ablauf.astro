@@ -1,0 +1,45 @@
+---
+/** Abschnitt 5: Ablauf in vier Schritten (H3). */
+import { ablaufSchritte } from '@/data/ablauf';
+---
+<section id="ablauf" class="section-pad ablauf">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">So läuft es ab</p>
+      <h2 class="t-h2">Von der Beratung bis zum Ergebnis</h2>
+      <p class="t-lead section-head__lead">
+        Kein Druck, kein Verkaufsgespräch. Wir starten immer mit einer kostenlosen Beratung samt Testfleck.
+      </p>
+    </header>
+
+    <ol class="ablauf__list">
+      {ablaufSchritte.map((s) => (
+        <li class="ablauf__item reveal">
+          <span class="ablauf__num" aria-hidden="true">{s.nummer}</span>
+          <div class="ablauf__body">
+            <h3 class="t-h3">{s.titel}</h3>
+            <p class="ablauf__text">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .ablauf { background: var(--color-cream); }
+  .ablauf__list { list-style: none; display: grid; grid-template-columns: 1fr; gap: 1rem; counter-reset: none; }
+  @media (min-width: 768px) { .ablauf__list { grid-template-columns: 1fr 1fr; gap: 1.25rem; } }
+
+  .ablauf__item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: #fff; border: 1px solid var(--color-sand); border-radius: var(--radius-md);
+    padding: 1.4rem 1.4rem; box-shadow: var(--shadow-soft);
+  }
+  .ablauf__num {
+    font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; line-height: 1;
+    color: var(--color-gold-soft); flex: 0 0 auto; min-width: 2.6rem;
+  }
+  .ablauf__body h3 { font-size: 1.25rem; }
+  .ablauf__text { margin-top: 0.4rem; color: var(--color-ink-soft); font-size: 0.97rem; }
+</style>

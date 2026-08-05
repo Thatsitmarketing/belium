@@ -1,0 +1,48 @@
+---
+/** Abschnitt 14: Abschluss-CTA. Letzter klarer Handlungsaufruf. */
+import { whatsappLink, telLink, site } from '@/data/site';
+import Icon from '@/components/Icon.astro';
+---
+<section id="abschluss" class="section-pad abschluss">
+  <div class="container-page">
+    <div class="abschluss__box reveal">
+      <p class="t-eyebrow abschluss__eyebrow">Bereit für glatte Haut?</p>
+      <h2 class="abschluss__title">Starte mit einer kostenlosen Beratung.</h2>
+      <p class="abschluss__lead">
+        Unverbindlich, ehrlich und mit Testfleck. Wir schauen gemeinsam, was für dich möglich ist.
+      </p>
+      <div class="abschluss__actions">
+        <a href="#kontakt" class="btn btn-dark abschluss__btn" data-track="cta_abschluss">
+          <Icon name="arrow" class="w-4 h-4" /> Termin anfragen
+        </a>
+        <a href={whatsappLink()} class="btn btn-whatsapp abschluss__btn" target="_blank" rel="noopener" data-track="whatsapp_klick">
+          <Icon name="whatsapp" class="w-5 h-5" /> WhatsApp
+        </a>
+        <a href={telLink()} class="btn btn-ghost abschluss__btn" data-track="telefon_klick">
+          <Icon name="phone" class="w-5 h-5" /> {site.contact.phone}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abschluss { background: var(--color-cream); }
+  .abschluss__box {
+    background:
+      radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--color-gold-soft) 40%, transparent) 0%, transparent 45%),
+      var(--color-cream-deep);
+    border: 1px solid var(--color-sand);
+    border-radius: var(--radius-xl);
+    padding: clamp(2.25rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+    text-align: center;
+    box-shadow: var(--shadow-card);
+  }
+  .abschluss__eyebrow { justify-content: center; }
+  .abschluss__title { font-size: clamp(2rem, 5vw, 3.25rem); margin-top: 0.6rem; }
+  .abschluss__lead { max-width: 48ch; margin: 1rem auto 0; color: var(--color-ink-soft); font-size: 1.05rem; }
+  .abschluss__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 2rem; }
+  .abschluss__btn { flex: 1 1 auto; }
+  @media (min-width: 560px) { .abschluss__btn { flex: 0 0 auto; } }
+
+</style>
