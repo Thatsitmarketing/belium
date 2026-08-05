@@ -36,7 +36,7 @@ const eingeschraenkt = [
 
     <div class="fe__grid">
       <!-- Links: Eignung -->
-      <div class="fe__eignung reveal" data-reveal="right">
+      <div class="fe__eignung">
         <article class="eignung__col eignung__col--ja">
           <h3 class="eignung__h"><span class="eignung__badge eignung__badge--ja"><Icon name="check" class="w-4 h-4" /></span> Häufig gut geeignet</h3>
           <ul class="eignung__list">
@@ -57,7 +57,7 @@ const eingeschraenkt = [
       </div>
 
       <!-- Rechts: FAQ (Top 6) -->
-      <div class="fe__faq reveal" data-reveal="left">
+      <div class="fe__faq">
         {faqItems.slice(0, 6).map((item, i) => (
           <details class="faq__item" name="faq" open={i === 0}>
             <summary class="faq__summary">

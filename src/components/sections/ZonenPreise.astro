@@ -9,10 +9,10 @@ import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/d
 import Icon from '@/components/Icon.astro';
 
 const steps = [
-  { n: 1, label: 'Bereich' },
-  { n: 2, label: 'Zonen' },
-  { n: 3, label: 'Paket' },
-  { n: 4, label: 'Angebot' },
+  { n: 1, label: 'Bereich', icon: 'user' },
+  { n: 2, label: 'Zonen', icon: 'sparkle' },
+  { n: 3, label: 'Paket', icon: 'gem' },
+  { n: 4, label: 'Angebot', icon: 'euro' },
 ];
 ---
 <section id="preise" class="section-pad preise">
@@ -33,7 +33,10 @@ const steps = [
         <ol class="funnel__steps">
           {steps.map((s) => (
             <li class:list={['funnel__step', { 'is-active': s.n === 1 }]} data-step-dot={s.n}>
-              <span class="funnel__step-num">{s.n}</span>
+              <span class="funnel__step-num">
+                <Icon name={s.icon} class="w-4 h-4 funnel__step-ic" />
+                <Icon name="check" class="w-4 h-4 funnel__step-done" />
+              </span>
               <span class="funnel__step-label">{s.label}</span>
             </li>
           ))}
@@ -181,19 +184,30 @@ const steps = [
   .funnel__step { display: flex; align-items: center; gap: 0.5rem; opacity: 0.5; transition: opacity 0.3s ease; }
   .funnel__step.is-active, .funnel__step.is-done { opacity: 1; }
   .funnel__step-num {
+    position: relative;
     display: inline-flex; align-items: center; justify-content: center;
-    width: 1.7rem; height: 1.7rem; border-radius: 50%; font-size: 0.8rem; font-weight: 800;
+    width: 1.9rem; height: 1.9rem; border-radius: 50%;
     background: color-mix(in srgb, #fff 10%, transparent); color: var(--color-onink);
     border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
+  .funnel__step-num :global(.funnel__step-done) { display: none; }
   .funnel__step.is-active .funnel__step-num,
   .funnel__step.is-done .funnel__step-num { background: var(--gradient-gold); color: #2a1c07; border-color: transparent; }
+  /* Erledigte Schritte zeigen den Haken statt des Icons */
+  .funnel__step.is-done .funnel__step-num :global(.funnel__step-ic) { display: none; }
+  .funnel__step.is-done .funnel__step-num :global(.funnel__step-done) { display: block; }
   .funnel__step-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; }
   @media (max-width: 520px) { .funnel__step-label { display: none; } }
 
-  /* Stage */
-  .funnel__stage { padding: clamp(1.2rem, 4vw, 2.2rem); }
+  /* Stage – feste Mindesthöhe (durchschnittliche Schritthöhe), damit das Frame
+     beim Wechsel zwischen den Schritten nicht zu stark springt. */
+  .funnel__stage {
+    padding: clamp(1.2rem, 4vw, 2.2rem);
+    min-height: 24rem;
+    display: flex; flex-direction: column; justify-content: flex-start;
+  }
+  @media (min-width: 560px) { .funnel__stage { min-height: 26rem; } }
   .fstep { animation: fstep-in 0.5s cubic-bezier(0.22,1,0.36,1); }
   .fstep[hidden] { display: none; }
   @keyframes fstep-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }

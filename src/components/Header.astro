@@ -160,6 +160,13 @@ const { solid = false } = Astro.props;
   .nav-mobile__cta { margin-top: 1.1rem; }
 
   @media (min-width: 1024px) {
+    /* Logo, Menü und CTA als zentrierte Gruppe – nicht mehr ganz an den
+       Rändern verteilt, sondern näher am Menü zusammengerückt. */
+    .siteheader__inner {
+      display: flex;
+      justify-content: center;
+      gap: clamp(1.75rem, 4vw, 3.25rem);
+    }
     .nav-desktop { display: flex; }
     .siteheader__cta { display: flex; }
     .nav-toggle { display: none; }
