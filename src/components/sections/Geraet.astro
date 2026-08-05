@@ -1,0 +1,118 @@
+---
+/**
+ * „Das Gerät & die Technik" – Produkt-Showcase im Stil der Referenz (Bild links,
+ * Text + Punkte-Modul rechts). Ersetzt die frühere Hotspot-„Behandlung"-Sektion.
+ * Das Punkte-/Checklisten-Modul zeigt, wofür sich der Diodenlaser eignet.
+ */
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import { technikFakten } from '@/data/inhalt';
+import geraet from '@/assets/images/diodenlaser-geraet-behandlungsraum-belium-gelsenkirchen.png';
+
+const eignung = [
+  'Für viele Haut- und Haartypen',
+  'Feine Zonen wie Oberlippe & Kinn',
+  'Große Flächen wie Beine & Rücken',
+  'Für Damen und Herren',
+  'Dunkles Haar auf hellerer Haut ideal',
+  'Präzise auf jede Körperzone einstellbar',
+];
+
+// Kompakte Spec-Chips (Auswahl aus den Technikdaten)
+const fakten = technikFakten.filter((f) =>
+  ['Wellenlänge', 'Kühlung', 'Spotgröße', 'Taktfrequenz'].includes(f.label),
+);
+---
+<section id="geraet" class="section-pad geraet">
+  <div class="container-page">
+    <div class="geraet__card reveal">
+      <div class="geraet__media" data-reveal="right">
+        <Image
+          src={geraet}
+          alt="Gekühlter VIKINI Diodenlaser mit Touchscreen und Handstück im Behandlungsraum von Belium Beauty"
+          widths={[560, 840, 1120]}
+          sizes="(min-width: 900px) 46vw, 92vw"
+          loading="lazy"
+          format="avif"
+          quality={64}
+          class="geraet__img"
+        />
+      </div>
+
+      <div class="geraet__body" data-reveal="left">
+        <p class="t-eyebrow">Die Technik</p>
+        <h2 class="geraet__title">VIKINI Diodenlaser mit <span class="text-gold">808&nbsp;nm &amp; Kühlung</span></h2>
+        <p class="geraet__lead">
+          Der Diodenlaser sendet Lichtimpulse mit 808&nbsp;Nanometern gezielt auf das Farbpigment im
+          Haar, während die Saphirspitze die Haut im selben Moment kühlt. So arbeitet er wirkungsvoll
+          und bleibt dabei angenehm für dich.
+        </p>
+
+        <ul class="geraet__points">
+          {eignung.map((e) => (
+            <li><span class="geraet__check"><Icon name="check" class="w-3.5 h-3.5" /></span>{e}</li>
+          ))}
+        </ul>
+
+        <dl class="geraet__facts">
+          {fakten.map((f) => (
+            <div class="geraet__fact">
+              <dt>{f.label}</dt>
+              <dd>{f.wert}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <a href="#preise" class="geraet__link" data-track="cta_geraet_preise">
+          Preise ansehen <Icon name="arrow-up-right" class="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .geraet { background: var(--color-cream-deep); }
+
+  .geraet__card {
+    background: #fff; border: 1px solid var(--color-sand);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-card);
+    padding: clamp(1.1rem, 2.5vw, 1.6rem);
+    display: grid; grid-template-columns: 1fr; gap: clamp(1.5rem, 3vw, 2.5rem); align-items: center;
+  }
+  @media (min-width: 900px) { .geraet__card { grid-template-columns: 1fr 1fr; } }
+
+  .geraet__img { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-lg); }
+
+  .geraet__body { padding: clamp(0.4rem, 2vw, 1.5rem) clamp(0.4rem, 2vw, 1.25rem); }
+  .geraet__title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.1; margin-top: 0.55rem; color: var(--color-ink); }
+  .geraet__lead { margin-top: 0.9rem; color: var(--color-ink-soft); font-size: 1rem; line-height: 1.6; }
+
+  .geraet__points { list-style: none; margin-top: 1.4rem; display: grid; grid-template-columns: 1fr; gap: 0.7rem 1.25rem; }
+  @media (min-width: 520px) { .geraet__points { grid-template-columns: 1fr 1fr; } }
+  .geraet__points li { display: flex; align-items: flex-start; gap: 0.55rem; font-size: 0.94rem; font-weight: 600; color: var(--color-espresso); }
+  .geraet__check {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 1.35rem; height: 1.35rem; border-radius: 50%; margin-top: 0.05rem;
+    color: #2a1c07; background: var(--gradient-gold);
+  }
+
+  .geraet__facts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .geraet__fact {
+    background: color-mix(in srgb, var(--color-gold-soft) 26%, #fff);
+    border: 1px solid var(--color-sand-deep); border-radius: var(--radius-sm);
+    padding: 0.5rem 0.8rem; line-height: 1.2;
+  }
+  .geraet__fact dt { font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-mocha); }
+  .geraet__fact dd { font-weight: 700; font-size: 0.9rem; margin-top: 0.1rem; color: var(--color-ink); }
+
+  .geraet__link {
+    display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.6rem;
+    font-weight: 700; font-size: 0.95rem; color: var(--color-gold-deep); text-decoration: none;
+    padding-bottom: 2px; border-bottom: 1.5px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .geraet__link:hover { color: var(--color-gold-darker); border-color: var(--color-gold); }
+  .geraet__link :global(svg) { transition: transform 0.2s ease; }
+  .geraet__link:hover :global(svg) { transform: translate(2px, -2px); }
+</style>

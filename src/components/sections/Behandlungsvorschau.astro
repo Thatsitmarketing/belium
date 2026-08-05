@@ -1,0 +1,161 @@
+---
+/**
+ * Behandlungsvorschau – das frühere „Punkte-Modul" (nummerierte Hotspots auf einem Bild),
+ * jetzt auf einem Foto einer behandelten Person: markierte Zonen mit kurzer Erklärung.
+ * Rein informativ, kein CTA (der Preisrechner folgt weiter unten).
+ */
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import person from '@/assets/images/behandlungsvorschau-glatte-haut-laser-belium-gelsenkirchen.png';
+
+type Spot = { n: string; x: number; y: number; titel: string; text: string };
+const spots: Spot[] = [
+  { n: '01', x: 66, y: 16, titel: 'Gesicht & Oberlippe', text: 'Feine Zonen wie Oberlippe, Kinn und Wangen werden präzise und besonders sanft behandelt.' },
+  { n: '02', x: 42, y: 47, titel: 'Achseln & Arme', text: 'Ein Klassiker: Achseln, Unterarme oder Arme komplett – gleichmäßig glatt, ganz ohne Rasur.' },
+  { n: '03', x: 60, y: 74, titel: 'Bikinizone & Intim', text: 'Von der klassischen Bikinizone bis Intim komplett – schonend und diskret behandelt.' },
+  { n: '04', x: 36, y: 69, titel: 'Beine', text: 'Unterschenkel oder Beine komplett – die große Fläche dauerhaft frei vom ständigen Rasieren.' },
+];
+---
+<section id="behandlungsvorschau" class="bv">
+  <div class="container-page bv__inner">
+    <header class="bv__head" data-reveal="up">
+      <p class="t-eyebrow t-eyebrow--on-dark">Behandlungsvorschau</p>
+      <h2 class="t-h2 bv__title">Zone für Zone <span class="text-gold--on-dark">glatte Haut</span></h2>
+      <p class="bv__lead">
+        Tippe die Punkte an und sieh, welche Körperzonen sich behandeln lassen – von feinen
+        Bereichen im Gesicht bis zu großen Flächen wie den Beinen.
+      </p>
+    </header>
+
+    <div class="bv__stage" data-reveal="up">
+      <div class="hs" data-bv>
+        <div class="hs__media">
+          <Image
+            src={person}
+            alt="Frau mit glatter, hautschonend behandelter Haut in einem hellen Studio – Vorschau der behandelbaren Zonen"
+            widths={[640, 960, 1280, 1600]}
+            sizes="(min-width: 1000px) 64vw, 92vw"
+            loading="lazy"
+            format="avif"
+            quality={64}
+            class="hs__img"
+          />
+          <div class="hs__scrim" aria-hidden="true"></div>
+
+          {spots.map((s, i) => (
+            <button
+              type="button"
+              class={`hs__dot${i === 0 ? ' is-active' : ''}`}
+              style={`left:${s.x}%; top:${s.y}%`}
+              data-bv-spot
+              data-titel={s.titel}
+              data-text={s.text}
+              data-n={s.n}
+              aria-label={`${s.n} – ${s.titel}`}
+            >
+              <span class="hs__dot-n">{s.n}</span>
+              <span class="hs__dot-ring" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+
+        <div class="hs__card" data-bv-card aria-live="polite">
+          <span class="hs__card-n" data-bv-n>{spots[0].n}</span>
+          <h3 class="hs__card-title" data-bv-title>{spots[0].titel}</h3>
+          <p class="hs__card-text" data-bv-text>{spots[0].text}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bv {
+    position: relative; overflow: hidden;
+    background: var(--gradient-ink); color: var(--color-onink);
+    padding-block: clamp(4rem, 8vw, 7.5rem);
+    isolation: isolate;
+  }
+  .bv__inner { position: relative; z-index: 1; }
+  .bv__head { max-width: 44rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .bv__title { color: #fff; margin-top: 0.6rem; }
+  .bv__lead { margin-top: 0.9rem; color: var(--color-onink-soft); font-size: 1.05rem; max-width: 46ch; }
+
+  .hs { position: relative; }
+  .hs__media {
+    position: relative; border-radius: var(--radius-lg); overflow: hidden;
+    aspect-ratio: 3 / 2; box-shadow: var(--shadow-float);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
+  }
+  .hs__img { width: 100%; height: 100%; object-fit: cover; }
+  .hs__scrim {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(120deg, rgba(15,11,8,0.5) 0%, rgba(15,11,8,0.1) 42%, transparent 68%);
+  }
+
+  .hs__dot {
+    position: absolute; z-index: 3; translate: -50% -50%;
+    width: 2.2rem; height: 2.2rem; border-radius: 50%; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    backdrop-filter: blur(4px);
+    border: 1.5px solid color-mix(in srgb, var(--color-gold) 60%, transparent);
+    color: var(--color-gold-light); font-size: 0.72rem; font-weight: 800;
+    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  }
+  .hs__dot:hover, .hs__dot.is-active {
+    background: var(--gradient-gold); color: #2a1c07; border-color: transparent;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+  .hs__dot-ring {
+    position: absolute; inset: -6px; border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+    animation: bv-pulse 2.4s ease-out infinite;
+  }
+  .hs__dot.is-active .hs__dot-ring { border-color: color-mix(in srgb, var(--color-gold) 70%, transparent); }
+  @keyframes bv-pulse { 0% { transform: scale(0.8); opacity: 0.9; } 100% { transform: scale(1.7); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .hs__dot-ring { animation: none; } }
+
+  .hs__card {
+    position: relative; z-index: 4; margin-top: 1.2rem;
+    background: color-mix(in srgb, var(--color-ink-2) 92%, #000);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+    border-radius: var(--radius-md); padding: 1.5rem 1.6rem;
+    box-shadow: var(--shadow-float);
+  }
+  .hs__card-n { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--color-gold); letter-spacing: 0.1em; }
+  .hs__card-title { color: #fff; font-size: 1.5rem; margin-top: 0.15rem; }
+  .hs__card-text { margin-top: 0.55rem; color: var(--color-onink-soft); font-size: 0.98rem; max-width: 52ch; }
+
+  @media (min-width: 1000px) {
+    .hs__card {
+      position: absolute; left: 1.5rem; bottom: 1.5rem; margin-top: 0;
+      max-width: 24rem; backdrop-filter: blur(8px);
+      background: color-mix(in srgb, var(--color-ink) 82%, transparent);
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-bv]');
+  if (root) {
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-bv-spot]'));
+    const nEl = root.querySelector<HTMLElement>('[data-bv-n]');
+    const tEl = root.querySelector<HTMLElement>('[data-bv-title]');
+    const xEl = root.querySelector<HTMLElement>('[data-bv-text]');
+
+    const activate = (dot: HTMLButtonElement) => {
+      dots.forEach((d) => d.classList.remove('is-active'));
+      dot.classList.add('is-active');
+      if (nEl) nEl.textContent = dot.dataset.n || '';
+      if (tEl) tEl.textContent = dot.dataset.titel || '';
+      if (xEl) xEl.textContent = dot.dataset.text || '';
+    };
+
+    dots.forEach((dot) => {
+      dot.addEventListener('mouseenter', () => activate(dot));
+      dot.addEventListener('focus', () => activate(dot));
+      dot.addEventListener('click', () => activate(dot));
+    });
+  }
+</script>

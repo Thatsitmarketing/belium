@@ -1,6 +1,5 @@
 ---
 import { navItems } from '@/data/inhalt';
-import { telLink } from '@/data/site';
 import Icon from '@/components/Icon.astro';
 import Wordmark from '@/components/Wordmark.astro';
 
@@ -23,10 +22,7 @@ const { solid = false } = Astro.props;
     </nav>
 
     <div class="siteheader__cta">
-      <a href={telLink()} class="nav-phone" data-track="telefon_klick" aria-label="Anrufen">
-        <Icon name="phone" class="w-5 h-5" />
-      </a>
-      <a href="#kontakt" class="btn btn-primary btn--sm">Termin anfragen</a>
+      <a href="#kontakt" class="btn btn-primary btn--sm" data-track="cta_header">Kostenlose Beratung</a>
     </div>
 
     <button
@@ -50,7 +46,7 @@ const { solid = false } = Astro.props;
           <Icon name="arrow-up-right" class="w-4 h-4 nav-mobile__link-icon" />
         </a>
       ))}
-      <a href="#kontakt" class="btn btn-primary nav-mobile__cta" data-nav-close>Termin anfragen</a>
+      <a href="#kontakt" class="btn btn-primary nav-mobile__cta" data-nav-close>Kostenlose Beratung</a>
     </nav>
   </div>
 </header>

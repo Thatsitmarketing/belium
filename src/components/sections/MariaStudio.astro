@@ -1,0 +1,128 @@
+---
+/**
+ * Zusammengeführter Vertrauensabschnitt: „Über Maria" + „Räumlichkeiten".
+ * Die behandelnde Person ist der zentrale Vertrauensfaktor und steht daher vor dem Preisrechner.
+ * Kein separater CTA („Termin bei Maria anfragen" wurde bewusst entfernt).
+ */
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import mariaImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
+import warteraum from '@/assets/images/warteraum-belium-gelsenkirchen-buer.png';
+import behandlungsraum from '@/assets/images/behandlungsraum-neutral-belium-gelsenkirchen-buer.png';
+import lichtdecke from '@/assets/images/studio-lichtdecke-belium-gelsenkirchen-buer.png';
+
+const qualifikationen = [
+  'Zertifizierte Laserschutzbeauftragte für kosmetische Laserbehandlungen',
+  'Schwerpunkte Lasersicherheit und Laserschutz (BGV B2, DIN VDE 56912, EN 60825)',
+  'Ausbildung bei Belium Medical in Spanien',
+  'Laufende Weiterbildungen im Bereich Dermatologie',
+];
+
+const studio = [
+  { src: warteraum, alt: 'Gemütlicher Wartebereich im Studio von Belium Beauty in Gelsenkirchen Buer' },
+  { src: behandlungsraum, alt: 'Ruhiger, sauberer Behandlungsraum bei Belium Beauty' },
+  { src: lichtdecke, alt: 'Beleuchtete Lichtdecke sorgt für Wohlfühlatmosphäre im Behandlungsraum' },
+];
+
+const atmosphaere = [
+  { icon: 'shield', text: 'Hygiene & saubere Abläufe' },
+  { icon: 'heart', text: 'Diskret & respektvoll' },
+  { icon: 'leaf', text: 'Ruhige Wohlfühl-Atmosphäre' },
+];
+---
+<section id="ueber-maria" class="section-pad maria">
+  <div class="container-page">
+    <header class="section-head reveal">
+      <p class="t-eyebrow">Persönlich behandelt</p>
+      <h2 class="t-h2">Persönlich behandelt. <span class="text-gold">Professionell begleitet.</span></h2>
+      <p class="t-lead section-head__lead">
+        Bei Belium Beauty behandelt dich Maria persönlich – mit geprüfter Lasersicherheit und einem
+        ruhigen, ehrlichen Umgang.
+      </p>
+    </header>
+
+    <div class="maria__grid">
+      <div class="maria__media reveal" data-reveal="right">
+        <Image
+          src={mariaImg}
+          alt="Maria Espejo Jimenez, Inhaberin von Belium Beauty und zertifizierte Laserschutzbeauftragte in Gelsenkirchen Buer"
+          widths={[380, 560, 760]}
+          sizes="(min-width: 900px) 38vw, 88vw"
+          loading="lazy"
+          format="avif"
+          quality={72}
+          class="maria__img"
+        />
+        <span class="maria__badge"><Icon name="award" class="w-4 h-4" /> Zertifizierte Laserschutzbeauftragte</span>
+      </div>
+
+      <div class="maria__content reveal" data-reveal="left">
+        <p class="maria__name">Maria Espejo Jimenez</p>
+        <p class="maria__lead">
+          Du bekommst eine klare Einschätzung, was für dich sinnvoll ist – und was nicht. Statt
+          Verkaufsdruck steht die richtige Entscheidung für deine Haut im Mittelpunkt.
+        </p>
+        <ul class="maria__quali">
+          {qualifikationen.map((q) => (
+            <li><Icon name="check-circle" class="w-5 h-5" /><span>{q}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="maria__studio reveal">
+      <div class="maria__gallery">
+        {studio.map((b) => (
+          <Image
+            src={b.src}
+            alt={b.alt}
+            widths={[360, 560, 760]}
+            sizes="(min-width: 900px) 30vw, 90vw"
+            loading="lazy"
+            format="avif"
+            quality={64}
+            class="maria__shot"
+          />
+        ))}
+      </div>
+      <ul class="maria__atmo">
+        {atmosphaere.map((a) => (
+          <li><span class="maria__atmo-ic"><Icon name={a.icon} class="w-4 h-4" gradient /></span>{a.text}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .maria { background: var(--color-cream-deep); }
+
+  .maria__grid { display: grid; grid-template-columns: 1fr; gap: 2.25rem; align-items: center; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 900px) { .maria__grid { grid-template-columns: 0.85fr 1.15fr; gap: 3rem; } }
+
+  .maria__media { position: relative; }
+  .maria__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+  .maria__badge {
+    position: absolute; left: 0.9rem; bottom: 0.9rem;
+    display: inline-flex; align-items: center; gap: 0.45rem; max-width: calc(100% - 1.8rem);
+    background: color-mix(in srgb, var(--color-ink) 88%, transparent); backdrop-filter: blur(6px);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
+    color: var(--color-gold-light); border-radius: var(--radius-pill);
+    padding: 0.5rem 0.9rem; font-size: 0.78rem; font-weight: 700; box-shadow: var(--shadow-card);
+  }
+
+  .maria__name { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 3vw, 2.2rem); color: var(--color-ink); }
+  .maria__lead { margin-top: 0.8rem; color: var(--color-ink-soft); font-size: 1.05rem; line-height: 1.6; max-width: 46ch; }
+  .maria__quali { list-style: none; margin-top: 1.4rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .maria__quali li { display: flex; align-items: flex-start; gap: 0.6rem; font-weight: 600; }
+  .maria__quali :global(svg) { color: var(--color-gold-deep); flex: 0 0 auto; margin-top: 0.1rem; }
+
+  .maria__studio { border-top: 1px solid var(--color-sand); padding-top: clamp(2rem, 4vw, 2.75rem); }
+  .maria__gallery { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  @media (min-width: 620px) { .maria__gallery { grid-template-columns: repeat(3, 1fr); gap: 1rem; } }
+  .maria__shot { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-soft); }
+
+  .maria__atmo { list-style: none; display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; justify-content: center; margin-top: 1.5rem; }
+  .maria__atmo li { display: inline-flex; align-items: center; gap: 0.55rem; font-weight: 700; font-size: 0.9rem; color: var(--color-espresso); }
+  .maria__atmo-ic { display: inline-flex; flex: 0 0 auto; }
+</style>

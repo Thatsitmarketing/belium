@@ -36,13 +36,6 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
           </article>
         </li>
       ))}
-      <li class="rev__item rev__item--cta">
-        <a href="#kontakt" class="rcard rcard--cta" data-track="cta_bewertung">
-          <span class="rcard__cta-ic"><Icon name="heart" class="w-6 h-6" /></span>
-          <span class="rcard__cta-title">Werde die nächste zufriedene Kundin</span>
-          <span class="rcard__cta-link">Kostenlose Beratung sichern <Icon name="arrow-up-right" class="w-4 h-4" /></span>
-        </a>
-      </li>
     </ul>
   </div>
 
@@ -76,10 +69,9 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
     list-style: none; display: flex; gap: 1.15rem;
     overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
     padding-block: 0.5rem 2.4rem;
-    padding-inline: max(1.25rem, calc((100vw - 75rem) / 2 + 1.25rem));
+    padding-inline: max(1.25rem, 10%);
     -ms-overflow-style: none; scrollbar-width: none; cursor: grab;
   }
-  @media (min-width: 768px) { .rev__track { padding-inline: max(2rem, calc((100vw - 75rem) / 2 + 2rem)); } }
   .rev__track::-webkit-scrollbar { display: none; }
   .rev__track.is-dragging { cursor: grabbing; scroll-behavior: auto; scroll-snap-type: none; }
 
@@ -115,20 +107,6 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
   .rcard__meta { display: flex; flex-direction: column; line-height: 1.3; }
   .rcard__name { font-weight: 700; color: var(--color-ink); }
   .rcard__zone { font-size: 0.82rem; color: var(--color-mocha); }
-
-  /* CTA-Karte am Ende der Reihe */
-  .rcard--cta {
-    justify-content: center; align-items: flex-start; text-decoration: none;
-    background: var(--gradient-ink); border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
-    color: var(--color-onink);
-  }
-  .rcard__cta-ic {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 3rem; height: 3rem; border-radius: 50%; margin-bottom: 1rem;
-    color: #2a1c07; background: var(--gradient-gold);
-  }
-  .rcard__cta-title { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.15; color: #fff; }
-  .rcard__cta-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-weight: 700; color: var(--color-gold-light); }
 
   .rev__foot { text-align: center; margin-top: 0.5rem; }
   .rev__note {

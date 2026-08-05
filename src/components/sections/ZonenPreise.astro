@@ -6,7 +6,6 @@
  * Ein Fortschrittsbalken zeigt den Stand; die Schritte erscheinen nacheinander.
  */
 import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/data/zonen';
-import LeadForm from '@/components/LeadForm.astro';
 import Icon from '@/components/Icon.astro';
 
 const steps = [
@@ -126,13 +125,17 @@ const steps = [
             </p>
           )}
 
-          <div class="result__offer card" id="angebot">
-            <h3 class="t-h3">Persönliches Angebot &amp; Wunschtermin</h3>
-            <p class="result__offer-lead">
-              Hinterlasse uns Name und Kontakt. Wir senden dir ein unverbindliches Angebot für deine
-              Auswahl und schlagen einen Termin für die kostenlose Beratung vor.
-            </p>
-            <LeadForm id="leadform-angebot" variant="angebot" eventName="zonenwaehler_abschluss" />
+          <div class="result__offer">
+            <div class="result__offer-body">
+              <h3 class="t-h3">Auswahl für die Beratung übernehmen</h3>
+              <p class="result__offer-lead">
+                Übernimm deine Auswahl in die kostenlose Beratungsanfrage – Zonen und Richtpreis werden
+                automatisch ins Kontaktformular übertragen. Keine erneute Eingabe nötig.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary result__adopt" data-adopt data-track="zonenwaehler_abschluss">
+              Auswahl übernehmen <Icon name="arrow" class="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
@@ -286,8 +289,15 @@ const steps = [
   }
   .preise__hinweis :global(svg) { color: var(--color-gold-light); flex: 0 0 auto; margin-top: 0.1rem; }
 
-  .result__offer { background: #fff; color: var(--color-ink); padding: clamp(1.25rem, 3vw, 2rem); }
-  .result__offer-lead { margin: 0.6rem 0 1.25rem; color: var(--color-ink-soft); }
+  .result__offer {
+    background: #fff; color: var(--color-ink);
+    border-radius: var(--radius-md); padding: clamp(1.25rem, 3vw, 2rem);
+    display: grid; grid-template-columns: 1fr; gap: 1.25rem; align-items: center;
+  }
+  @media (min-width: 620px) { .result__offer { grid-template-columns: 1fr auto; gap: 1.75rem; } }
+  .result__offer-lead { margin-top: 0.6rem; color: var(--color-ink-soft); max-width: 44ch; }
+  .result__adopt { white-space: nowrap; }
+  .result__adopt.is-done { background: #2f7a43; color: #fff; box-shadow: none; }
 
   /* Nav */
   .funnel__nav {
@@ -333,12 +343,8 @@ const steps = [
     const resAlt = root.querySelector<HTMLElement>('[data-result-alt]');
     const resChips = root.querySelector<HTMLElement>('[data-result-chips]');
 
-    // Lead-Formular
-    const angebotForm = document.getElementById('leadform-angebot') as HTMLFormElement | null;
-    const zonenField = angebotForm?.querySelector<HTMLInputElement>('input[name="zonen"]') ?? null;
-    const summeField = angebotForm?.querySelector<HTMLInputElement>('input[name="summe"]') ?? null;
-    const zonenSummary = angebotForm?.querySelector<HTMLElement>('[data-zonen-summary]') ?? null;
-    const zonenText = angebotForm?.querySelector<HTMLElement>('[data-zonen-text]') ?? null;
+    // Übernahme in das (einzige) Kontaktformular
+    const adoptBtn = root.querySelector<HTMLButtonElement>('[data-adopt]');
 
     const state = {
       step: 1,
@@ -374,15 +380,41 @@ const steps = [
       if (nextBtn && state.step === 2) nextBtn.disabled = count === 0;
     }
 
-    function syncForm() {
+    // Auswahl in das Kontaktformular übernehmen (Zonen + Richtpreis) und dorthin scrollen.
+    function adoptSelection() {
       const names = Array.from(state.selected.keys());
+      if (!names.length) return;
       const { paket, einzel } = totals();
       const summe = state.mode === 'einzel' ? einzel : paket;
       const modeLabel = state.mode === 'einzel' ? 'Einzelsitzung' : `Paket (ca. ${paketSitzungen} Sitzungen)`;
-      if (zonenField) zonenField.value = names.join(', ');
-      if (summeField) summeField.value = String(summe);
-      if (zonenText) zonenText.textContent = names.length ? `${names.join(', ')} · ${modeLabel} ca. ${formatEuro(summe)}` : '—';
-      if (zonenSummary) zonenSummary.hidden = names.length === 0;
+      const summary = `${names.join(', ')} · ${modeLabel} ca. ${formatEuro(summe)}`;
+
+      const kontaktForm = document.getElementById('leadform-kontakt') as HTMLFormElement | null;
+      if (kontaktForm) {
+        const zf = kontaktForm.querySelector<HTMLInputElement>('input[name="zonen"]');
+        const sf = kontaktForm.querySelector<HTMLInputElement>('input[name="summe"]');
+        const wz = kontaktForm.querySelector<HTMLInputElement>('input[name="wunschzone"]');
+        const sumBox = kontaktForm.querySelector<HTMLElement>('[data-zonen-summary]');
+        const sumText = kontaktForm.querySelector<HTMLElement>('[data-zonen-text]');
+        if (zf) zf.value = names.join(', ');
+        if (sf) sf.value = String(summe);
+        if (wz && !wz.value.trim()) wz.value = names.join(', ');
+        if (sumText) sumText.textContent = summary;
+        if (sumBox) sumBox.hidden = false;
+      }
+
+      (window as any).trackEvent?.('zonenwaehler_abschluss', { zonen: names.join(', '), summe });
+
+      if (adoptBtn) {
+        adoptBtn.classList.add('is-done');
+        adoptBtn.innerHTML = 'Auswahl übernommen ✓';
+      }
+
+      const kontakt = document.getElementById('kontakt');
+      if (kontakt) {
+        const top = kontakt.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
+      }
     }
 
     function renderResult() {
@@ -402,7 +434,11 @@ const steps = [
           resChips.appendChild(li);
         });
       }
-      syncForm();
+      // Übernehmen-Button für eine (erneute) Übernahme zurücksetzen.
+      if (adoptBtn) {
+        adoptBtn.classList.remove('is-done');
+        adoptBtn.innerHTML = 'Auswahl übernehmen <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      }
     }
 
     // --- Schrittsteuerung ---
@@ -440,7 +476,7 @@ const steps = [
       if (step === 4) renderResult();
 
       // sanft in den Rechner scrollen (nicht beim ersten Laden)
-      if (step > 1) {
+      if (step > 1 && root) {
         const top = root.getBoundingClientRect().top + window.scrollY - 90;
         window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
       }
@@ -496,6 +532,7 @@ const steps = [
       goTo(Math.min(4, state.step + 1));
     });
     backBtn?.addEventListener('click', () => goTo(Math.max(1, state.step - 1)));
+    adoptBtn?.addEventListener('click', adoptSelection);
 
     goTo(1);
   }

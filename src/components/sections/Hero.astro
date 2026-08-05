@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
-import { telLink } from '@/data/site';
 import heroImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
 
 /**
@@ -48,18 +47,10 @@ const checks = [
       </ul>
 
       <div class="hero__actions" data-hero-el>
-        <a href="#kontakt" class="btn btn-primary" data-track="cta_hero">Kostenlose Beratung sichern</a>
-        <a href="#preise" class="btn btn-ghost">
-          <Icon name="euro" class="w-5 h-5" /> Preis berechnen
+        <a href="#kontakt" class="btn btn-primary" data-track="cta_hero">Kostenlose Beratung anfragen</a>
+        <a href="#preise" class="hero__secondary" data-track="cta_hero_preise">
+          <Icon name="euro" class="w-5 h-5" /> Preise ansehen
         </a>
-      </div>
-
-      <div class="hero__proof" data-hero-el>
-        <span class="hero__proof-item"><Icon name="laser" class="w-4 h-4" /> VIKINI 808 nm</span>
-        <span class="hero__proof-dot"></span>
-        <span class="hero__proof-item"><Icon name="snowflake" class="w-4 h-4" /> Saphir-Kühlung</span>
-        <span class="hero__proof-dot"></span>
-        <span class="hero__proof-item"><Icon name="shield" class="w-4 h-4" /> Zertifiziert</span>
       </div>
     </div>
 
@@ -87,9 +78,7 @@ const checks = [
         <div class="hero__stat">
           <span class="hero__stat-num">808<span>nm</span></span>
           <span class="hero__stat-label">VIKINI Diodenlaser</span>
-          <a href={telLink()} class="hero__stat-call" data-track="telefon_klick">
-            <Icon name="phone" class="w-4 h-4" /> Direkt anrufen
-          </a>
+          <span class="hero__stat-note"><Icon name="snowflake" class="w-4 h-4" /> Saphir-gekühlt &amp; schmerzarm</span>
         </div>
 
         <!-- kleines Vertrauens-Badge -->
@@ -163,16 +152,16 @@ const checks = [
     background: var(--gradient-gold); box-shadow: var(--shadow-gold);
   }
 
-  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2rem; }
-
-  .hero__proof {
-    display: flex; align-items: center; flex-wrap: wrap; gap: 0.7rem;
-    margin-top: 1.8rem; color: var(--color-mocha); font-size: 0.82rem; font-weight: 700;
-    letter-spacing: 0.02em;
+  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem 1.4rem; margin-top: 2rem; }
+  /* Sekundäre Aktion bewusst als zurückhaltender Textlink – kein zweiter Hauptbutton. */
+  .hero__secondary {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-weight: 700; font-size: 0.95rem; color: var(--color-espresso); text-decoration: none;
+    padding: 0.4rem 0.2rem; border-bottom: 1.5px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+    transition: color 0.2s ease, border-color 0.2s ease;
   }
-  .hero__proof-item { display: inline-flex; align-items: center; gap: 0.4rem; }
-  .hero__proof-item :global(svg) { color: var(--color-gold-deep); }
-  .hero__proof-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-sand-deep); }
+  .hero__secondary :global(svg) { color: var(--color-gold-deep); }
+  .hero__secondary:hover { color: var(--color-gold-deep); border-color: var(--color-gold); }
 
   /* ---- Visual ---- */
   .hero__visual { position: relative; }
@@ -209,12 +198,10 @@ const checks = [
   }
   .hero__stat-num span { font-size: 1rem; margin-left: 0.15rem; }
   .hero__stat-label { display: block; margin-top: 0.15rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-onink-soft); }
-  .hero__stat-call {
+  .hero__stat-note {
     display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem;
-    font-weight: 700; font-size: 0.86rem; color: var(--color-gold-light); text-decoration: none;
-    padding-bottom: 2px; border-bottom: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+    font-weight: 600; font-size: 0.82rem; color: var(--color-gold-light);
   }
-  .hero__stat-call:hover { color: #fff; }
 
   .hero__chip {
     position: absolute; z-index: 2; right: -0.8rem; top: 1.4rem;

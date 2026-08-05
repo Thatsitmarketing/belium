@@ -43,9 +43,9 @@ const year = 2026;
       <h2 class="footer__h">Seite</h2>
       <ul class="footer__links">
         <li><a href="/#vorteile">Vorteile</a></li>
-        <li><a href="/#behandlungen">Behandlung</a></li>
-        <li><a href="/#preise">Zonen &amp; Preise</a></li>
+        <li><a href="/#ueber-maria">Über Maria</a></li>
         <li><a href="/#ablauf">Ablauf</a></li>
+        <li><a href="/#preise">Preise</a></li>
         <li><a href="/#faq">FAQ</a></li>
         <li><a href="/#kontakt">Kontakt</a></li>
       </ul>
@@ -59,12 +59,6 @@ const year = 2026;
         <li><button type="button" class="footer__consent" onclick="window.openConsent && window.openConsent()">Cookie-Einstellungen</button></li>
       </ul>
     </nav>
-
-    <div class="footer__col footer__cta-col">
-      <h2 class="footer__h">Termin</h2>
-      <p class="footer__cta-text">Kostenlose, unverbindliche Erstberatung.</p>
-      <a href="/#kontakt" class="btn btn-primary btn--sm footer__cta-btn">Beratung sichern</a>
-    </div>
   </div>
 
   <div class="container-page footer__bottom">
@@ -109,7 +103,7 @@ const year = 2026;
 
   .footer__grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
   @media (min-width: 640px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
-  @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1.2fr; } }
+  @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
 
   .footer__h {
     font-family: var(--font-sans);
@@ -123,9 +117,6 @@ const year = 2026;
   .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
   .footer__consent { background: none; border: 0; color: inherit; cursor: pointer; padding: 0; font: inherit; text-align: left; }
   .footer__consent:hover { color: #fff; text-decoration: underline; }
-
-  .footer__cta-text { font-size: 0.95rem; color: var(--color-onink-soft); margin-bottom: 1rem; max-width: 24ch; }
-  .footer__cta-btn { width: max-content; }
 
   .footer__bottom {
     margin-top: clamp(2rem, 4vw, 3rem); padding-top: 1.5rem;
