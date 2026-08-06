@@ -19,8 +19,6 @@ export const site = {
     phoneIntl: '+4920936667488', // für tel:-Links (Festnetz)
     mobile: '0178 1592194', // laut Altseite-Impressum
     fax: '0209 93890694',
-    // WhatsApp läuft über die Mobilnummer (0178 1592194). Falls nicht WhatsApp-fähig, bitte korrigieren.
-    whatsapp: '491781592194',
     email: 'info@belium.de', // auf der Altseite bestätigt
   },
 
@@ -47,7 +45,7 @@ export const site = {
     { day: 'Samstag', short: 'Sa', hours: 'nach Vereinbarung', from: null, to: null },
     { day: 'Sonntag', short: 'So', hours: 'geschlossen', from: null, to: null },
   ],
-  openingHoursNote: 'Termine ausschließlich nach Vereinbarung. (Öffnungszeiten sind Platzhalter – bitte bestätigen.)',
+  openingHoursNote: 'Termine ausschließlich nach Vereinbarung. (Öffnungszeiten sind Platzhalter, bitte bestätigen.)',
 
   social: {
     facebook: 'https://facebook.com/Beliumbeautybymaria/',
@@ -70,14 +68,6 @@ export const site = {
   // nur Honeypot ist aktiv. Secret-Key gehört in die Pages-Function-Umgebungsvariable.
   turnstileSiteKey: '', // PLATZHALTER
 } as const;
-
-// Vorbelegter WhatsApp-Text (URL-encodiert im Link zusammengesetzt)
-export const whatsappDefaultText =
-  'Hallo Belium Beauty, ich interessiere mich für eine dauerhafte Laser Haarentfernung und hätte gerne einen Beratungstermin.';
-
-export function whatsappLink(text: string = whatsappDefaultText): string {
-  return `https://wa.me/${site.contact.whatsapp}?text=${encodeURIComponent(text)}`;
-}
 
 export function telLink(): string {
   return `tel:${site.contact.phoneIntl}`;

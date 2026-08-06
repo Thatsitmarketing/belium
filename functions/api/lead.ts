@@ -155,7 +155,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   } catch (err) {
     console.error('[lead] Zustellung fehlgeschlagen:', err);
     return json(
-      { ok: false, error: 'Zustellung derzeit nicht möglich. Bitte ruf uns an oder schreib per WhatsApp.' },
+      { ok: false, error: 'Zustellung derzeit nicht möglich. Bitte ruf uns kurz an, wir helfen sofort.' },
       502
     );
   }

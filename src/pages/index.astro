@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import ScrollProgress from '@/components/ScrollProgress.astro';
 
 import Hero from '@/components/sections/Hero.astro';
 import Problem from '@/components/sections/Problem.astro';
@@ -23,6 +24,7 @@ const description =
 ---
 <Layout title={title} description={description} path="/">
   <span id="top"></span>
+  <ScrollProgress />
   <Header />
   <main id="hauptinhalt">
     <!-- 1. Hero: Was & warum, mit klarer CTA-Hierarchie -->
@@ -31,7 +33,7 @@ const description =
     <Problem />
     <!-- 4. Editorial-Erlebnisgalerie (horizontale Serif-Galerie) -->
     <Erlebnis />
-    <!-- 5. Warum Belium – drei Säulen -->
+    <!-- 5. Warum Belium: drei Säulen -->
     <Vorteile />
     <!-- 5. Wer behandelt: Maria & Studio (vor dem Preisrechner) -->
     <MariaStudio />

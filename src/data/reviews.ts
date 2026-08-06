@@ -25,7 +25,7 @@ export const reviews: Review[] = [
     name: 'Sabrina K.',
     zone: 'Achseln',
     stars: 5,
-    text: 'Von Anfang an ehrlich beraten – kein Verkaufsdruck, sondern ein realistischer Plan. Die gekühlte Behandlung war für mich gut auszuhalten.',
+    text: 'Von Anfang an ehrlich beraten. Kein Verkaufsdruck, sondern ein realistischer Plan. Die gekühlte Behandlung war für mich gut auszuhalten.',
   },
   {
     name: 'Melike D.',
@@ -34,16 +34,16 @@ export const reviews: Review[] = [
     text: 'Sehr saubere, ruhige Atmosphäre und ein spürbar professioneller Ablauf. Man merkt, dass hier auf Sicherheit geachtet wird.',
   },
   {
-    name: 'Jonas R.',
+    name: 'Jasmin R.',
     zone: 'Rücken',
     stars: 5,
-    text: 'Als Mann war ich erst skeptisch. Maria hat alles genau erklärt, die Zonen wurden zügig behandelt. Rundum angenehm.',
+    text: 'Ich war erst skeptisch. Maria hat alles genau erklärt und die Zonen wurden zügig behandelt. Rundum angenehm.',
   },
   {
     name: 'Aylin T.',
     zone: 'Beine',
     stars: 5,
-    text: 'Endlich Schluss mit dem ständigen Rasieren. Nach den ersten Sitzungen wächst deutlich weniger nach – ich bin sehr zufrieden.',
+    text: 'Endlich Schluss mit dem ständigen Rasieren. Nach den ersten Sitzungen wächst deutlich weniger nach und ich bin sehr zufrieden.',
   },
   {
     name: 'Carolin S.',
@@ -52,8 +52,8 @@ export const reviews: Review[] = [
     text: 'Feinfühlig und präzise auch im empfindlichen Gesichtsbereich. Die Beratung vorab hat mir jede Unsicherheit genommen.',
   },
   {
-    name: 'Deniz A.',
-    zone: 'Nacken',
+    name: 'Derya A.',
+    zone: 'Bikinizone',
     stars: 5,
     text: 'Termin schnell bekommen, freundlicher Empfang, transparente Preise. Ich fühle mich hier gut aufgehoben.',
   },

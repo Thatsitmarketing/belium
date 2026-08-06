@@ -1,5 +1,5 @@
 ---
-import { site, telLink, whatsappLink } from '@/data/site';
+import { site, telLink } from '@/data/site';
 import Icon from '@/components/Icon.astro';
 import Wordmark from '@/components/Wordmark.astro';
 import Atmosphere from '@/components/Atmosphere.astro';
@@ -15,7 +15,7 @@ const year = 2026;
       <p class="footer__statement">Dauerhaft glatte Haut.<br /><span class="text-gold--on-dark">Ganz ohne Rasieren.</span></p>
     </div>
     <div class="footer__brand-right">
-      <p class="footer__brand-note">Studio für dauerhafte Laser Haarentfernung mit gekühltem VIKINI&nbsp;Diodenlaser – mitten in Gelsenkirchen&nbsp;Buer.</p>
+      <p class="footer__brand-note">Studio für dauerhafte Laser Haarentfernung mit gekühltem VIKINI&nbsp;Diodenlaser, mitten in Gelsenkirchen&nbsp;Buer.</p>
       <div class="footer__social">
         <a href={site.social.instagram} target="_blank" rel="noopener me" aria-label="Instagram"><Icon name="instagram" class="w-5 h-5" /></a>
         <a href={site.social.facebook} target="_blank" rel="noopener me" aria-label="Facebook"><Icon name="facebook" class="w-5 h-5" /></a>
@@ -34,9 +34,6 @@ const year = 2026;
         <a href={telLink()} data-track="telefon_klick">{site.contact.phone}</a><br />
         <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
       </address>
-      <a href={whatsappLink()} class="footer__wa" target="_blank" rel="noopener" data-track="whatsapp_klick">
-        <Icon name="whatsapp" class="w-4 h-4" /> Per WhatsApp schreiben
-      </a>
     </div>
 
     <nav class="footer__col" aria-label="Weitere Seiten">
@@ -122,8 +119,6 @@ const year = 2026;
   }
   .footer__addr { font-style: normal; font-size: 0.95rem; line-height: 1.8; }
   .footer__addr a:hover, .footer__links a:hover { color: #fff; text-decoration: underline; }
-  .footer__wa { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1rem; font-size: 0.92rem; }
-  .footer__wa:hover { color: #fff; }
   .footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.95rem; }
   .footer__consent { background: none; border: 0; color: inherit; cursor: pointer; padding: 0; font: inherit; text-align: left; }
   .footer__consent:hover { color: #fff; text-decoration: underline; }

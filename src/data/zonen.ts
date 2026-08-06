@@ -27,7 +27,7 @@ export type Zone = {
 };
 
 export type ZonenGruppe = {
-  id: 'damen' | 'herren';
+  id: 'damen';
   label: string;
   zonen: Zone[];
 };
@@ -48,7 +48,7 @@ export function formatEuro(value: number): string {
 export const zonenGruppen: ZonenGruppe[] = [
   {
     id: 'damen',
-    label: 'Damen',
+    label: 'Zonen',
     zonen: [
       { id: 'oberlippe', name: 'Oberlippe', hinweis: 'Gesicht', einzel: 30, paket: 150, placeholder: true },
       { id: 'kinn', name: 'Kinn', hinweis: 'Gesicht', einzel: 30, paket: 150, placeholder: true },
@@ -62,21 +62,6 @@ export const zonenGruppen: ZonenGruppe[] = [
       { id: 'beine-komplett', name: 'Beine komplett', einzel: 120, paket: 600, placeholder: true },
       { id: 'ruecken-damen', name: 'Rücken', einzel: 90, paket: 450, placeholder: true },
       { id: 'bauch-damen', name: 'Bauch', einzel: 60, paket: 300, placeholder: true },
-    ],
-  },
-  {
-    id: 'herren',
-    label: 'Herren',
-    zonen: [
-      { id: 'nacken', name: 'Nacken', einzel: 40, paket: 200, placeholder: true },
-      { id: 'wangen-herren', name: 'Wangen / Bartkontur', einzel: 45, paket: 220, placeholder: true },
-      { id: 'achseln-herren', name: 'Achseln', einzel: 50, paket: 250, placeholder: true },
-      { id: 'brust', name: 'Brust', einzel: 80, paket: 400, placeholder: true },
-      { id: 'bauch-herren', name: 'Bauch', einzel: 70, paket: 350, placeholder: true },
-      { id: 'ruecken-herren', name: 'Rücken', einzel: 100, paket: 500, placeholder: true },
-      { id: 'schultern', name: 'Schultern', einzel: 60, paket: 300, placeholder: true },
-      { id: 'oberarme', name: 'Oberarme', einzel: 65, paket: 325, placeholder: true },
-      { id: 'beine-herren', name: 'Beine komplett', einzel: 140, paket: 700, placeholder: true },
     ],
   },
 ];

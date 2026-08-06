@@ -195,7 +195,7 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
           setStatus(json.error || 'Es gab ein Problem. Bitte ruf uns kurz an, wir helfen sofort.', 'error');
         }
       } catch (err) {
-        setStatus('Verbindung fehlgeschlagen. Bitte ruf uns an oder schreib per WhatsApp.', 'error');
+        setStatus('Verbindung fehlgeschlagen. Bitte ruf uns kurz an, wir helfen sofort.', 'error');
       } finally {
         form.classList.remove('is-sending');
       }

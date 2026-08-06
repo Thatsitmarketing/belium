@@ -5,7 +5,7 @@
  * erst nach Einwilligung.
  */
 import { Image } from 'astro:assets';
-import { site, telLink, whatsappLink } from '@/data/site';
+import { site, telLink } from '@/data/site';
 import LeadForm from '@/components/LeadForm.astro';
 import Icon from '@/components/Icon.astro';
 import bgImg from '@/assets/images/behandlungsraum-belium-gelsenkirchen-buer.png';
@@ -25,19 +25,14 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
       <p class="t-eyebrow t-eyebrow--on-dark">Standort &amp; Kontakt</p>
       <h2 class="kontakt__title">Kostenlose <span class="text-gold--on-dark">Beratung anfragen</span></h2>
       <p class="kontakt__lead">
-        Unverbindlich und ehrlich, mitten in Gelsenkirchen&nbsp;Buer. Ruf an, schreib per WhatsApp oder
-        sende deine Anfrage – wir melden uns zeitnah und finden gemeinsam einen Termin.
+        Unverbindlich und ehrlich, mitten in Gelsenkirchen&nbsp;Buer. Ruf uns an oder sende deine Anfrage.
+        Wir melden uns zeitnah und finden gemeinsam einen Termin.
       </p>
 
       <div class="kontakt__channels">
         <a href={telLink()} class="kchannel" data-track="telefon_klick">
           <span class="kchannel__ic"><Icon name="phone" class="w-5 h-5" /></span>
           <span class="kchannel__body"><span class="kchannel__label">Anrufen</span><span class="kchannel__val">{site.contact.phone}</span></span>
-          <Icon name="arrow-up-right" class="w-4 h-4 kchannel__go" />
-        </a>
-        <a href={whatsappLink()} class="kchannel" target="_blank" rel="noopener" data-track="whatsapp_klick">
-          <span class="kchannel__ic"><Icon name="whatsapp" class="w-5 h-5" /></span>
-          <span class="kchannel__body"><span class="kchannel__label">WhatsApp</span><span class="kchannel__val">Schnelle Antwort</span></span>
           <Icon name="arrow-up-right" class="w-4 h-4 kchannel__go" />
         </a>
         <a href={`mailto:${site.contact.email}`} class="kchannel">
@@ -62,7 +57,7 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
     <!-- Formular-Karte -->
     <div class="kontakt__card" data-reveal="left">
       <h3 class="kontakt__card-title">Anfrage senden</h3>
-      <p class="kontakt__card-sub">Unverbindlich – wir melden uns zeitnah bei dir zurück.</p>
+      <p class="kontakt__card-sub">Unverbindlich. Wir melden uns zeitnah bei dir zurück.</p>
       <LeadForm id="leadform-kontakt" variant="full" />
     </div>
   </div>

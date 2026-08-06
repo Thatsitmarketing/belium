@@ -12,16 +12,20 @@ import sicher from '@/assets/images/erlebnis-sicher-entspannt-belium.png';
 import muehelos from '@/assets/images/erlebnis-muehelos-schulter-belium.png';
 
 const karten = [
-  { src: glatt, label: 'Glatt', text: 'Dauerhaft weniger Nachwuchs, spürbar glatte Haut.', alt: 'Glatte, hautschonend behandelte Beine im warmen Studiolicht' },
-  { src: sanft, label: 'Sanft', text: 'Gekühlte Behandlung – angenehm statt schmerzhaft.', alt: 'Frau mit glatter, hautschonend behandelter Achsel' },
-  { src: sicher, label: 'Sicher', text: 'Zertifiziert begleitet, individuell eingestellt.', alt: 'Entspannte Frau mit geschlossenen Augen während einer ruhigen Behandlung' },
+  { src: glatt, label: 'Glatt', text: 'Dauerhaft weniger Nachwuchs und spürbar glatte Haut.', alt: 'Glatte, hautschonend behandelte Beine im warmen Studiolicht' },
+  { src: sanft, label: 'Sanft', text: 'Gekühlte Behandlung, angenehm statt schmerzhaft.', alt: 'Frau mit glatter, hautschonend behandelter Achsel' },
+  { src: sicher, label: 'Sicher', text: 'Zertifiziert begleitet und individuell eingestellt.', alt: 'Entspannte Frau mit geschlossenen Augen während einer ruhigen Behandlung' },
   { src: muehelos, label: 'Mühelos', text: 'Schluss mit dem täglichen Rasieren.', alt: 'Glatte Schulter und Rücken mit gepflegter Haut in warmem Licht' },
 ];
 ---
 <section id="erlebnis" class="erlebnis">
   <div class="container-page erlebnis__head" data-reveal="up">
     <Ornament class="erlebnis__ornament" />
-    <h2 class="erlebnis__title">Fühl dich erneuert –<br />vom ersten Termin an</h2>
+    <p class="t-eyebrow">Wohlfühlmomente</p>
+    <h2 class="t-h2 erlebnis__title">Fühl dich <span class="text-gold">erneuert</span>, vom ersten Termin an</h2>
+    <p class="t-lead erlebnis__lead">
+      Vier ruhige Eindrücke, die zeigen, wie sich glatte, gepflegte Haut im Alltag anfühlt.
+    </p>
   </div>
 
   <ul class="erlebnis__strip" data-reveal-stagger>
@@ -57,13 +61,10 @@ const karten = [
 <style>
   .erlebnis { background: var(--color-cream); padding-block: clamp(3.75rem, 8vw, 7rem); overflow: hidden; }
 
-  .erlebnis__head { margin-bottom: clamp(1.75rem, 4vw, 2.75rem); }
+  .erlebnis__head { max-width: 46rem; margin-bottom: clamp(1.75rem, 4vw, 2.75rem); }
   .erlebnis :global(.erlebnis__ornament) { margin-inline: 0; width: 6.5rem; margin-bottom: 1.1rem; }
-  .erlebnis__title {
-    font-family: var(--font-display); font-weight: 600;
-    font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.04;
-    letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-gold-deep);
-  }
+  .erlebnis__title { margin-top: 0.7rem; color: var(--color-ink); }
+  .erlebnis__lead { margin-top: 0.9rem; }
 
   /* Mobil & Tablet: Karten untereinander (mit Scroll-Reveal über [data-reveal]) */
   .erlebnis__strip {
@@ -95,8 +96,8 @@ const karten = [
 
   .ecard__label {
     margin-top: 1rem; font-family: var(--font-display); font-weight: 600;
-    font-size: clamp(1.6rem, 2.6vw, 2.1rem); text-transform: uppercase; letter-spacing: 0.02em;
-    color: var(--color-gold-deep);
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem); line-height: 1.15; letter-spacing: -0.012em;
+    color: var(--color-ink);
   }
-  .ecard__text { margin-top: 0.25rem; color: var(--color-mocha); font-size: 0.92rem; max-width: 26ch; }
+  .ecard__text { margin-top: 0.3rem; color: var(--color-ink-soft); font-size: 0.95rem; max-width: 26ch; }
 </style>

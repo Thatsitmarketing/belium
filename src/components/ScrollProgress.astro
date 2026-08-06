@@ -1,0 +1,56 @@
+---
+/**
+ * Sichtbarer Scrollverlauf für die mobile Version.
+ * Eine schmale Gold-Leiste am oberen Rand füllt sich, während man durch die Seite scrollt.
+ * Auf Desktop ausgeblendet (dort gibt die feste Navigation genug Orientierung).
+ */
+---
+<div class="scrollprogress" aria-hidden="true">
+  <span class="scrollprogress__bar" data-scrollprogress></span>
+</div>
+
+<style>
+  .scrollprogress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 90;
+    height: 3px;
+    background: color-mix(in srgb, var(--color-ink) 12%, transparent);
+    pointer-events: none;
+  }
+  .scrollprogress__bar {
+    display: block;
+    height: 100%;
+    width: 0;
+    transform-origin: left center;
+    background: var(--gradient-gold);
+    box-shadow: 0 0 10px -2px color-mix(in srgb, var(--color-gold) 70%, transparent);
+  }
+  /* Nur in der mobilen/Tablet-Ansicht sichtbar. */
+  @media (min-width: 1024px) {
+    .scrollprogress { display: none; }
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-scrollprogress]');
+  if (bar) {
+    let ticking = false;
+    const update = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const pct = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      bar.style.width = (pct * 100).toFixed(2) + '%';
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+  }
+</script>

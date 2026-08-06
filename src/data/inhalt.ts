@@ -49,7 +49,7 @@ export const ergebnisseVorhanden = false;
 export const ergebnissePlatzhalter: { zone: string; sitzungen: string }[] = [
   { zone: 'Achseln', sitzungen: 'z. B. nach 6 Sitzungen' },
   { zone: 'Bikinizone', sitzungen: 'z. B. nach 8 Sitzungen' },
-  { zone: 'Rücken (Herren)', sitzungen: 'z. B. nach 6 Sitzungen' },
+  { zone: 'Beine', sitzungen: 'z. B. nach 6 Sitzungen' },
 ];
 
 /** Ankernavigation (Abschnitt-IDs müssen mit den Sektionen übereinstimmen). */

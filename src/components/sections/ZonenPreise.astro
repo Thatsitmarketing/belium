@@ -1,18 +1,19 @@
 ---
 /**
  * Abschnitt: Zonen & Preise als geführter Funnel.
- * Schritt 1 Bereich (Damen/Herren) → Schritt 2 Zonen wählen (Live-Summe) →
- * Schritt 3 Paket oder Einzelsitzung → Schritt 4 Ergebnis + persönliches Angebot.
+ * Schritt 1 Zonen wählen (Live-Summe) → Schritt 2 Paket oder Einzelsitzung →
+ * Schritt 3 Ergebnis + persönliches Angebot.
  * Ein Fortschrittsbalken zeigt den Stand; die Schritte erscheinen nacheinander.
  */
 import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/data/zonen';
 import Icon from '@/components/Icon.astro';
 
+const zonen = zonenGruppen[0].zonen;
+
 const steps = [
-  { n: 1, label: 'Bereich', icon: 'user' },
-  { n: 2, label: 'Zonen', icon: 'sparkle' },
-  { n: 3, label: 'Paket', icon: 'gem' },
-  { n: 4, label: 'Angebot', icon: 'euro' },
+  { n: 1, label: 'Zonen', icon: 'sparkle' },
+  { n: 2, label: 'Paket', icon: 'gem' },
+  { n: 3, label: 'Angebot', icon: 'euro' },
 ];
 ---
 <section id="preise" class="section-pad preise">
@@ -21,7 +22,7 @@ const steps = [
       <p class="t-eyebrow t-eyebrow--center">Zonen &amp; Preise</p>
       <h2 class="t-h2">Berechne deinen Preis in <span class="text-gold">wenigen Schritten</span></h2>
       <p class="t-lead section-head__lead">
-        Klick dich durch den Rechner. Du bekommst sofort eine unverbindliche Richtsumme –
+        Klick dich durch den Rechner. Du bekommst sofort eine unverbindliche Richtsumme
         und auf Wunsch dein persönliches Angebot für die kostenlose Beratung.
       </p>
     </header>
@@ -29,7 +30,7 @@ const steps = [
     <div class="funnel reveal" data-funnel>
       <!-- Fortschrittsbalken -->
       <div class="funnel__progress" aria-hidden="true">
-        <div class="funnel__track"><span class="funnel__bar" data-bar style="width: 12%"></span></div>
+        <div class="funnel__track"><span class="funnel__bar" data-bar style="width: 20%"></span></div>
         <ol class="funnel__steps">
           {steps.map((s) => (
             <li class:list={['funnel__step', { 'is-active': s.n === 1 }]} data-step-dot={s.n}>
@@ -44,72 +45,55 @@ const steps = [
       </div>
 
       <div class="funnel__stage">
-        <!-- SCHRITT 1: Bereich -->
+        <!-- SCHRITT 1: Zonen -->
         <div class="fstep" data-step="1">
-          <p class="fstep__kicker"><span class="num-gold">01</span> Für wen ist die Behandlung?</p>
-          <div class="choice-grid">
-            {zonenGruppen.map((g) => (
-              <button type="button" class="choice" data-gender={g.id}>
-                <span class="choice__ic"><Icon name="user" class="w-6 h-6" gradient /></span>
-                <span class="choice__name">{g.label}</span>
-                <span class="choice__hint">{g.zonen.length} Zonen verfügbar</span>
-                <span class="choice__go"><Icon name="arrow" class="w-4 h-4" /></span>
+          <p class="fstep__kicker"><span class="num-gold">01</span> Wähle deine Wunschzonen</p>
+          <div class="zones">
+            {zonen.map((z) => (
+              <button
+                type="button"
+                class="zone"
+                aria-pressed="false"
+                data-zone
+                data-name={z.name}
+                data-einzel={z.einzel}
+                data-paket={z.paket}
+              >
+                <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
+                <span class="zone__info">
+                  <span class="zone__name">{z.name}</span>
+                  {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
+                </span>
+                <span class="zone__preis">
+                  <span class="zone__paket">{formatEuro(z.paket)}</span>
+                  <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
+                </span>
               </button>
             ))}
           </div>
         </div>
 
-        <!-- SCHRITT 2: Zonen -->
+        <!-- SCHRITT 2: Paket oder Einzel -->
         <div class="fstep" data-step="2" hidden>
-          <p class="fstep__kicker"><span class="num-gold">02</span> Wähle deine Wunschzonen</p>
-          {zonenGruppen.map((g, i) => (
-            <div class="zones" data-zones={g.id} hidden={i !== 0}>
-              {g.zonen.map((z) => (
-                <button
-                  type="button"
-                  class="zone"
-                  aria-pressed="false"
-                  data-zone
-                  data-name={z.name}
-                  data-einzel={z.einzel}
-                  data-paket={z.paket}
-                >
-                  <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
-                  <span class="zone__info">
-                    <span class="zone__name">{z.name}</span>
-                    {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
-                  </span>
-                  <span class="zone__preis">
-                    <span class="zone__paket">{formatEuro(z.paket)}</span>
-                    <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
-                  </span>
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <!-- SCHRITT 3: Paket oder Einzel -->
-        <div class="fstep" data-step="3" hidden>
-          <p class="fstep__kicker"><span class="num-gold">03</span> Wie möchtest du buchen?</p>
+          <p class="fstep__kicker"><span class="num-gold">02</span> Wie möchtest du buchen?</p>
           <div class="choice-grid">
             <button type="button" class="choice choice--mode is-active" data-mode="paket">
               <span class="choice__badge">Empfohlen</span>
               <span class="choice__ic"><Icon name="gem" class="w-6 h-6" gradient /></span>
               <span class="choice__name">Paket</span>
-              <span class="choice__hint">ca. {paketSitzungen} Sitzungen bis zum Ergebnis – bester Preis pro Sitzung.</span>
+              <span class="choice__hint">ca. {paketSitzungen} Sitzungen bis zum Ergebnis, bester Preis pro Sitzung.</span>
             </button>
             <button type="button" class="choice choice--mode" data-mode="einzel">
               <span class="choice__ic"><Icon name="droplet" class="w-6 h-6" gradient /></span>
               <span class="choice__name">Einzelsitzung</span>
-              <span class="choice__hint">Erst einmal ausprobieren – Preis pro einzelner Sitzung.</span>
+              <span class="choice__hint">Erst einmal ausprobieren, Preis pro einzelner Sitzung.</span>
             </button>
           </div>
         </div>
 
-        <!-- SCHRITT 4: Ergebnis -->
-        <div class="fstep" data-step="4" hidden>
-          <p class="fstep__kicker"><span class="num-gold">04</span> Deine unverbindliche Richtsumme</p>
+        <!-- SCHRITT 3: Ergebnis -->
+        <div class="fstep" data-step="3" hidden>
+          <p class="fstep__kicker"><span class="num-gold">03</span> Deine unverbindliche Richtsumme</p>
           <div class="result">
             <div class="result__figure">
               <span class="result__mode" data-result-mode>Paketpreis</span>
@@ -132,7 +116,7 @@ const steps = [
             <div class="result__offer-body">
               <h3 class="t-h3">Auswahl für die Beratung übernehmen</h3>
               <p class="result__offer-lead">
-                Übernimm deine Auswahl in die kostenlose Beratungsanfrage – Zonen und Richtpreis werden
+                Übernimm deine Auswahl in die kostenlose Beratungsanfrage. Zonen und Richtpreis werden
                 automatisch ins Kontaktformular übertragen. Keine erneute Eingabe nötig.
               </p>
             </div>
@@ -362,7 +346,6 @@ const steps = [
 
     const state = {
       step: 1,
-      gender: '' as '' | 'damen' | 'herren',
       mode: 'paket' as 'paket' | 'einzel',
       selected: new Map<string, { einzel: number; paket: number; btn: HTMLButtonElement }>(),
       started: false,
@@ -391,7 +374,7 @@ const steps = [
       const count = state.selected.size;
       if (countEl) countEl.textContent = String(count);
       if (liveSumEl) liveSumEl.textContent = formatEuro(state.mode === 'einzel' ? einzel : paket);
-      if (nextBtn && state.step === 2) nextBtn.disabled = count === 0;
+      if (nextBtn && state.step === 1) nextBtn.disabled = count === 0;
     }
 
     // Auswahl in das Kontaktformular übernehmen (Zonen + Richtpreis) und dorthin scrollen.
@@ -457,8 +440,8 @@ const steps = [
 
     // --- Schrittsteuerung ---
     function progressPercent(step: number) {
-      // Balken fuellt sich ueber die 4 Schritte
-      return [12, 40, 68, 100][step - 1] ?? 12;
+      // Balken fuellt sich ueber die 3 Schritte
+      return [20, 60, 100][step - 1] ?? 20;
     }
 
     function goTo(step: number) {
@@ -473,21 +456,21 @@ const steps = [
 
       // Nav-Zustand
       if (backBtn) backBtn.hidden = step === 1;
-      if (liveBox) liveBox.hidden = !(step === 2 || step === 3);
+      if (liveBox) liveBox.hidden = !(step === 1 || step === 2);
       if (nextBtn) {
-        if (step === 4) {
+        if (step === 3) {
           nextBtn.hidden = true;
         } else {
           nextBtn.hidden = false;
-          nextBtn.innerHTML = step === 3
+          nextBtn.innerHTML = step === 2
             ? 'Ergebnis anzeigen <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
             : 'Weiter <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-          nextBtn.disabled = step === 2 ? state.selected.size === 0 : false;
+          nextBtn.disabled = step === 1 ? state.selected.size === 0 : false;
         }
       }
 
       updateLive();
-      if (step === 4) renderResult();
+      if (step === 3) renderResult();
 
       // sanft in den Rechner scrollen (nicht beim ersten Laden)
       if (step > 1 && root) {
@@ -496,19 +479,7 @@ const steps = [
       }
     }
 
-    // --- Schritt 1: Bereich ---
-    root.querySelectorAll<HTMLButtonElement>('[data-gender]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        state.gender = btn.dataset.gender as 'damen' | 'herren';
-        // relevante Zonengruppe zeigen
-        root.querySelectorAll<HTMLElement>('[data-zones]').forEach((z) => {
-          z.hidden = z.dataset.zones !== state.gender;
-        });
-        goTo(2);
-      });
-    });
-
-    // --- Schritt 2: Zonen ---
+    // --- Schritt 1: Zonen ---
     root.querySelectorAll<HTMLButtonElement>('[data-zone]').forEach((btn) => {
       const name = btn.dataset.name || '';
       btn.addEventListener('click', () => {
@@ -528,7 +499,7 @@ const steps = [
       });
     });
 
-    // --- Schritt 3: Modus ---
+    // --- Schritt 2: Modus ---
     root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((btn) => {
       btn.addEventListener('click', () => {
         state.mode = btn.dataset.mode as 'paket' | 'einzel';
@@ -541,9 +512,8 @@ const steps = [
 
     // --- Nav ---
     nextBtn?.addEventListener('click', () => {
-      if (state.step === 1 && !state.gender) return;
-      if (state.step === 2 && state.selected.size === 0) return;
-      goTo(Math.min(4, state.step + 1));
+      if (state.step === 1 && state.selected.size === 0) return;
+      goTo(Math.min(3, state.step + 1));
     });
     backBtn?.addEventListener('click', () => goTo(Math.max(1, state.step - 1)));
     adoptBtn?.addEventListener('click', adoptSelection);

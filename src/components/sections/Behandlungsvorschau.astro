@@ -10,10 +10,10 @@ import person from '@/assets/images/behandlungsvorschau-glatte-haut-laser-belium
 
 type Spot = { n: string; x: number; y: number; titel: string; text: string };
 const spots: Spot[] = [
-  { n: '01', x: 66, y: 16, titel: 'Gesicht & Oberlippe', text: 'Feine Zonen wie Oberlippe, Kinn und Wangen werden präzise und besonders sanft behandelt.' },
-  { n: '02', x: 42, y: 47, titel: 'Achseln & Arme', text: 'Ein Klassiker: Achseln, Unterarme oder Arme komplett – gleichmäßig glatt, ganz ohne Rasur.' },
-  { n: '03', x: 60, y: 74, titel: 'Bikinizone & Intim', text: 'Von der klassischen Bikinizone bis Intim komplett – schonend und diskret behandelt.' },
-  { n: '04', x: 36, y: 69, titel: 'Beine', text: 'Unterschenkel oder Beine komplett – die große Fläche dauerhaft frei vom ständigen Rasieren.' },
+  { n: '01', x: 53, y: 49, titel: 'Achseln & Arme', text: 'Ein Klassiker: Achseln, Unterarme oder Arme komplett. Gleichmäßig glatt, ganz ohne Rasur.' },
+  { n: '02', x: 44, y: 64, titel: 'Beine', text: 'Unterschenkel oder Beine komplett. Die große Fläche dauerhaft frei vom ständigen Rasieren.' },
+  { n: '03', x: 62, y: 72, titel: 'Bikinizone & Intim', text: 'Von der klassischen Bikinizone bis Intim komplett. Schonend und diskret behandelt.' },
+  { n: '04', x: 78, y: 26, titel: 'Gesicht & Oberlippe', text: 'Feine Zonen wie Oberlippe, Kinn und Wangen werden präzise und besonders sanft behandelt.' },
 ];
 ---
 <section id="behandlungsvorschau" class="bv">
@@ -22,7 +22,7 @@ const spots: Spot[] = [
       <p class="t-eyebrow t-eyebrow--on-dark">Behandlungsvorschau</p>
       <h2 class="t-h2 bv__title">Zone für Zone <span class="text-gold--on-dark">glatte Haut</span></h2>
       <p class="bv__lead">
-        Tippe die Punkte an und sieh, welche Körperzonen sich behandeln lassen – von feinen
+        Tippe die Punkte an und sieh, welche Körperzonen sich behandeln lassen: von feinen
         Bereichen im Gesicht bis zu großen Flächen wie den Beinen.
       </p>
     </header>
@@ -33,7 +33,7 @@ const spots: Spot[] = [
           <div class="hs__frame">
             <Image
               src={person}
-              alt="Frau mit glatter, hautschonend behandelter Haut in einem hellen Studio – Vorschau der behandelbaren Zonen"
+              alt="Frau mit glatter, hautschonend behandelter Haut in einem hellen Studio, Vorschau der behandelbaren Zonen"
               widths={[640, 960, 1280, 1600]}
               sizes="(min-width: 1000px) 64vw, 92vw"
               loading="lazy"
@@ -53,7 +53,7 @@ const spots: Spot[] = [
               data-titel={s.titel}
               data-text={s.text}
               data-n={s.n}
-              aria-label={`${s.n} – ${s.titel}`}
+              aria-label={`${s.n}: ${s.titel}`}
             >
               <span class="hs__dot-n">{s.n}</span>
               <span class="hs__dot-ring" aria-hidden="true"></span>
