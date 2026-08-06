@@ -55,7 +55,15 @@ npm run dev         # lokaler Dev-Server (http://localhost:4321)
 npm run build       # Produktionsbuild nach dist/
 npm run preview     # dist/ lokal ansehen
 node scripts/gen-assets.mjs   # OG-Bild + Icon neu erzeugen (nur bei Bedarf)
+npm run design:setup          # Impeccable Design-Skill lokal installieren (nach .claude/skills/)
 ```
+
+### Design-Skill (Impeccable)
+Für UI-/Frontend-Aufgaben ist der [Impeccable](https://impeccable.style)-Skill vorgesehen
+(Design-Kritik, Polish, Anti-Pattern-Erkennung, Live-Iteration). Er wird **lokal** installiert und
+ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore`. Einrichten mit
+`npm run design:setup` (bzw. `npx impeccable install --providers=claude --scope=project`), danach
+`/impeccable init` im Harness ausführen. Aktualisieren: `npx impeccable update`.
 
 ### Cloudflare Pages
 - **Build command:** `npm run build`

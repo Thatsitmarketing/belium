@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "design:setup": "npx --yes impeccable install --providers=claude --scope=project"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",

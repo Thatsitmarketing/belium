@@ -18,6 +18,7 @@ npm run dev        # http://localhost:4321
 | `npm run build` | Produktionsbuild nach `dist/` |
 | `npm run preview` | `dist/` lokal ansehen |
 | `node scripts/gen-assets.mjs` | OG-Bild und Apple-Touch-Icon neu erzeugen |
+| `npm run design:setup` | Impeccable Design-Skill lokal installieren (siehe unten) |
 
 ## Wo pflege ich was?
 
@@ -41,6 +42,19 @@ Details, Deploy-Anleitung und offene Punkte stehen in [`CLAUDE.md`](./CLAUDE.md)
 Onepage mit 14 Ankerabschnitten (Hero, Problem, Vorteile, Zonen & Preise, Ablauf, Technologie,
 Ergebnisse, Über Maria, Räumlichkeiten, Bewertungen, FAQ, Sicherheit, Kontakt, Abschluss-CTA) plus
 Rechtsseiten `impressum.astro` und `datenschutz.astro`.
+
+## Design-Skill (Impeccable)
+
+Für Frontend-/UI-Arbeit steht der [Impeccable](https://impeccable.style)-Skill für Claude Code
+bereit (Design-Kritik, Polish, Anti-Pattern-Erkennung u. a.). Der Skill wird **lokal** installiert
+und ist bewusst **nicht Teil des Repos** (`.claude/skills/` ist in `.gitignore`).
+
+```bash
+npm run design:setup     # installiert nach .claude/skills/impeccable (Provider: claude, Scope: project)
+# danach im Claude-Code-Harness:  /impeccable init
+```
+
+Aktualisieren mit `npx impeccable update`. Details unter [impeccable.style](https://impeccable.style).
 
 ## Hinweise
 
