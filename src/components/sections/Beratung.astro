@@ -1,0 +1,197 @@
+---
+/**
+ * Abschnitt „Einzelberatung" – was im kostenlosen Erstgespräch mit Maria konkret passiert.
+ * Ziel: die Hemmschwelle vor der Anfrage senken, indem der Ablauf des Gesprächs, die Dauer
+ * und die Unverbindlichkeit transparent gemacht werden.
+ * HWG-konform: keine Erfolgsversprechen, „dauerhafte Haarreduktion", „schmerzarm".
+ */
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import Ornament from '@/components/Ornament.astro';
+import beratungImg from '@/assets/images/wartebereich-belium-gelsenkirchen-buer.png';
+
+/** Die einzelnen Stationen des Beratungsgesprächs, in der Reihenfolge des Termins. */
+const gespraech = [
+  {
+    icon: 'chat',
+    titel: 'Deine Situation zuerst',
+    text: 'Maria fragt, was dich stört, was du bisher versucht hast und welches Ergebnis du dir wünschst. Erst danach spricht sie über Behandlung und Zonen.',
+  },
+  {
+    icon: 'user',
+    titel: 'Haut und Haar werden angeschaut',
+    text: 'Hauttyp, Haarfarbe und Haarstruktur in deiner Wunschzone werden direkt vor Ort beurteilt. Beides entscheidet darüber, wie gut der Laser überhaupt greifen kann.',
+  },
+  {
+    icon: 'shield',
+    titel: 'Ehrliche Eignungsprüfung',
+    text: 'Medikamente, Vorerkrankungen, Sonne, Tattoos oder Muttermale in der Zone werden offen durchgesprochen. Wenn etwas dagegen spricht, sagt Maria dir das klar, statt einen Termin zu verkaufen.',
+  },
+  {
+    icon: 'droplet',
+    titel: 'Testfleck auf Wunsch',
+    text: 'Ein kleiner Probeschuss zeigt dir, wie sich die gekühlte Behandlung anfühlt und wie deine Haut reagiert. So weißt du vor der ersten Sitzung, worauf du dich einlässt.',
+  },
+  {
+    icon: 'route',
+    titel: 'Dein persönlicher Plan',
+    text: 'Du bekommst eine realistische Einschätzung zu Zonen, Sitzungsanzahl, Abständen und Kosten. Kein Pauschalpaket, sondern das, was für deine Haut sinnvoll ist.',
+  },
+  {
+    icon: 'heart',
+    titel: 'Ohne Druck nach Hause',
+    text: 'Du musst im Termin nichts entscheiden und nichts unterschreiben. Du gehst mit allen Informationen raus und meldest dich, wenn es für dich passt.',
+  },
+];
+
+/** Eckdaten des Gesprächs als schnelle Orientierung. */
+const eckdaten = [
+  { icon: 'clock', label: 'Dauer', wert: 'ca. 20 – 30 Minuten' },
+  { icon: 'euro', label: 'Kosten', wert: 'kostenlos & unverbindlich' },
+  { icon: 'user', label: 'Bei wem', wert: 'persönlich bei Maria' },
+];
+---
+<section id="beratung" class="beratung">
+  <div class="container-page">
+    <header class="section-head section-head--center reveal">
+      <Ornament class="beratung__ornament" />
+      <p class="t-eyebrow t-eyebrow--center">Deine Einzelberatung</p>
+      <h2 class="t-h2">Das Gespräch mit <span class="text-gold">Maria</span>, Schritt für Schritt</h2>
+      <p class="t-lead section-head__lead">
+        Vor jeder Behandlung steht ein persönliches Gespräch, nur ihr beide. Damit du vorher weißt,
+        was dich erwartet, findest du hier den kompletten Ablauf des Termins.
+      </p>
+    </header>
+
+    <div class="beratung__grid">
+      <!-- Bild + Eckdaten -->
+      <aside class="beratung__aside reveal">
+        <div class="beratung__media">
+          <Image
+            src={beratungImg}
+            alt="Ruhiger Beratungs- und Wartebereich bei Belium Beauty in Gelsenkirchen Buer"
+            widths={[380, 560, 760]}
+            sizes="(min-width: 900px) 34vw, 88vw"
+            loading="lazy"
+            format="avif"
+            quality={70}
+            class="beratung__img"
+          />
+        </div>
+
+        <ul class="beratung__facts">
+          {eckdaten.map((e) => (
+            <li class="bfact">
+              <span class="bfact__ic"><Icon name={e.icon} class="w-5 h-5" /></span>
+              <span class="bfact__body">
+                <span class="bfact__label">{e.label}</span>
+                <span class="bfact__wert">{e.wert}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <blockquote class="beratung__quote">
+          <Icon name="quote" class="w-5 h-5 beratung__quote-ic" />
+          <p>
+            „Ich sage dir ehrlich, was bei deiner Haut und deinem Haar möglich ist und was nicht.
+            Lieber ein Termin weniger als ein Versprechen, das ich nicht halten kann."
+          </p>
+          <footer>Maria Espejo Jimenez, Inhaberin</footer>
+        </blockquote>
+      </aside>
+
+      <!-- Ablauf des Gesprächs -->
+      <ol class="bsteps" data-reveal-stagger>
+        {gespraech.map((g, i) => (
+          <li class="bstep" data-reveal="up">
+            <span class="bstep__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="bstep__ic"><Icon name={g.icon} class="w-5 h-5" gradient /></span>
+            <div class="bstep__body">
+              <h3 class="bstep__titel">{g.titel}</h3>
+              <p class="bstep__text">{g.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="section-cta section-cta--center reveal beratung__cta">
+      <a href="#kontakt" class="btn btn-primary" data-track="cta_beratung">Kostenlose Einzelberatung anfragen</a>
+      <p class="beratung__cta-note">Unverbindlich. Du entscheidest erst nach dem Gespräch.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .beratung { background: var(--color-cream); padding-block: clamp(3.75rem, 8vw, 7rem); }
+  .beratung :global(.beratung__ornament) { margin-bottom: 1rem; }
+
+  .beratung__grid {
+    display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 4vw, 3rem);
+    margin-top: clamp(2rem, 4vw, 3rem); align-items: start;
+  }
+  @media (min-width: 900px) { .beratung__grid { grid-template-columns: 0.85fr 1.15fr; gap: clamp(2.5rem, 5vw, 4rem); } }
+
+  /* --- Bild, Eckdaten, Zitat --- */
+  .beratung__media { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid var(--color-sand); }
+  .beratung__img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+
+  .beratung__facts { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.25rem; }
+  .bfact {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: #fff; border: 1px solid var(--color-sand);
+    border-radius: var(--radius-sm); padding: 0.7rem 0.9rem;
+  }
+  .bfact__ic {
+    flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+    width: 2.3rem; height: 2.3rem; border-radius: 50%;
+    color: var(--color-gold-deep);
+    background: color-mix(in srgb, var(--color-gold-soft) 45%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
+  }
+  .bfact__body { display: flex; flex-direction: column; line-height: 1.3; }
+  .bfact__label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; color: var(--color-mocha); }
+  .bfact__wert { font-weight: 700; color: var(--color-ink); font-size: 0.95rem; }
+
+  .beratung__quote {
+    position: relative; margin-top: 1.25rem;
+    background: color-mix(in srgb, var(--color-gold-soft) 25%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+    border-radius: var(--radius-md); padding: 1.25rem 1.3rem;
+  }
+  .beratung__quote :global(.beratung__quote-ic) { color: var(--color-gold-deep); margin-bottom: 0.5rem; }
+  .beratung__quote p { font-family: var(--font-display); font-size: 1.08rem; line-height: 1.5; color: var(--color-ink); }
+  .beratung__quote footer { margin-top: 0.7rem; font-size: 0.8rem; font-weight: 700; color: var(--color-mocha); }
+
+  /* --- Gesprächsablauf --- */
+  .bsteps { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; counter-reset: bstep; }
+  .bstep {
+    position: relative; display: grid; grid-template-columns: auto 1fr; gap: 0.9rem 1rem;
+    background: #fff; border: 1px solid var(--color-sand);
+    border-radius: var(--radius-md); padding: 1.15rem 1.25rem;
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.22,1,0.36,1);
+  }
+  .bstep:hover { border-color: color-mix(in srgb, var(--color-gold) 45%, transparent); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .bstep:hover { transform: none; } }
+
+  .bstep__num {
+    position: absolute; top: 0.9rem; right: 1.1rem;
+    font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1;
+    color: color-mix(in srgb, var(--color-gold) 34%, transparent);
+  }
+  .bstep__ic {
+    grid-row: span 2; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.6rem; height: 2.6rem; border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-gold-soft) 40%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+  }
+  .bstep__body { min-width: 0; }
+  .bstep__titel { font-size: 1.05rem; font-weight: 700; color: var(--color-ink); padding-right: 2.5rem; }
+  .bstep__text { margin-top: 0.35rem; color: var(--color-ink-soft); font-size: 0.95rem; line-height: 1.6; }
+
+  .beratung__cta { margin-top: clamp(2rem, 4vw, 3rem); flex-direction: column; }
+  .beratung__cta-note { margin-top: 0.7rem; font-size: 0.85rem; color: var(--color-mocha); }
+</style>

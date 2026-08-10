@@ -1,6 +1,7 @@
 ---
 import { site } from '@/data/site';
 import Icon from '@/components/Icon.astro';
+import { alleZonen } from '@/data/zonen';
 
 /**
  * Wiederverwendbares Lead-/Kontaktformular.
@@ -61,14 +62,20 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
   <p class="field__hint">Gib mindestens E-Mail oder Telefon an, damit wir dich erreichen können.</p>
 
   {variant === 'full' && (
-    <div class="leadform__row leadform__row--2">
+    <div class="leadform__row">
       <div class="field">
         <label for={`${id}-zone`}>Wunschzone</label>
-        <input id={`${id}-zone`} name="wunschzone" type="text" placeholder="z. B. Achseln, Bikinizone" />
-      </div>
-      <div class="field">
-        <label for={`${id}-termin`}>Wunschtermin</label>
-        <input id={`${id}-termin`} name="wunschtermin" type="text" placeholder="z. B. werktags nachmittags" />
+        <div class="select">
+          <select id={`${id}-zone`} name="wunschzone">
+            <option value="">Bitte wählen</option>
+            {alleZonen.map((z) => (
+              <option value={z.name}>{z.name}{z.hinweis ? ` (${z.hinweis})` : ''}</option>
+            ))}
+            <option value="Mehrere Zonen">Mehrere Zonen</option>
+            <option value="Noch unklar – bitte beraten">Noch unklar – bitte beraten</option>
+          </select>
+          <Icon name="chevron" class="w-4 h-4 select__ic" />
+        </div>
       </div>
     </div>
   )}
@@ -99,6 +106,22 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
   <p class="leadform__status" role="status" aria-live="polite" data-status hidden></p>
 </form>
 
+<!-- Danke-Fenster: ersetzt nach erfolgreichem Versand das Formular -->
+<div class="leadsuccess" data-success-for={id} role="status" aria-live="polite" hidden>
+  <span class="leadsuccess__ic" aria-hidden="true">
+    <svg viewBox="0 0 52 52" class="leadsuccess__svg" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle class="leadsuccess__circle" cx="26" cy="26" r="23" stroke-width="2.5" />
+      <path class="leadsuccess__check" d="M15.5 26.8l7.2 7.2 13.8-15" stroke-width="3.4" />
+    </svg>
+  </span>
+  <h3 class="leadsuccess__title">Danke für deine Anfrage!</h3>
+  <p class="leadsuccess__text">
+    Deine Nachricht ist bei uns angekommen. Maria meldet sich zeitnah persönlich bei dir,
+    um deine kostenlose Beratung zu terminieren.
+  </p>
+  <button type="button" class="leadsuccess__again" data-success-reset>Weitere Anfrage senden</button>
+</div>
+
 <style>
   .leadform { display: flex; flex-direction: column; gap: 0.9rem; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -126,6 +149,27 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 25%, transparent);
   }
   .field textarea { resize: vertical; min-height: 3rem; }
+
+  /* Auswahlfeld (Wunschzone) im Look der übrigen Felder */
+  .select { position: relative; display: block; }
+  .select select {
+    appearance: none; width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--color-sand-deep);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 2.6rem 0.75rem 0.9rem;
+    font: inherit; font-size: 0.98rem; color: var(--color-ink); cursor: pointer;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .select select:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 25%, transparent);
+  }
+  .select :global(.select__ic) {
+    position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+    color: var(--color-mocha); pointer-events: none;
+  }
   .field__hint { font-size: 0.82rem; color: var(--color-mocha); margin-top: -0.3rem; }
 
   .field--check { margin-top: 0.2rem; }
@@ -147,12 +191,69 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
   .leadform__status.is-ok { color: #2f7a43; }
   .leadform__status.is-error { color: #b23b3b; }
   .leadform.is-sending .leadform__submit { opacity: 0.65; pointer-events: none; }
+  .leadform[hidden] { display: none; }
+
+  /* --- Danke-Fenster --- */
+  .leadsuccess {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: clamp(1.5rem, 4vw, 2.5rem) 0.5rem;
+    animation: ls-in 0.45s cubic-bezier(0.22,1,0.36,1);
+  }
+  .leadsuccess[hidden] { display: none; }
+  @keyframes ls-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .leadsuccess__ic {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 5.25rem; height: 5.25rem; border-radius: 50%; margin-bottom: 1.1rem;
+    background: color-mix(in srgb, var(--color-gold-soft) 40%, #fff);
+    border: 1px solid color-mix(in srgb, var(--color-gold) 35%, transparent);
+    box-shadow: var(--shadow-gold);
+  }
+  .leadsuccess__svg { width: 3.1rem; height: 3.1rem; stroke: var(--color-gold-deep); }
+  .leadsuccess__circle { stroke-dasharray: 145; stroke-dashoffset: 145; animation: ls-circle 0.6s cubic-bezier(0.65,0,0.45,1) forwards; }
+  .leadsuccess__check { stroke-dasharray: 40; stroke-dashoffset: 40; animation: ls-check 0.35s cubic-bezier(0.65,0,0.45,1) 0.5s forwards; }
+  @keyframes ls-circle { to { stroke-dashoffset: 0; } }
+  @keyframes ls-check { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .leadsuccess { animation: none; }
+    .leadsuccess__circle, .leadsuccess__check { animation: none; stroke-dashoffset: 0; }
+  }
+
+  .leadsuccess__title { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 3.5vw, 1.9rem); color: var(--color-ink); }
+  .leadsuccess__text { margin-top: 0.6rem; color: var(--color-ink-soft); font-size: 0.98rem; line-height: 1.6; max-width: 34ch; }
+  .leadsuccess__again {
+    margin-top: 1.3rem; background: none; border: 0; cursor: pointer; font: inherit;
+    font-size: 0.9rem; font-weight: 700; color: var(--color-gold-deep); text-decoration: underline;
+  }
+  .leadsuccess__again:hover { color: var(--color-ink); }
 </style>
 
 <script>
   // Client-Logik fuer alle LeadForm-Instanzen
   document.querySelectorAll<HTMLFormElement>('form.leadform').forEach((form) => {
     const statusEl = form.querySelector<HTMLElement>('[data-status]');
+    const successEl = document.querySelector<HTMLElement>(`[data-success-for="${form.id}"]`);
+    const resetBtn = successEl?.querySelector<HTMLButtonElement>('[data-success-reset]');
+
+    // Nach Erfolg das Formular ausblenden und das Danke-Fenster zeigen.
+    const showSuccess = () => {
+      if (!successEl) {
+        setStatus('Danke! Deine Anfrage ist bei uns. Wir melden uns zeitnah.', 'ok');
+        return;
+      }
+      form.hidden = true;
+      successEl.hidden = false;
+      // Umgebende Karte kann darauf reagieren (z. B. eigene Überschrift ausblenden).
+      form.parentElement?.classList.add('has-lead-success');
+      successEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    };
+
+    resetBtn?.addEventListener('click', () => {
+      if (successEl) successEl.hidden = true;
+      form.hidden = false;
+      form.parentElement?.classList.remove('has-lead-success');
+      form.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
+    });
     const setStatus = (msg: string, kind: 'ok' | 'error' | '') => {
       if (!statusEl) return;
       statusEl.textContent = msg;
@@ -190,7 +291,8 @@ const hasTurnstile = Boolean(site.turnstileSiteKey);
         if (res.ok && json.ok) {
           form.reset();
           form.querySelectorAll<HTMLElement>('[data-zonen-summary]').forEach((el) => (el.hidden = true));
-          setStatus('Danke! Deine Anfrage ist bei uns. Wir melden uns zeitnah.', 'ok');
+          setStatus('', '');
+          showSuccess();
         } else {
           setStatus(json.error || 'Es gab ein Problem. Bitte ruf uns kurz an, wir helfen sofort.', 'error');
         }

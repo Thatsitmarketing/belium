@@ -1,7 +1,9 @@
 ---
 /**
- * Bewertungen – durchlaufender (auto-scrollender) Kundenstimmen-Slider auf heller Fläche.
- * Kein dunkler Balken mehr im Hintergrund; die Karten laufen als ruhige Endlos-Schleife.
+ * Bewertungen – swipebarer Kundenstimmen-Slider auf heller Fläche.
+ * Nativer horizontaler Scroll mit Scroll-Snap (Touch-Swipe, Trackpad, Mausrad-Shift),
+ * zusätzlich Pfeiltasten, Vor/Zurück-Buttons und Punkt-Navigation. Ein ruhiger Autoplay
+ * läuft im Hintergrund und pausiert, sobald man selbst bedient oder hovert.
  * Inhalte aus src/data/reviews.ts (PLATZHALTER, siehe dortige Hinweise) – vor Livegang
  * durch echte, freigegebene Bewertungen oder das Google/ProvenExpert-Widget ersetzen.
  */
@@ -16,32 +18,56 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
     <h2 class="t-h2 rev__title">Das sagen <span class="text-gold">unsere Kundinnen</span></h2>
   </div>
 
-  <div class="rev__viewport" data-rev-viewport>
-    <div class="rev__track" data-rev-track>
-      {[0, 1].map((copy) => (
-        <ul class="rev__group" aria-hidden={copy === 1 ? 'true' : undefined}>
-          {reviews.map((r) => (
-            <li class="rev__item">
-              <article class="rcard">
-                <span class="rcard__quote" aria-hidden="true"><Icon name="quote" class="w-6 h-6" /></span>
-                <div class="rcard__stars" role="img" aria-label={`${r.stars} von 5 Sternen`}>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Icon name="star" class={`w-4 h-4 rcard__star${i < r.stars ? ' is-on' : ''}`} />
-                  ))}
-                </div>
-                <p class="rcard__text">{r.text}</p>
-                <footer class="rcard__foot">
-                  <span class="rcard__avatar" aria-hidden="true">{r.name.charAt(0)}</span>
-                  <span class="rcard__meta">
-                    <span class="rcard__name">{r.name}</span>
-                    <span class="rcard__zone">{r.zone}</span>
-                  </span>
-                </footer>
-              </article>
-            </li>
-          ))}
-        </ul>
+  <div class="rev__slider" data-rev>
+    <ul
+      class="rev__viewport"
+      data-rev-viewport
+      tabindex="0"
+      role="region"
+      aria-roledescription="Karussell"
+      aria-label="Kundenstimmen, seitlich wischbar"
+    >
+      {reviews.map((r, i) => (
+        <li class="rev__item" data-rev-item aria-label={`${i + 1} von ${reviews.length}`}>
+          <article class="rcard">
+            <span class="rcard__quote" aria-hidden="true"><Icon name="quote" class="w-6 h-6" /></span>
+            <div class="rcard__stars" role="img" aria-label={`${r.stars} von 5 Sternen`}>
+              {Array.from({ length: 5 }).map((_, s) => (
+                <Icon name="star" class={`w-4 h-4 rcard__star${s < r.stars ? ' is-on' : ''}`} />
+              ))}
+            </div>
+            <p class="rcard__text">{r.text}</p>
+            <footer class="rcard__foot">
+              <span class="rcard__avatar" aria-hidden="true">{r.name.charAt(0)}</span>
+              <span class="rcard__meta">
+                <span class="rcard__name">{r.name}</span>
+                <span class="rcard__zone">{r.zone}</span>
+              </span>
+            </footer>
+          </article>
+        </li>
       ))}
+    </ul>
+
+    <div class="rev__controls">
+      <button type="button" class="rev__arrow" data-rev-prev aria-label="Vorherige Bewertung">
+        <Icon name="arrow" class="w-5 h-5 rev__arrow-ic rev__arrow-ic--prev" />
+      </button>
+      <ol class="rev__dots" data-rev-dots aria-label="Bewertung auswählen">
+        {reviews.map((r, i) => (
+          <li>
+            <button
+              type="button"
+              class:list={['rev__dot', { 'is-active': i === 0 }]}
+              data-rev-dot={i}
+              aria-label={`Bewertung ${i + 1} von ${reviews.length}: ${r.name}`}
+            ></button>
+          </li>
+        ))}
+      </ol>
+      <button type="button" class="rev__arrow" data-rev-next aria-label="Nächste Bewertung">
+        <Icon name="arrow" class="w-5 h-5 rev__arrow-ic" />
+      </button>
     </div>
   </div>
 
@@ -74,34 +100,48 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
   .rev :global(.rev__ornament) { margin-bottom: 1rem; }
   .rev__head .rev__title { margin-top: 0.7rem; text-wrap: balance; }
 
-  /* Durchlaufender Slider (Endlos-Schleife) */
-  .rev__viewport { position: relative; overflow: hidden; padding-block: 0.5rem 2rem; }
-  /* Weiche Ränder links/rechts, damit die Karten sanft ein- und ausblenden */
+  /* Swipebarer Slider: nativer Scroll + Snap, damit Touch/Trackpad sofort funktionieren */
+  .rev__slider { position: relative; }
   .rev__viewport {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    list-style: none; display: flex; gap: 1.15rem;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: none; -ms-overflow-style: none;
+    padding-block: 0.5rem 1.5rem;
+    /* Erste/letzte Karte sollen zentriert erreichbar sein */
+    padding-inline: max(1.25rem, calc((100% - 74rem) / 2));
+    -webkit-overflow-scrolling: touch;
   }
-  .rev__track { display: flex; width: max-content; gap: 1.15rem; }
-  .rev__group {
-    list-style: none; display: flex; gap: 1.15rem; flex: 0 0 auto;
-    padding-block: 0.25rem;
-    animation: rev-marquee 46s linear infinite;
-  }
-  .rev__viewport:hover .rev__group,
-  .rev__viewport:focus-within .rev__group { animation-play-state: paused; }
+  .rev__viewport::-webkit-scrollbar { display: none; }
+  .rev__viewport:focus-visible { outline: 3px solid var(--color-gold); outline-offset: -3px; border-radius: var(--radius-md); }
+  @media (prefers-reduced-motion: reduce) { .rev__viewport { scroll-behavior: auto; } }
 
-  @keyframes rev-marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-100% - 1.15rem)); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rev__viewport { overflow-x: auto; scrollbar-width: none; }
-    .rev__viewport::-webkit-scrollbar { display: none; }
-    .rev__group { animation: none; }
-    .rev__group[aria-hidden="true"] { display: none; }
-  }
+  .rev__item { flex: 0 0 clamp(17rem, 78vw, 20.5rem); scroll-snap-align: center; }
+  @media (min-width: 700px) { .rev__item { flex-basis: clamp(18rem, 30vw, 20.5rem); } }
 
-  .rev__item { flex: 0 0 clamp(17rem, 24vw, 20.5rem); }
+  /* Bedienelemente */
+  .rev__controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 0.25rem; }
+  .rev__arrow {
+    flex: 0 0 auto; width: 2.75rem; height: 2.75rem; border-radius: 50%; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff; color: var(--color-ink);
+    border: 1px solid var(--color-sand-deep); box-shadow: var(--shadow-card);
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  }
+  .rev__arrow:hover { border-color: var(--color-gold); color: var(--color-gold-deep); transform: translateY(-2px); }
+  .rev__arrow:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 2px; }
+  .rev__arrow[disabled] { opacity: 0.35; pointer-events: none; }
+  .rev__arrow :global(.rev__arrow-ic--prev) { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: reduce) { .rev__arrow:hover { transform: none; } }
+
+  .rev__dots { list-style: none; display: flex; align-items: center; gap: 0.45rem; }
+  .rev__dot {
+    width: 0.55rem; height: 0.55rem; border-radius: 999px; cursor: pointer;
+    border: 0; padding: 0; background: var(--color-sand-deep);
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .rev__dot.is-active { width: 1.6rem; background: var(--gradient-gold); }
+  .rev__dot:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
 
   .rcard {
     position: relative; height: 100%;
@@ -140,3 +180,123 @@ import { reviews, reviewsPlatzhalter } from '@/data/reviews';
   .rev__links { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
   .rev__glogo { flex: 0 0 auto; display: block; }
 </style>
+
+<script>
+  /**
+   * Slider-Steuerung: Der Scroll-Container ist die Quelle der Wahrheit. Pfeile, Punkte und
+   * Autoplay setzen nur `scrollLeft`; der Zustand wird aus der Scroll-Position abgeleitet.
+   */
+  const slider = document.querySelector<HTMLElement>('[data-rev]');
+  if (slider) {
+    const viewport = slider.querySelector<HTMLElement>('[data-rev-viewport]');
+    const items = Array.from(slider.querySelectorAll<HTMLElement>('[data-rev-item]'));
+    const dots = Array.from(slider.querySelectorAll<HTMLButtonElement>('[data-rev-dot]'));
+    const prevBtn = slider.querySelector<HTMLButtonElement>('[data-rev-prev]');
+    const nextBtn = slider.querySelector<HTMLButtonElement>('[data-rev-next]');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (viewport && items.length) {
+      // `target` ist die zuletzt angesteuerte Karte. Sie dient als Basis für Pfeile und
+      // Autoplay, damit ein Klick während einer laufenden Animation nicht ins Leere greift.
+      let target = 0;
+      let paused = false;
+      let timer: number | undefined;
+      let settleTimer: number | undefined;
+
+      /** Index der Karte, die der aktuellen Scroll-Position am nächsten liegt. */
+      function currentIndex() {
+        const mitte = viewport!.scrollLeft + viewport!.clientWidth / 2;
+        let best = 0;
+        let bestDist = Infinity;
+        items.forEach((el, i) => {
+          const c = el.offsetLeft + el.offsetWidth / 2;
+          const d = Math.abs(c - mitte);
+          if (d < bestDist) { bestDist = d; best = i; }
+        });
+        return best;
+      }
+
+      function scrollToIndex(i: number) {
+        const clamped = Math.max(0, Math.min(items.length - 1, i));
+        const el = items[clamped];
+        if (!el) return;
+        target = clamped;
+        // Während der Animation nicht aus der Scroll-Position zurückrechnen.
+        if (settleTimer) window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(() => { settleTimer = undefined; target = currentIndex(); }, 700);
+        // Karte mittig ausrichten, aber innerhalb des scrollbaren Bereichs bleiben.
+        const ziel = el.offsetLeft - (viewport!.clientWidth - el.offsetWidth) / 2;
+        const max = viewport!.scrollWidth - viewport!.clientWidth;
+        viewport!.scrollTo({ left: Math.max(0, Math.min(max, ziel)), behavior: prefersReduced ? 'auto' : 'smooth' });
+        markActive(clamped);
+      }
+
+      function markActive(i: number) {
+        dots.forEach((d, n) => d.classList.toggle('is-active', n === i));
+      }
+
+      function syncState() {
+        if (!settleTimer) target = currentIndex();
+        markActive(target);
+        const max = viewport!.scrollWidth - viewport!.clientWidth - 2;
+        if (prevBtn) prevBtn.disabled = viewport!.scrollLeft <= 2;
+        if (nextBtn) nextBtn.disabled = viewport!.scrollLeft >= max;
+      }
+
+      // Autoplay: ruhig und jederzeit unterbrechbar.
+      function tick() {
+        if (paused || document.hidden) return;
+        const max = viewport!.scrollWidth - viewport!.clientWidth - 2;
+        if (viewport!.scrollLeft >= max || target >= items.length - 1) {
+          target = 0;
+          viewport!.scrollTo({ left: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+          markActive(0);
+        } else {
+          scrollToIndex(target + 1);
+        }
+      }
+      function startAuto() {
+        if (prefersReduced || timer) return;
+        timer = window.setInterval(tick, 5000);
+      }
+      function stopAuto() {
+        if (timer) { window.clearInterval(timer); timer = undefined; }
+      }
+
+      let scrollRaf = 0;
+      viewport.addEventListener('scroll', () => {
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(() => { scrollRaf = 0; syncState(); });
+      }, { passive: true });
+
+      prevBtn?.addEventListener('click', () => scrollToIndex(target - 1));
+      nextBtn?.addEventListener('click', () => scrollToIndex(target + 1));
+      dots.forEach((d, i) => d.addEventListener('click', () => scrollToIndex(i)));
+
+      // Tastatur: Links/Rechts blättern, wenn der Slider fokussiert ist.
+      viewport.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); scrollToIndex(target + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); scrollToIndex(target - 1); }
+      });
+
+      // Autoplay pausiert bei jeder eigenen Bedienung.
+      ['pointerenter', 'pointerdown', 'focusin', 'touchstart'].forEach((ev) =>
+        slider.addEventListener(ev, () => { paused = true; }, { passive: true })
+      );
+      ['pointerleave', 'focusout'].forEach((ev) =>
+        slider.addEventListener(ev, () => { paused = false; }, { passive: true })
+      );
+      viewport.addEventListener('touchend', () => { window.setTimeout(() => { paused = false; }, 4000); }, { passive: true });
+
+      // Im Hintergrundtab nicht weiterlaufen lassen.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopAuto();
+        else startAuto();
+      });
+
+      window.addEventListener('resize', syncState, { passive: true });
+      syncState();
+      startAuto();
+    }
+  }
+</script>

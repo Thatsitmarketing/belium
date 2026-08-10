@@ -134,6 +134,9 @@ const mapLink = `https://www.google.com/maps/search/?api=1&query=${site.address.
   }
   .kontakt__card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.6rem; }
   .kontakt__card-sub { color: var(--color-mocha); font-size: 0.95rem; margin-top: 0.2rem; margin-bottom: 1.3rem; }
+  /* Nach erfolgreichem Versand übernimmt das Danke-Fenster die Karte allein. */
+  .kontakt__card.has-lead-success .kontakt__card-title,
+  .kontakt__card.has-lead-success .kontakt__card-sub { display: none; }
 
   /* Karte */
   .kontakt__map { margin-top: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid color-mix(in srgb, #fff 16%, transparent); border-radius: var(--radius-lg); overflow: hidden; background: color-mix(in srgb, var(--color-ink) 60%, transparent); backdrop-filter: blur(6px); }

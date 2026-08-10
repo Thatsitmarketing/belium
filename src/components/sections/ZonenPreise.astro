@@ -5,7 +5,7 @@
  * Schritt 3 Ergebnis + persönliches Angebot.
  * Ein Fortschrittsbalken zeigt den Stand; die Schritte erscheinen nacheinander.
  */
-import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter } from '@/data/zonen';
+import { zonenGruppen, formatEuro, paketSitzungen, preisePlatzhalter, ersparnis } from '@/data/zonen';
 import Icon from '@/components/Icon.astro';
 
 const zonen = zonenGruppen[0].zonen;
@@ -49,27 +49,37 @@ const steps = [
         <div class="fstep" data-step="1">
           <p class="fstep__kicker"><span class="num-gold">01</span> Wähle deine Wunschzonen</p>
           <div class="zones">
-            {zonen.map((z) => (
-              <button
-                type="button"
-                class="zone"
-                aria-pressed="false"
-                data-zone
-                data-name={z.name}
-                data-einzel={z.einzel}
-                data-paket={z.paket}
-              >
-                <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
-                <span class="zone__info">
-                  <span class="zone__name">{z.name}</span>
-                  {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
-                </span>
-                <span class="zone__preis">
-                  <span class="zone__paket">{formatEuro(z.paket)}</span>
-                  <span class="zone__einzel">einzeln {formatEuro(z.einzel)}</span>
-                </span>
-              </button>
-            ))}
+            {zonen.map((z) => {
+              const e = ersparnis(z.einzel, z.paket);
+              return (
+                <button
+                  type="button"
+                  class="zone"
+                  aria-pressed="false"
+                  data-zone
+                  data-name={z.name}
+                  data-einzel={z.einzel}
+                  data-paket={z.paket}
+                >
+                  <span class="zone__check"><Icon name="check" class="w-4 h-4" /></span>
+                  <span class="zone__info">
+                    <span class="zone__name">{z.name}</span>
+                    {z.hinweis && <span class="zone__hinweis">{z.hinweis}</span>}
+                  </span>
+                  <span class="zone__preis">
+                    <span class="zone__paket">{formatEuro(z.paket)}</span>
+                    <span class="zone__einzel">
+                      einzeln {paketSitzungen}× {formatEuro(z.einzel)} = <s>{formatEuro(e.einzelGesamt)}</s>
+                    </span>
+                    {e.betrag > 0 && (
+                      <span class="zone__save">
+                        spare {formatEuro(e.betrag)} · {e.prozent}&thinsp;%
+                      </span>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -82,11 +92,13 @@ const steps = [
               <span class="choice__ic"><Icon name="gem" class="w-6 h-6" gradient /></span>
               <span class="choice__name">Paket</span>
               <span class="choice__hint">ca. {paketSitzungen} Sitzungen bis zum Ergebnis, bester Preis pro Sitzung.</span>
+              <span class="choice__save" data-choice-save hidden></span>
             </button>
             <button type="button" class="choice choice--mode" data-mode="einzel">
               <span class="choice__ic"><Icon name="droplet" class="w-6 h-6" gradient /></span>
               <span class="choice__name">Einzelsitzung</span>
               <span class="choice__hint">Erst einmal ausprobieren, Preis pro einzelner Sitzung.</span>
+              <span class="choice__compare" data-choice-compare hidden></span>
             </button>
           </div>
         </div>
@@ -101,7 +113,31 @@ const steps = [
               <span class="result__meta" data-result-meta>für {paketSitzungen} Sitzungen</span>
               <span class="result__alt" data-result-alt></span>
             </div>
-            <ul class="result__chips" data-result-chips aria-label="Gewählte Zonen"></ul>
+            <div class="result__side">
+              <ul class="result__chips" data-result-chips aria-label="Gewählte Zonen"></ul>
+
+              <!-- Ersparnis-Aufschlüsselung Paket vs. Einzelsitzungen -->
+              <div class="save" data-save hidden>
+                <p class="save__head">
+                  <Icon name="gem" class="w-4 h-4" /> Deine Paket-Ersparnis
+                </p>
+                <dl class="save__rows">
+                  <div class="save__row">
+                    <dt>{paketSitzungen} Einzelsitzungen</dt>
+                    <dd><s data-save-einzel></s></dd>
+                  </div>
+                  <div class="save__row">
+                    <dt>Paketpreis</dt>
+                    <dd data-save-paket></dd>
+                  </div>
+                  <div class="save__row save__row--total">
+                    <dt>Du sparst</dt>
+                    <dd><span data-save-betrag></span> <span class="save__pct" data-save-prozent></span></dd>
+                  </div>
+                </dl>
+                <p class="save__note" data-save-note></p>
+              </div>
+            </div>
           </div>
 
           {preisePlatzhalter && (
@@ -223,6 +259,17 @@ const steps = [
   .choice__hint { font-size: 0.88rem; color: var(--color-onink-soft); }
   .choice__go { position: absolute; top: 1.4rem; right: 1.4rem; color: var(--color-gold-light); opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; }
   .choice:hover .choice__go { opacity: 1; transform: translateX(3px); }
+  /* Live-Ersparnis auf der Paket-Karte (Schritt 2) */
+  .choice__save {
+    margin-top: 0.7rem; align-self: flex-start;
+    font-size: 0.82rem; font-weight: 800; color: #d7f5df;
+    background: color-mix(in srgb, #2f7a43 55%, transparent);
+    border: 1px solid color-mix(in srgb, #6fd694 40%, transparent);
+    border-radius: var(--radius-xs); padding: 0.3rem 0.6rem;
+  }
+  .choice__compare { margin-top: 0.7rem; font-size: 0.82rem; color: var(--color-onink-soft); }
+  .choice__save[hidden], .choice__compare[hidden] { display: none; }
+
   .choice__badge {
     position: absolute; top: 1rem; right: 1rem;
     font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
@@ -254,6 +301,14 @@ const steps = [
   .zone__preis { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.25; }
   .zone__paket { font-weight: 800; font-size: 0.95rem; color: var(--color-gold-light); }
   .zone__einzel { font-size: 0.72rem; color: var(--color-onink-soft); }
+  .zone__einzel s { text-decoration-thickness: 1px; }
+  /* Ersparnis pro Zone: sofort sichtbarer Vorteil gegenüber Einzelsitzungen */
+  .zone__save {
+    margin-top: 0.2rem; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.01em;
+    color: #d7f5df; background: color-mix(in srgb, #2f7a43 55%, transparent);
+    border: 1px solid color-mix(in srgb, #6fd694 40%, transparent);
+    border-radius: var(--radius-xs); padding: 0.12rem 0.42rem; white-space: nowrap;
+  }
   .zone[aria-pressed='true'] { border-color: var(--color-gold); background: color-mix(in srgb, var(--color-gold) 14%, transparent); }
   .zone[aria-pressed='true'] .zone__check { background: var(--gradient-gold); border-color: transparent; color: #2a1c07; }
 
@@ -271,12 +326,40 @@ const steps = [
   .result__amount { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 8vw, 3.6rem); line-height: 1; margin-top: 0.35rem; }
   .result__meta { font-size: 0.85rem; color: var(--color-onink-soft); margin-top: 0.35rem; }
   .result__alt { font-size: 0.85rem; color: var(--color-onink-soft); margin-top: 0.5rem; }
+  .result__side { display: flex; flex-direction: column; gap: 1rem; }
   .result__chips { list-style: none; display: flex; flex-wrap: wrap; gap: 0.45rem; align-content: flex-start; }
-  .result__chips li {
+  /* :global, weil die Chips per JS erzeugt werden und keine Scope-Klasse tragen. */
+  .result__chips :global(li) {
     display: inline-flex; align-items: center; gap: 0.35rem;
     background: color-mix(in srgb, #fff 8%, transparent); border: 1px solid color-mix(in srgb, #fff 16%, transparent);
     border-radius: var(--radius-xs); padding: 0.32rem 0.75rem; font-size: 0.82rem; font-weight: 600; color: #fff;
   }
+
+  /* Ersparnis-Aufschlüsselung im Ergebnis */
+  .save {
+    background: color-mix(in srgb, #2f7a43 22%, transparent);
+    border: 1px solid color-mix(in srgb, #6fd694 35%, transparent);
+    border-radius: var(--radius-sm); padding: 0.9rem 1rem;
+  }
+  .save[hidden] { display: none; }
+  .save__head {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #d7f5df; margin-bottom: 0.6rem;
+  }
+  .save__head :global(svg) { color: #a9e9c0; flex: 0 0 auto; }
+  .save__rows { display: flex; flex-direction: column; gap: 0.3rem; }
+  .save__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-size: 0.88rem; color: var(--color-onink-soft); }
+  .save__row dd { font-weight: 700; color: #fff; }
+  .save__row--total {
+    margin-top: 0.45rem; padding-top: 0.5rem;
+    border-top: 1px solid color-mix(in srgb, #6fd694 28%, transparent);
+    font-size: 1rem;
+  }
+  .save__row--total dt { font-weight: 800; color: #fff; }
+  .save__row--total dd { font-family: var(--font-display); font-size: 1.3rem; color: #d7f5df; }
+  .save__pct { font-family: var(--font-body); font-size: 0.82rem; font-weight: 800; opacity: 0.85; }
+  .save__note { margin-top: 0.55rem; font-size: 0.78rem; color: var(--color-onink-soft); }
 
   .preise__hinweis {
     display: flex; align-items: flex-start; gap: 0.6rem;
@@ -341,6 +424,16 @@ const steps = [
     const resAlt = root.querySelector<HTMLElement>('[data-result-alt]');
     const resChips = root.querySelector<HTMLElement>('[data-result-chips]');
 
+    // Ersparnis-Anzeige (Schritt 2 + Schritt 3)
+    const choiceSave = root.querySelector<HTMLElement>('[data-choice-save]');
+    const choiceCompare = root.querySelector<HTMLElement>('[data-choice-compare]');
+    const saveBox = root.querySelector<HTMLElement>('[data-save]');
+    const saveEinzel = root.querySelector<HTMLElement>('[data-save-einzel]');
+    const savePaket = root.querySelector<HTMLElement>('[data-save-paket]');
+    const saveBetrag = root.querySelector<HTMLElement>('[data-save-betrag]');
+    const saveProzent = root.querySelector<HTMLElement>('[data-save-prozent]');
+    const saveNote = root.querySelector<HTMLElement>('[data-save-note]');
+
     // Übernahme in das (einzige) Kontaktformular
     const adoptBtn = root.querySelector<HTMLButtonElement>('[data-adopt]');
 
@@ -355,6 +448,48 @@ const steps = [
       let paket = 0, einzel = 0;
       state.selected.forEach((v) => { paket += v.paket; einzel += v.einzel; });
       return { paket, einzel };
+    }
+
+    /** Paketpreis vs. dieselbe Anzahl einzeln gebuchter Sitzungen. */
+    function savings() {
+      const { paket, einzel } = totals();
+      const einzelGesamt = einzel * paketSitzungen;
+      const betrag = Math.max(0, einzelGesamt - paket);
+      const prozent = einzelGesamt > 0 ? Math.round((betrag / einzelGesamt) * 100) : 0;
+      return { paket, einzel, einzelGesamt, betrag, prozent };
+    }
+
+    /** Ersparnis-Hinweise in Schritt 2 und Schritt 3 aktualisieren. */
+    function renderSavings() {
+      const s = savings();
+      const hasSave = state.selected.size > 0 && s.betrag > 0;
+
+      if (choiceSave) {
+        choiceSave.hidden = !hasSave;
+        choiceSave.textContent = hasSave
+          ? `Du sparst ${formatEuro(s.betrag)} (${s.prozent} %) gegenüber ${paketSitzungen} Einzelsitzungen`
+          : '';
+      }
+      if (choiceCompare) {
+        const show = state.selected.size > 0;
+        choiceCompare.hidden = !show;
+        choiceCompare.textContent = show
+          ? `${paketSitzungen} Sitzungen einzeln: ${formatEuro(s.einzelGesamt)}`
+          : '';
+      }
+
+      if (saveBox) {
+        saveBox.hidden = !hasSave;
+        if (hasSave) {
+          if (saveEinzel) saveEinzel.textContent = formatEuro(s.einzelGesamt);
+          if (savePaket) savePaket.textContent = formatEuro(s.paket);
+          if (saveBetrag) saveBetrag.textContent = formatEuro(s.betrag);
+          if (saveProzent) saveProzent.textContent = `(${s.prozent} %)`;
+          if (saveNote) saveNote.textContent = state.mode === 'paket'
+            ? `Gegenüber ${paketSitzungen} einzeln gebuchten Sitzungen zu je ${formatEuro(s.einzel)}.`
+            : `Als Paket würdest du ${formatEuro(s.betrag)} sparen (Paketpreis ${formatEuro(s.paket)}).`;
+        }
+      }
     }
 
     function animateNumber(el: HTMLElement | null, to: number) {
@@ -375,6 +510,7 @@ const steps = [
       if (countEl) countEl.textContent = String(count);
       if (liveSumEl) liveSumEl.textContent = formatEuro(state.mode === 'einzel' ? einzel : paket);
       if (nextBtn && state.step === 1) nextBtn.disabled = count === 0;
+      renderSavings();
     }
 
     // Auswahl in das Kontaktformular übernehmen (Zonen + Richtpreis) und dorthin scrollen.
@@ -390,12 +526,17 @@ const steps = [
       if (kontaktForm) {
         const zf = kontaktForm.querySelector<HTMLInputElement>('input[name="zonen"]');
         const sf = kontaktForm.querySelector<HTMLInputElement>('input[name="summe"]');
-        const wz = kontaktForm.querySelector<HTMLInputElement>('input[name="wunschzone"]');
+        const wz = kontaktForm.querySelector<HTMLSelectElement>('select[name="wunschzone"]');
         const sumBox = kontaktForm.querySelector<HTMLElement>('[data-zonen-summary]');
         const sumText = kontaktForm.querySelector<HTMLElement>('[data-zonen-text]');
         if (zf) zf.value = names.join(', ');
         if (sf) sf.value = String(summe);
-        if (wz && !wz.value.trim()) wz.value = names.join(', ');
+        // Dropdown: eine Zone direkt auswählen, bei mehreren die Sammeloption.
+        if (wz) {
+          const ziel = names.length === 1 ? names[0] : 'Mehrere Zonen';
+          const passt = Array.from(wz.options).some((o) => o.value === ziel);
+          if (passt) wz.value = ziel;
+        }
         if (sumText) sumText.textContent = summary;
         if (sumBox) sumBox.hidden = false;
       }
@@ -420,8 +561,9 @@ const steps = [
       animateNumber(resAmount, isPaket ? paket : einzel);
       if (resMode) resMode.textContent = isPaket ? 'Paketpreis' : 'Einzelsitzung';
       if (resMeta) resMeta.textContent = isPaket ? `für ca. ${paketSitzungen} Sitzungen` : 'pro Sitzung';
+      const s = savings();
       if (resAlt) resAlt.textContent = isPaket
-        ? `Einzelne Sitzung: ca. ${formatEuro(einzel)}`
+        ? `Einzelne Sitzung: ca. ${formatEuro(einzel)} · ${paketSitzungen} Sitzungen einzeln: ca. ${formatEuro(s.einzelGesamt)}`
         : `Als Paket (${paketSitzungen} Sitzungen): ca. ${formatEuro(paket)}`;
       if (resChips) {
         resChips.innerHTML = '';
@@ -431,6 +573,7 @@ const steps = [
           resChips.appendChild(li);
         });
       }
+      renderSavings();
       // Übernehmen-Button für eine (erneute) Übernahme zurücksetzen.
       if (adoptBtn) {
         adoptBtn.classList.remove('is-done');

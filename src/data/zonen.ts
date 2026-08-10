@@ -66,5 +66,20 @@ export const zonenGruppen: ZonenGruppe[] = [
   },
 ];
 
+/** Flache Liste aller Zonen (z. B. für das Dropdown im Kontaktformular). */
+export const alleZonen: Zone[] = zonenGruppen.flatMap((g) => g.zonen);
+
+/**
+ * Ersparnis eines Pakets gegenüber der gleichen Anzahl einzeln gebuchter Sitzungen.
+ * Basis: `paketSitzungen` × Einzelpreis verglichen mit dem Paketpreis.
+ * Gibt Betrag (EUR), Prozent (gerundet) und den Vergleichswert zurück.
+ */
+export function ersparnis(einzel: number, paket: number) {
+  const einzelGesamt = einzel * paketSitzungen;
+  const betrag = Math.max(0, einzelGesamt - paket);
+  const prozent = einzelGesamt > 0 ? Math.round((betrag / einzelGesamt) * 100) : 0;
+  return { einzelGesamt, betrag, prozent };
+}
+
 /** True, solange irgendein Preis noch Platzhalter ist – steuert den Hinweisbanner im UI. */
 export const preisePlatzhalter = zonenGruppen.some((g) => g.zonen.some((z) => z.placeholder));
