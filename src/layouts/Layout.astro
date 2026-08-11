@@ -114,17 +114,23 @@ const { title, description, path, jsonLdType = 'home', breadcrumb } = Astro.prop
 
         // 3) Richtungs-Reveal ([data-reveal]) – vertikale UND horizontale Bewegung.
         //    Wert: up (Default) | down | left | right | zoom.
+        //    [data-reveal-mobile] überschreibt die Richtung auf schmalen Screens: dort stehen
+        //    zweispaltige Blöcke untereinander, ein seitliches Einfliegen liesse die Karten
+        //    ausserhalb der Mitte starten (und am overflow-x-Rand abschneiden).
         //    Container mit [data-reveal-stagger] blenden ihre [data-reveal]-Kinder gestaffelt ein.
         const OFF = 46;
+        const schmal = window.matchMedia('(max-width: 819px)');
+        const richtung = (el: Element) =>
+          (schmal.matches && el.getAttribute('data-reveal-mobile')) || el.getAttribute('data-reveal') || 'up';
         const offX = (el: Element) => {
-          const d = el.getAttribute('data-reveal');
+          const d = richtung(el);
           return d === 'left' ? -OFF : d === 'right' ? OFF : 0;
         };
         const offY = (el: Element) => {
-          const d = el.getAttribute('data-reveal') || 'up';
+          const d = richtung(el);
           return d === 'up' ? OFF : d === 'down' ? -OFF : 0;
         };
-        const isZoom = (el: Element) => el.getAttribute('data-reveal') === 'zoom';
+        const isZoom = (el: Element) => richtung(el) === 'zoom';
 
         const animateGroup = (items: Element[], stagger: number) => {
           gsap.fromTo(
