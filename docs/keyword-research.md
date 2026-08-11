@@ -60,8 +60,10 @@ Treatwell (eigene „Gelsenkirchen-Buer"-Seite), Planity, Cylex, ProvenExpert, E
    LocalBusiness/HealthAndBeautyBusiness-Schema (ist umgesetzt), Buer-spezifische Inhalte.
 2. **Alleinstellung** „physisches Studio direkt in Gelsenkirchen-Buer, keine Anfahrt nach Essen nötig"
    klar gegen Ministry of Beauty positionieren (Standort- und Anfahrtsabschnitt).
-3. **Transparente Preis-/Zonen-Sektion** (viele Wettbewerber ranken über „preise/kosten") – der
-   interaktive Zonenwähler bedient „preise", „kosten", „bikinizone", „männer rücken" gleichzeitig.
+3. ~~**Transparente Preis-/Zonen-Sektion**~~ – **verworfen (Kundenentscheidung):** Es werden keine
+   Preise auf der Seite gezeigt und der Zonenwähler wurde entfernt. Preisnahe Suchanfragen
+   („preise", „kosten") werden stattdessen über die FAQ-Antwort „Was kostet das?" und das
+   Kontaktformular (kostenlose Beratung) bedient.
 4. **Eigene Herren-Ansicht** (Rücken/Brust) und ein **FAQ-Block** für die informationalen Long-Tails.
 5. **Bewertungen/Citations** aufbauen (Google, ProvenExpert, Treatwell), da „erfahrungen" gut
    nachgefragt wird.

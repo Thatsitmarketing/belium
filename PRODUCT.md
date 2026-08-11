@@ -12,8 +12,9 @@ Primär **Frauen** aus Gelsenkirchen Buer und dem näheren Umland (Ruhrgebiet),
 die dauerhaft störende Körperbehaarung reduzieren möchten und eine seriöse,
 gut erreichbare Anlaufstelle vor Ort suchen. Sie informieren sich meist mobil,
 vergleichen Studios und wollen vor der Buchung Vertrauen fassen (Ablauf,
-Eignung, Preisrahmen, Ansprechpartnerin). Männer sind ausdrückliche
-Nebenzielgruppe – der Zonenwähler führt Damen- und Herrenzonen.
+Eignung, Ansprechpartnerin). Männer sind ausdrückliche Nebenzielgruppe.
+Preise stehen bewusst nicht auf der Seite: Sie werden persönlich in der
+kostenlosen Beratung genannt, angebahnt über das Kontaktformular.
 
 ## Product Purpose
 
@@ -55,9 +56,10 @@ ausschließlich nach Vereinbarung. Primär-CTA ist das Lead-Formular
   (Consent-Banner, Event `belium:consent`); vor Einwilligung nichts Externes.
 - **Tracking:** vorbereitet, nicht scharf (`window.trackEvent` → `dataLayer`),
   keine automatisch geladenen Pixel.
-- **Inhaltspflege:** redaktionelle Inhalte & Preise in `src/data/` ohne
-  Codeeingriff (`site.ts`, `zonen.ts`, `faq.ts`, `vorteile.ts`, `ablauf.ts`,
-  `inhalt.ts`).
+- **Inhaltspflege:** redaktionelle Inhalte in `src/data/` ohne Codeeingriff
+  (`site.ts`, `faq.ts`, `vorteile.ts`, `ablauf.ts`, `inhalt.ts`).
+- **Keine Preise/Preisrechner:** einziger Conversion-Punkt ist das
+  Kontaktformular unten auf der Seite (`#kontakt`).
 
 ## Brand Commitments
 
@@ -78,8 +80,7 @@ ausschließlich nach Vereinbarung. Primär-CTA ist das Lead-Formular
   nur „Diodenlaser" schreiben.
 - **Standort (real):** Beckeradstraße 111, 45897 Gelsenkirchen (Buer).
 - **Kontakt (real):** Festnetz 0209 36667488, E-Mail info@belium.de.
-- **Noch ausstehend – NICHT erfinden:** echte Preise (aktuell `placeholder: true`
-  in `zonen.ts`), verbindliche Öffnungszeiten, WhatsApp-Nummer-Bestätigung,
+- **Noch ausstehend – NICHT erfinden:** verbindliche Öffnungszeiten, WhatsApp-Nummer-Bestätigung,
   Vorher-Nachher-Fotos (`ergebnisseVorhanden = false`), Google-/ProvenExpert-
   Bewertungs-Widget-IDs und -Zahlen, finale Geokoordinaten, finale Domain.
 

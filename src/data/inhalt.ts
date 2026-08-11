@@ -52,12 +52,30 @@ export const ergebnissePlatzhalter: { zone: string; sitzungen: string }[] = [
   { zone: 'Beine', sitzungen: 'z. B. nach 8 Sitzungen' },
 ];
 
+/**
+ * Behandlungszonen für das Dropdown „Wunschzone" im Kontaktformular.
+ * Bewusst OHNE Preise: Preise werden ausschließlich persönlich in der Beratung genannt.
+ */
+export const wunschzonen: { name: string; hinweis?: string }[] = [
+  { name: 'Oberlippe', hinweis: 'Gesicht' },
+  { name: 'Kinn', hinweis: 'Gesicht' },
+  { name: 'Wangen', hinweis: 'Gesicht' },
+  { name: 'Achseln' },
+  { name: 'Unterarme' },
+  { name: 'Arme komplett' },
+  { name: 'Bikinizone', hinweis: 'klassisch' },
+  { name: 'Intim komplett' },
+  { name: 'Unterschenkel' },
+  { name: 'Beine komplett' },
+  { name: 'Rücken' },
+  { name: 'Bauch' },
+];
+
 /** Ankernavigation (Abschnitt-IDs müssen mit den Sektionen übereinstimmen). */
 export const navItems: { href: string; label: string }[] = [
   { href: '#vorteile', label: 'Vorteile' },
   { href: '#ueber-maria', label: 'Über Maria' },
   { href: '#ablauf', label: 'Ablauf' },
-  { href: '#preise', label: 'Preise' },
   { href: '#faq', label: 'FAQ' },
   { href: '#kontakt', label: 'Kontakt' },
 ];

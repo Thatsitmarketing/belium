@@ -5,8 +5,10 @@ Kontext und Arbeitsanweisungen für dieses Repository.
 ## Projektziel
 Konversionsoptimierte Onepage für **Belium Beauty**, ein Studio für dauerhafte Laser Haarentfernung
 mit Diodenlaser in **Gelsenkirchen Buer**. Ziel der Seite: Termine erzeugen (Leads), nicht nur
-informieren. Sie ersetzt die alte, reine Info-Seite (belium.de) mit klaren CTAs, einem
-interaktiven Zonen-/Preisrechner, Buchungsanbahnung, lokalem SEO und rechtlicher Absicherung.
+informieren. Sie ersetzt die alte, reine Info-Seite (belium.de) mit klaren CTAs, dem
+Kontaktformular als einzigem Conversion-Punkt, lokalem SEO und rechtlicher Absicherung.
+**Es gibt bewusst keinen Preisrechner und keine Preisangaben auf der Seite** – Preise werden
+ausschließlich persönlich in der kostenlosen Beratung genannt.
 
 ## Tech Stack
 - **Astro 5** (statischer Output), **Tailwind CSS v4** (über `@tailwindcss/vite`)
@@ -44,9 +46,9 @@ interaktiven Zonen-/Preisrechner, Buchungsanbahnung, lokalem SEO und rechtlicher
 ## Inhalte & Preise pflegen (ohne Codeeingriff)
 Alle redaktionellen Inhalte liegen in **`src/data/`**:
 - `site.ts` – Stammdaten: Adresse, Telefon, WhatsApp, E-Mail, Öffnungszeiten, Social, Buchungs-URL, Turnstile-Key
-- `zonen.ts` – **Behandlungszonen & Preise** für den Zonenwähler (Damen/Herren)
 - `faq.ts` – FAQ (wird auch im FAQPage-Schema gespiegelt)
-- `vorteile.ts`, `ablauf.ts`, `inhalt.ts` – Vorteile, Ablaufschritte, Ausschlusskriterien, Technik, Navigation
+- `vorteile.ts`, `ablauf.ts`, `inhalt.ts` – Vorteile, Ablaufschritte, Ausschlusskriterien, Technik,
+  Navigation und die Zonenliste (`wunschzonen`) für das Dropdown im Kontaktformular
 
 ## Build & Deploy
 ```bash
@@ -80,7 +82,7 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - Primär-CTA: Terminanfrage über `LeadForm` (→ `/api/lead`). Sekundär: WhatsApp mit vorbelegtem Text.
 - Buchungssystem ist austauschbar: `site.bookingUrl` setzen, um später Calendly/Shore/Treatwell einzuhängen.
 - Tracking ist **vorbereitet, nicht scharf**: `window.trackEvent(name, detail)` schreibt in `window.dataLayer`.
-  Events: `zonenwaehler_start`, `zonenwaehler_abschluss`, `formular_absenden`, `whatsapp_klick`,
+  Events: `formular_absenden`, `whatsapp_klick`,
   `telefon_klick` (+ CTA-Klicks). Es werden **keine** externen Pixel automatisch geladen.
 - Consent-Banner (`ConsentBanner.astro`) lädt vor Einwilligung nichts Externes. Karte & Bewertungen
   hören auf das Event `belium:consent`.
@@ -92,9 +94,10 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - Bild-Dateinamen ohne Umlaute/Leerzeichen; Alt-Texte mit echten Umlauten.
 - **Kein Herstellername** für das Gerät (kein „VIKINI") – nur „Diodenlaser" schreiben.
 - Sitzungsanzahl einheitlich: **in der Regel 7–10 Behandlungen**.
+- **Keine Preise auf der Seite** und kein Preisrechner. Einziger Conversion-Punkt ist das
+  Kontaktformular im Abschnitt `#kontakt`.
 
 ## Offene Punkte / vom Kunden nachzureichen
-- [ ] **Echte Preise** in `src/data/zonen.ts` eintragen (aktuell PLATZHALTER, `placeholder: true`).
 - [ ] **Öffnungszeiten** in `src/data/site.ts` (aktuell „nach Vereinbarung", Platzhalter). Auch für Schema.
 - [ ] **WhatsApp-Nummer** bestätigen (aktuell Mobil 0178 1592194 aus Alt-Impressum).
 - [ ] **Steuernummer vs. USt-IdNr** klären: 319/5148/5608 ist dem Format nach eine **Steuernummer**,
