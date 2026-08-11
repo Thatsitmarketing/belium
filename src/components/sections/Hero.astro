@@ -205,10 +205,16 @@ const checks = [
   }
   .hero__img { width: 100%; height: 116%; object-fit: cover; object-position: center 22%; }
 
-  /* feine Gold-Geometrie hinter dem Bild */
-  .hero__ln { position: absolute; background: color-mix(in srgb, var(--color-gold) 55%, transparent); z-index: 0; }
-  .hero__ln--v { top: -1.4rem; bottom: 2.5rem; left: -1.4rem; width: 1px; }
-  .hero__ln--h { left: -1.4rem; right: 3rem; top: -1.4rem; height: 1px; }
+  /* Feine Gold-Geometrie hinter dem Bild – nur im zweispaltigen Layout.
+     Untereinander gestapelt ragen die Linien seitlich am Rahmen vorbei und laufen
+     unter den darüberliegenden Text (Google-Badge); dort wirken sie wie ein Fehler
+     statt wie ein Detail. Darum erst ab dem Split-Breakpoint einblenden. */
+  .hero__ln { display: none; }
+  @media (min-width: 1000px) {
+    .hero__ln { display: block; position: absolute; background: color-mix(in srgb, var(--color-gold) 55%, transparent); z-index: 0; }
+    .hero__ln--v { top: -1.4rem; bottom: 2.5rem; left: -1.4rem; width: 1px; }
+    .hero__ln--h { left: -1.4rem; right: 3rem; top: -1.4rem; height: 1px; }
+  }
 
   .hero__stat {
     position: absolute; z-index: 2; left: -1.1rem; bottom: 1.6rem;
