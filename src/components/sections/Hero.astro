@@ -180,9 +180,17 @@ const checks = [
     width: max-content; max-width: 100%; text-decoration: none; color: var(--color-espresso);
     padding: 0.5rem 0.9rem; border: 1px solid var(--color-sand-deep); border-radius: var(--radius-sm);
     background: color-mix(in srgb, #fff 72%, transparent); backdrop-filter: blur(4px);
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    /* Kein transform hier: Die Intro-Animation (GSAP, [data-hero-el]) schreibt transform
+       pro Frame. Eine CSS-Transition darauf bremst die Tween-Endwerte aus – das Badge
+       blieb dadurch dauerhaft 26 px zu tief stehen und klebte am Portrait. */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-  .hero__trust:hover { border-color: var(--color-gold); transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+  .hero__trust:hover { border-color: var(--color-gold); box-shadow: var(--shadow-soft); }
+  /* Einspaltig steht das Badge zwischen „Preise ansehen" und dem Portrait: enger an die
+     Aktionen, zu denen es gehört, und mit klarer Luft nach unten zum Bild. */
+  @media (max-width: 999px) {
+    .hero__trust { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+  }
   .hero__trust-g { flex: 0 0 auto; display: inline-flex; }
   .hero__trust-stars { display: inline-flex; gap: 0.08rem; color: var(--color-gold); }
   .hero__trust-label { font-size: 0.86rem; font-weight: 700; }
