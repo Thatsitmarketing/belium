@@ -33,7 +33,7 @@ const ergebnis = [
     </header>
 
     <div class="problem__compare">
-      <article class="pcol pcol--ist reveal" data-reveal="right">
+      <article class="pcol pcol--ist reveal" data-reveal="right" data-reveal-mobile="up">
         <p class="pcol__label">Ohne Laser</p>
         <ul class="pcol__list">
           {problem.map((p) => (
@@ -44,7 +44,7 @@ const ergebnis = [
 
       <span class="problem__arrow" aria-hidden="true"><Icon name="arrow" class="w-6 h-6" /></span>
 
-      <article class="pcol pcol--ziel reveal" data-reveal="left">
+      <article class="pcol pcol--ziel reveal" data-reveal="left" data-reveal-mobile="up">
         <p class="pcol__label pcol__label--ziel">Mit Belium Beauty</p>
         <ul class="pcol__list">
           {ergebnis.map((e) => (
