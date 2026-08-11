@@ -90,6 +90,8 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - **Genau ein H1** pro Seite; Abschnitte starten mit H2, Unterpunkte H3.
 - Keine erfundenen Preise, Bewertungszahlen oder Erfahrungsberichte – Platzhalter sind markiert (siehe unten).
 - Bild-Dateinamen ohne Umlaute/Leerzeichen; Alt-Texte mit echten Umlauten.
+- **Kein Herstellername** für das Gerät (kein „VIKINI") – nur „Diodenlaser" schreiben.
+- Sitzungsanzahl einheitlich: **in der Regel 7–10 Behandlungen**.
 
 ## Offene Punkte / vom Kunden nachzureichen
 - [ ] **Echte Preise** in `src/data/zonen.ts` eintragen (aktuell PLATZHALTER, `placeholder: true`).

@@ -72,8 +72,10 @@ ausschließlich nach Vereinbarung. Primär-CTA ist das Lead-Formular
 
 ## Evidence on Hand
 
-- **Gerät/Technik (real):** VIKINI Multiplus Diodenlaser, 808 nm (940 nm
-  optional), Saphir-Kontaktkühlung, Spotgröße 12 × 11 mm, bis 10 Hz.
+- **Gerät/Technik (real):** Diodenlaser, 808 nm (940 nm optional),
+  Saphir-Kontaktkühlung, Spotgröße 12 × 11 mm, bis 10 Hz.
+  **Kundenvorgabe:** Der Herstellername (VIKINI) wird auf der Seite nicht genannt –
+  nur „Diodenlaser" schreiben.
 - **Standort (real):** Beckeradstraße 111, 45897 Gelsenkirchen (Buer).
 - **Kontakt (real):** Festnetz 0209 36667488, E-Mail info@belium.de.
 - **Noch ausstehend – NICHT erfinden:** echte Preise (aktuell `placeholder: true`

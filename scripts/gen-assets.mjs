@@ -35,7 +35,7 @@ const og = `
   <text x="82" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="8" fill="#997c3f">B E A U T Y</text>
   <text x="80" y="360" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#2c261f">Dauerhaft glatte Haut.</text>
   <text x="80" y="430" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#b3934f">Laser Haarentfernung.</text>
-  <text x="80" y="510" font-family="Arial, sans-serif" font-size="30" fill="#4a4136">Gekühlter VIKINI Diodenlaser · Gelsenkirchen Buer</text>
+  <text x="80" y="510" font-family="Arial, sans-serif" font-size="30" fill="#4a4136">Gekühlter Diodenlaser · Gelsenkirchen Buer</text>
 </svg>`;
 
 /**

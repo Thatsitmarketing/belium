@@ -33,7 +33,7 @@ export const ausschlussKriterien: { titel: string; text: string }[] = [
 
 /** Technologie-Fakten (Abschnitt 6), kurz als Beweis positioniert. */
 export const technikFakten: { label: string; wert: string }[] = [
-  { label: 'Gerät', wert: 'VIKINI Multiplus Diodenlaser' },
+  { label: 'Gerät', wert: 'Diodenlaser' },
   { label: 'Wellenlänge', wert: '808 nm (940 nm optional)' },
   { label: 'Kühlung', wert: 'Saphir-Kontaktkühlung' },
   { label: 'Spotgröße', wert: '12 × 11 mm' },
@@ -47,9 +47,9 @@ export const technikFakten: { label: string; wert: string }[] = [
  */
 export const ergebnisseVorhanden = false;
 export const ergebnissePlatzhalter: { zone: string; sitzungen: string }[] = [
-  { zone: 'Achseln', sitzungen: 'z. B. nach 6 Sitzungen' },
-  { zone: 'Bikinizone', sitzungen: 'z. B. nach 8 Sitzungen' },
-  { zone: 'Beine', sitzungen: 'z. B. nach 6 Sitzungen' },
+  { zone: 'Achseln', sitzungen: 'z. B. nach 8 Sitzungen' },
+  { zone: 'Bikinizone', sitzungen: 'z. B. nach 10 Sitzungen' },
+  { zone: 'Beine', sitzungen: 'z. B. nach 8 Sitzungen' },
 ];
 
 /** Ankernavigation (Abschnitt-IDs müssen mit den Sektionen übereinstimmen). */

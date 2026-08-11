@@ -33,7 +33,7 @@ export type ZonenGruppe = {
 };
 
 /** Anzahl Sitzungen, auf die sich ein Paketpreis üblicherweise bezieht (Platzhalter-Annahme). */
-export const paketSitzungen = 6;
+export const paketSitzungen = 8;
 
 /** Währungsformat für die Anzeige */
 export function formatEuro(value: number): string {
