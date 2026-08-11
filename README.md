@@ -23,7 +23,8 @@ npm run dev        # http://localhost:4321
 ## Wo pflege ich was?
 
 - **Texte, Adresse, Kontakt, Öffnungszeiten:** `src/data/site.ts`
-- **Behandlungszonen & Preise:** `src/data/zonen.ts`
+- **Behandlungszonen (Dropdown im Kontaktformular):** `wunschzonen` in `src/data/inhalt.ts`
+  (bewusst ohne Preise – die Seite zeigt keine Preise)
 - **FAQ:** `src/data/faq.ts`
 - **Vorteile / Ablauf / Ausschlusskriterien:** `src/data/vorteile.ts`, `ablauf.ts`, `inhalt.ts`
 - **Design (Farben, Schrift, Buttons):** `src/styles/global.css`

@@ -33,7 +33,7 @@ export const ausschlussKriterien: { titel: string; text: string }[] = [
 
 /** Technologie-Fakten (Abschnitt 6), kurz als Beweis positioniert. */
 export const technikFakten: { label: string; wert: string }[] = [
-  { label: 'Gerät', wert: 'VIKINI Multiplus Diodenlaser' },
+  { label: 'Gerät', wert: 'Diodenlaser' },
   { label: 'Wellenlänge', wert: '808 nm (940 nm optional)' },
   { label: 'Kühlung', wert: 'Saphir-Kontaktkühlung' },
   { label: 'Spotgröße', wert: '12 × 11 mm' },
@@ -47,9 +47,28 @@ export const technikFakten: { label: string; wert: string }[] = [
  */
 export const ergebnisseVorhanden = false;
 export const ergebnissePlatzhalter: { zone: string; sitzungen: string }[] = [
-  { zone: 'Achseln', sitzungen: 'z. B. nach 6 Sitzungen' },
-  { zone: 'Bikinizone', sitzungen: 'z. B. nach 8 Sitzungen' },
-  { zone: 'Beine', sitzungen: 'z. B. nach 6 Sitzungen' },
+  { zone: 'Achseln', sitzungen: 'z. B. nach 8 Sitzungen' },
+  { zone: 'Bikinizone', sitzungen: 'z. B. nach 10 Sitzungen' },
+  { zone: 'Beine', sitzungen: 'z. B. nach 8 Sitzungen' },
+];
+
+/**
+ * Behandlungszonen für das Dropdown „Wunschzone" im Kontaktformular.
+ * Bewusst OHNE Preise: Preise werden ausschließlich persönlich in der Beratung genannt.
+ */
+export const wunschzonen: { name: string; hinweis?: string }[] = [
+  { name: 'Oberlippe', hinweis: 'Gesicht' },
+  { name: 'Kinn', hinweis: 'Gesicht' },
+  { name: 'Wangen', hinweis: 'Gesicht' },
+  { name: 'Achseln' },
+  { name: 'Unterarme' },
+  { name: 'Arme komplett' },
+  { name: 'Bikinizone', hinweis: 'klassisch' },
+  { name: 'Intim komplett' },
+  { name: 'Unterschenkel' },
+  { name: 'Beine komplett' },
+  { name: 'Rücken' },
+  { name: 'Bauch' },
 ];
 
 /** Ankernavigation (Abschnitt-IDs müssen mit den Sektionen übereinstimmen). */
@@ -57,7 +76,6 @@ export const navItems: { href: string; label: string }[] = [
   { href: '#vorteile', label: 'Vorteile' },
   { href: '#ueber-maria', label: 'Über Maria' },
   { href: '#ablauf', label: 'Ablauf' },
-  { href: '#preise', label: 'Preise' },
   { href: '#faq', label: 'FAQ' },
   { href: '#kontakt', label: 'Kontakt' },
 ];

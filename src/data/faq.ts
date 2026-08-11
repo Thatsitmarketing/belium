@@ -18,7 +18,7 @@ export const faqItems: FaqItem[] = [
   {
     frage: 'Wie viele Sitzungen brauche ich?',
     antwort:
-      'Das hängt von der Körperregion, deinem Haartyp und dem Haarwachstum ab. In der Regel sind vier bis acht Sitzungen im Abstand von einigen Wochen sinnvoll. Da Haare in Zyklen wachsen, lässt sich nur das Haar behandeln, das gerade aktiv ist. Deshalb sind mehrere Termine nötig.',
+      'Das hängt von der Körperregion, deinem Haartyp und dem Haarwachstum ab. In der Regel sind sieben bis zehn Sitzungen im Abstand von einigen Wochen sinnvoll. Da Haare in Zyklen wachsen, lässt sich nur das Haar behandeln, das gerade aktiv ist. Deshalb sind mehrere Termine nötig.',
   },
   {
     frage: 'Funktioniert der Laser bei jedem Hauttyp?',
@@ -43,7 +43,7 @@ export const faqItems: FaqItem[] = [
   {
     frage: 'Was kostet eine dauerhafte Haarentfernung?',
     antwort:
-      'Der Preis richtet sich nach der Zone und danach, ob du einzelne Sitzungen oder ein Paket buchst. Größere Flächen wie Beine oder Rücken kosten mehr als kleine Zonen wie die Oberlippe. Über den Zonenwähler auf dieser Seite kannst du deine Wunschzonen zusammenstellen und dir ein persönliches Angebot geben lassen.',
+      'Der Preis richtet sich nach der Zone und danach, ob du einzelne Sitzungen oder ein Paket buchst. Größere Flächen wie Beine oder Rücken kosten mehr als kleine Zonen wie die Oberlippe. Deinen persönlichen Preis nennen wir dir in der kostenlosen Beratung, nachdem wir deine Haut und deine Wunschzonen eingeschätzt haben. Sende uns dafür einfach das Kontaktformular am Ende der Seite.',
   },
   {
     frage: 'Übernimmt die Krankenkasse die Kosten?',
