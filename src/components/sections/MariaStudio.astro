@@ -7,6 +7,7 @@
  */
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
+import { site } from '@/data/site';
 import mariaImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
 import warteraum from '@/assets/images/warteraum-belium-gelsenkirchen-buer.png';
 import wartebereich from '@/assets/images/wartebereich-belium-gelsenkirchen-buer.png';
@@ -64,7 +65,7 @@ const studio = [
       </div>
 
       <div class="maria__content reveal">
-        <p class="maria__name">Maria Espejo Jimenez</p>
+        <p class="maria__name">{site.ownerShort}</p>
         <p class="maria__lead">
           Du bekommst eine klare Einschätzung, was für dich sinnvoll ist und was nicht. Statt
           Verkaufsdruck steht die richtige Entscheidung für deine Haut im Mittelpunkt.
