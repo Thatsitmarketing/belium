@@ -39,6 +39,6 @@ export const vorteile: Vorteil[] = [
   {
     icon: 'sparkle',
     titel: 'Dauerhafte Haarreduktion',
-    text: 'Nach einer abgeschlossenen Behandlungsreihe wächst deutlich weniger Haar nach. Schluss mit dem täglichen Rasieren, das immer wieder von vorn beginnt.',
+    text: 'Schon nach wenigen Behandlungen wächst in der Regel sichtbar weniger nach, nach der abgeschlossenen Reihe deutlich weniger. Schluss mit dem täglichen Rasieren, das immer wieder von vorn beginnt.',
   },
 ];

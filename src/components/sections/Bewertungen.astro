@@ -6,8 +6,8 @@
  * (Touch), Trackpad und Maus-Drag ohne Umwege funktionieren – während der Bedienung pausiert
  * der Lauf und setzt danach nahtlos fort. Die Kartenliste ist verdoppelt, der Scroll springt
  * bei Halbzeit unsichtbar zurück (Endlosschleife).
- * Inhalte aus src/data/reviews.ts (PLATZHALTER, siehe dortige Hinweise) – vor Livegang
- * durch echte, freigegebene Bewertungen oder das Google/ProvenExpert-Widget ersetzen.
+ * Inhalte aus src/data/reviews.ts – echte, wörtlich übernommene Google-Rezensionen.
+ * Der Hinweis unter dem Streifen erscheint nur noch, solange `reviewsPlatzhalter` true ist.
  */
 import Icon from '@/components/Icon.astro';
 import Ornament from '@/components/Ornament.astro';
@@ -51,7 +51,7 @@ const track = [...reviews, ...reviews];
               <span class="rcard__avatar" aria-hidden="true">{r.name.charAt(0)}</span>
               <span class="rcard__meta">
                 <span class="rcard__name">{r.name}</span>
-                <span class="rcard__zone">{r.zone}</span>
+                <span class="rcard__zone">{r.quelle}</span>
               </span>
             </footer>
           </article>

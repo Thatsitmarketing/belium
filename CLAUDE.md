@@ -103,7 +103,8 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - [ ] **Steuernummer vs. USt-IdNr** klären: 319/5148/5608 ist dem Format nach eine **Steuernummer**,
       auf der Altseite fälschlich als „USt-IdNr" geführt. Im Impressum als Steuernummer ausgewiesen.
 - [ ] **Vorher-Nachher-Fotos** (mit Zone + Sitzungsanzahl) liefern → `inhalt.ts` `ergebnisseVorhanden = true`.
-- [ ] **Google-/ProvenExpert-Widget-IDs** für den Bewertungsabschnitt.
+- [ ] **Google-/ProvenExpert-Widget-IDs** für den Bewertungsabschnitt (optional – der Abschnitt
+      zeigt inzwischen echte, wörtlich übernommene Google-Rezensionen aus `src/data/reviews.ts`).
 - [ ] **Turnstile-Key** + **Zustellkanal** (Resend oder Webhook) in Cloudflare konfigurieren.
 - [ ] **Geokoordinaten** im `site.ts` final verifizieren (aktuell Näherung).
 - [ ] Datenschutzerklärung & Impressum rechtlich final prüfen lassen.

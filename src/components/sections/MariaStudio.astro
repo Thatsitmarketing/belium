@@ -40,8 +40,8 @@ const studio = [
       <p class="t-eyebrow">Persönlich behandelt</p>
       <h2 class="t-h2">Persönlich behandelt. <span class="text-gold">Professionell begleitet.</span></h2>
       <p class="t-lead section-head__lead">
-        Bei Belium Beauty behandelt dich Maria persönlich, mit geprüfter Lasersicherheit und einem
-        ruhigen, ehrlichen Umgang.
+        Bei Belium Beauty behandelt dich Maria persönlich, NiSV-zertifiziert, mit geprüfter
+        Lasersicherheit und einem ruhigen, ehrlichen Umgang.
       </p>
     </header>
 
@@ -57,7 +57,10 @@ const studio = [
           quality={72}
           class="maria__img"
         />
-        <span class="maria__badge"><Icon name="award" class="w-4 h-4" /> Zertifizierte Laserschutzbeauftragte</span>
+        <div class="maria__badges">
+          <span class="maria__badge"><Icon name="award" class="w-4 h-4" /> Zertifizierte Laserschutzbeauftragte</span>
+          <span class="maria__badge"><Icon name="shield" class="w-4 h-4" /> NiSV-zertifiziert</span>
+        </div>
       </div>
 
       <div class="maria__content reveal">
@@ -115,9 +118,14 @@ const studio = [
   .maria__media { position: relative; max-width: 22rem; }
   @media (min-width: 900px) { .maria__media { max-width: 100%; } }
   .maria__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: top center; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+  /* Zwei Nachweise übereinander statt eines einzelnen Badges: der Block wird positioniert,
+     die Badges selbst bleiben im Fluss und schrumpfen auf ihre Textbreite. */
+  .maria__badges {
+    position: absolute; left: 0.9rem; bottom: 0.9rem; right: 0.9rem;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem;
+  }
   .maria__badge {
-    position: absolute; left: 0.9rem; bottom: 0.9rem;
-    display: inline-flex; align-items: center; gap: 0.45rem; max-width: calc(100% - 1.8rem);
+    display: inline-flex; align-items: flex-start; gap: 0.45rem; max-width: 100%;
     background: color-mix(in srgb, var(--color-ink) 88%, transparent); backdrop-filter: blur(6px);
     border: 1px solid color-mix(in srgb, var(--color-gold) 34%, transparent);
     color: var(--color-gold-light); border-radius: var(--radius-sm);

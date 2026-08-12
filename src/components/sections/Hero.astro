@@ -35,7 +35,7 @@ const checks = [
 
       <p class="hero__lead" data-hero-el>
         Mit dem gekühlten Diodenlaser reduzieren wir deine Haare dauerhaft und
-        schmerzarm. Begleitet wirst du von einer zertifizierten Laserschutzbeauftragten.
+        schmerzarm. Begleitet wirst du von einer NiSV-zertifizierten Laserschutzbeauftragten.
       </p>
 
       <ul class="hero__checks" data-hero-el>
@@ -93,9 +93,9 @@ const checks = [
 
         <!-- schwebende Karte: Inhaberin & Qualifikation -->
         <div class="hero__stat">
-          <span class="hero__stat-eyebrow">Deine Behandlerin</span>
-          <span class="hero__stat-name">{site.owner}</span>
+          <span class="hero__stat-name">{site.ownerShort}</span>
           <span class="hero__stat-role"><Icon name="award" class="w-4 h-4" /> Zertifizierte Laserschutzbeauftragte</span>
+          <span class="hero__stat-role"><Icon name="shield" class="w-4 h-4" /> NiSV-zertifiziert</span>
         </div>
       </div>
     </div>
@@ -211,7 +211,10 @@ const checks = [
     background: var(--color-cream-deep);
     z-index: 1;
   }
-  .hero__img { width: 100%; height: 116%; object-fit: cover; object-position: center 22%; }
+  /* Das Portrait ist selbst schon fast 4:5 – ohne zusätzliche Überhöhe passt es nahezu
+     verlustfrei in den Rahmen. Oben ausgerichtet, damit Maria komplett im Bild steht und
+     nur der Boden unter ihr wegfällt (dort sitzt ohnehin die Qualifikationskarte). */
+  .hero__img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 
   /* Feine Gold-Geometrie hinter dem Bild – nur im zweispaltigen Layout.
      Untereinander gestapelt ragen die Linien seitlich am Rahmen vorbei und laufen
@@ -232,19 +235,19 @@ const checks = [
     border-radius: var(--radius-md); padding: 1rem 1.15rem;
     box-shadow: var(--shadow-float); min-width: 12.5rem; max-width: 16rem;
   }
-  .hero__stat-eyebrow {
-    display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--color-onink-soft);
-  }
+  /* Name bewusst in der Body-Schrift (wie die Qualifikationszeilen darunter), nur etwas
+     kräftiger – die Karte liest sich dadurch als eine zusammenhängende Angabe. */
   .hero__stat-name {
-    display: block; margin-top: 0.3rem; font-family: var(--font-display); font-weight: 700;
-    line-height: 1.05; font-size: 1.7rem; color: var(--color-gold-light);
+    display: block; font-weight: 800; letter-spacing: 0.01em;
+    line-height: 1.2; font-size: 1.02rem; color: var(--color-gold-light);
   }
   .hero__stat-role {
-    display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.65rem;
+    display: flex; align-items: flex-start; gap: 0.4rem; margin-top: 0.55rem;
     font-weight: 600; font-size: 0.8rem; line-height: 1.25; color: var(--color-onink);
   }
-  .hero__stat-role :global(svg) { flex: 0 0 auto; color: var(--color-gold-light); }
+  /* Icon an der ersten Textzeile ausrichten – bei zweizeiligen Angaben rutscht es sonst
+     in die Mitte und der Block franst links aus. */
+  .hero__stat-role :global(svg) { flex: 0 0 auto; margin-top: 0.05rem; color: var(--color-gold-light); }
 
   .hero__scroll {
     display: none;

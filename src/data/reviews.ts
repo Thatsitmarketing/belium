@@ -1,20 +1,25 @@
 /**
  * Kundenstimmen (Abschnitt „Bewertungen").
  *
- * ⚠️ PLATZHALTER: Dies sind BEISPIELHAFTE Stimmen, die ausschliesslich der Gestaltung dienen.
- * Vor dem Live-Gang zwingend durch ECHTE, freigegebene Bewertungen ersetzen – oder das
- * Google-/ProvenExpert-Widget einbinden (siehe Abschnitt-Fuss). Es duerfen KEINE erfundenen
- * Bewertungen veroeffentlicht werden (Irrefuehrung, §5 UWG). Formulierungen bewusst HWG-konform
- * (kein „schmerzfrei", keine Heilversprechen).
+ * Dies sind ECHTE, öffentlich auf dem Google-Unternehmensprofil von Belium Beauty
+ * veröffentlichte Rezensionen – wörtlich übernommen, inklusive Schreibweise. Sie dürfen
+ * NICHT umformuliert werden: eine geänderte Bewertung ist keine echte Bewertung mehr
+ * (Irreführung, §5 UWG).
  *
- * Sobald echte Bewertungen vorliegen: `reviewsPlatzhalter = false` setzen und `reviews` fuellen.
+ * Neue Stimmen bitte ebenfalls nur wörtlich und nur aus dem echten Profil ergänzen.
+ * Erfundene oder „geglättete" Texte sind hier nicht zulässig.
+ *
+ * HINWEIS zur ersten Stimme: Die Kundin schreibt selbst „Schmerzfreie Laserhaarentfernung".
+ * Werbung mit „schmerzfrei" ist im HWG-Kontext heikel – der Text steht hier bewusst
+ * unverändert als Zitat der Kundin. Wenn die rechtliche Prüfung das anders bewertet,
+ * die Stimme bitte KOMPLETT entfernen statt sie umzuschreiben.
  */
-export const reviewsPlatzhalter = true;
+export const reviewsPlatzhalter = false;
 
 export type Review = {
   name: string;
-  /** Zone/Kontext der Behandlung */
-  zone: string;
+  /** Quelle/Einordnung der Stimme, erscheint klein unter dem Namen */
+  quelle: string;
   text: string;
   /** 1–5, fuer die Sternanzeige */
   stars: number;
@@ -22,39 +27,27 @@ export type Review = {
 
 export const reviews: Review[] = [
   {
-    name: 'Sabrina K.',
-    zone: 'Achseln',
+    name: 'Ninethavone Jagusch',
+    quelle: 'Rezension auf Google',
     stars: 5,
-    text: 'Von Anfang an ehrlich beraten. Kein Verkaufsdruck, sondern ein realistischer Plan. Die gekühlte Behandlung war für mich gut auszuhalten.',
+    text: 'Ich war sehr zufrieden, die Besitzerin ist sehr nett und vorsichtig, Studio ist top und hygienisch sauber! Alles professionell und mit gutem Gewissen empfehlenswert!!!',
   },
   {
-    name: 'Melike D.',
-    zone: 'Bikinizone',
+    name: 'Puri Feria',
+    quelle: 'Rezension auf Google',
     stars: 5,
-    text: 'Sehr saubere, ruhige Atmosphäre und ein spürbar professioneller Ablauf. Man merkt, dass hier auf Sicherheit geachtet wird.',
+    text: 'Sehr nette und kompetente Beratung! Sicherlich die beste Methode für eine schnelle und nachhaltige Haarentfernung.',
   },
   {
-    name: 'Jasmin R.',
-    zone: 'Rücken',
+    name: 'Nadi My',
+    quelle: 'Rezension auf Google',
     stars: 5,
-    text: 'Ich war erst skeptisch. Maria hat alles genau erklärt und die Zonen wurden zügig behandelt. Rundum angenehm.',
+    text: 'Schmerzfreie Laserhaarentfernung in wirklich gemütlichen und sauber gepflegten Studio. Die Besitzerin ist sehr freundlich und sorgt gut für das Wohl ihrer Kunden.',
   },
   {
-    name: 'Aylin T.',
-    zone: 'Beine',
+    name: 'Manoli Espejo Jimenez',
+    quelle: 'Rezension auf Google',
     stars: 5,
-    text: 'Endlich Schluss mit dem ständigen Rasieren. Nach den ersten Sitzungen wächst deutlich weniger nach und ich bin sehr zufrieden.',
-  },
-  {
-    name: 'Carolin S.',
-    zone: 'Gesicht / Oberlippe',
-    stars: 5,
-    text: 'Feinfühlig und präzise auch im empfindlichen Gesichtsbereich. Die Beratung vorab hat mir jede Unsicherheit genommen.',
-  },
-  {
-    name: 'Derya A.',
-    zone: 'Bikinizone',
-    stars: 5,
-    text: 'Termin schnell bekommen, freundlicher Empfang, transparente Preise. Ich fühle mich hier gut aufgehoben.',
+    text: 'Sehr professionell, Top zufrieden, freundlich, empfehlenswert.',
   },
 ];

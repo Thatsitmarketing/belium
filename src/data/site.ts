@@ -9,6 +9,8 @@ export const site = {
   name: 'Belium Beauty',
   legalName: 'Belium',
   owner: 'Maria Espejo Jimenez',
+  /** Kurzform für die Seite selbst (Hero, Fließtext) – der volle Name bleibt für Impressum & Schema. */
+  ownerShort: 'Maria Espejo',
   tagline: 'Dauerhafte Laser Haarentfernung in Gelsenkirchen Buer',
 
   // Produktions-Domain – bei finalem Deployment prüfen

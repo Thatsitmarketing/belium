@@ -1,10 +1,12 @@
 /**
  * Generiert statische Bildassets:
  *  - public/og-belium-beauty.jpg  (1200x630 Open-Graph-Bild, aus SVG-Vorlage)
- *  - public/favicon.png           (512x512, transparent – Browser-Tab)
+ *  - public/favicon.png           (512x512 – Browser-Tab)
  *  - public/favicon-32.png        (32x32, scharf gerechnet für kleine Tabs)
- *  - public/apple-touch-icon.png  (180x180, mit Creme-Fläche – iOS ignoriert Transparenz)
- * Favicon-Quelle: src/assets/brand/belium-favicon-b.png (Marken-„B", schwarz auf transparent).
+ *  - public/apple-touch-icon.png  (180x180 – iOS ignoriert Transparenz)
+ * Favicon-Quelle: src/assets/brand/belium-favicon-b.jpg (Marken-„B" in Gold auf Weiss).
+ * Die Quelle hat KEINE Transparenz, deshalb bekommen alle Icons eine helle Fläche –
+ * das goldene „B" bleibt so in hellen wie dunklen Browser-Oberflächen lesbar.
  * Ausführen mit:  node scripts/gen-assets.mjs
  * (Läuft nicht automatisch im Build – die erzeugten Dateien werden eingecheckt.)
  */
@@ -14,7 +16,7 @@ import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pub = join(root, 'public');
-const markeB = join(root, 'src/assets/brand/belium-favicon-b.png');
+const markeB = join(root, 'src/assets/brand/belium-favicon-b.jpg');
 
 const og = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
@@ -47,10 +49,18 @@ const og = `
  */
 async function icon(groesse, luft, hintergrund) {
   const innen = Math.round(groesse * (1 - 2 * luft));
-  const glyphe = await sharp(markeB)
-    .trim({ threshold: 1 })
-    .resize(innen, innen, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .toBuffer();
+  // Schwelle deutlich über 1: die JPEG-Quelle hat einen weissen Rand mit
+  // Kompressionsrauschen, der sonst nicht sauber weggeschnitten wird.
+  const zugeschnitten = sharp(markeB).trim({ threshold: 12 }).resize(innen, innen, {
+    fit: 'contain',
+    background: '#ffffff',
+  });
+  const farben = await zugeschnitten.clone().toBuffer();
+  // Die Quelle ist deckend (JPEG). Aus der Helligkeit wird eine Alphamaske gebaut:
+  // Weiss wird transparent, das goldene „B" bleibt stehen – inklusive weicher Kanten.
+  // So sitzt das Zeichen direkt auf der Icon-Fläche statt auf einem weissen Kasten.
+  const maske = await zugeschnitten.clone().greyscale().negate().normalise().toBuffer();
+  const glyphe = await sharp(farben).removeAlpha().joinChannel(maske).png().toBuffer();
   return sharp({
     create: {
       width: groesse, height: groesse, channels: 4,
@@ -63,9 +73,9 @@ async function icon(groesse, luft, hintergrund) {
 }
 
 await sharp(Buffer.from(og)).jpeg({ quality: 82 }).toFile(join(pub, 'og-belium-beauty.jpg'));
-// Tab-Icon transparent, damit es sich in helle wie dunkle Browser-Oberflächen einfügt.
-await sharp(await icon(512, 0.06, null)).toFile(join(pub, 'favicon.png'));
-await sharp(await icon(32, 0.06, null)).toFile(join(pub, 'favicon-32.png'));
-// iOS legt Icons auf Schwarz, wenn sie transparent sind -> feste Creme-Fläche.
+// Helle Fläche statt Transparenz: das goldene „B" hat zu wenig Kontrast gegen dunkle
+// Browser-Oberflächen, auf Creme steht es in beiden Modi sauber.
+await sharp(await icon(512, 0.14, '#f7f0e6')).toFile(join(pub, 'favicon.png'));
+await sharp(await icon(32, 0.12, '#f7f0e6')).toFile(join(pub, 'favicon-32.png'));
 await sharp(await icon(180, 0.2, '#f7f0e6')).toFile(join(pub, 'apple-touch-icon.png'));
 console.log('Assets erzeugt: og-belium-beauty.jpg, favicon.png, favicon-32.png, apple-touch-icon.png');

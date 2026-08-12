@@ -27,6 +27,6 @@ export const ablaufSchritte: Schritt[] = [
   {
     nummer: '04',
     titel: 'Intervall bis zum Ergebnis',
-    text: 'Haare wachsen in Zyklen, deshalb sind mehrere Sitzungen im Abstand von einigen Wochen nötig. Je nach Körperregion sind das in der Regel sieben bis zehn Termine, bis sichtbar weniger nachwächst.',
+    text: 'Haare wachsen in Zyklen, deshalb sind mehrere Sitzungen im Abstand von vier bis acht Wochen nötig. Je nach Körperregion sind das in der Regel sieben bis zehn Termine. Schon nach wenigen Behandlungen wächst in der Regel sichtbar weniger nach.',
   },
 ];

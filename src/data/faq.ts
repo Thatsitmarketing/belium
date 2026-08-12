@@ -18,7 +18,7 @@ export const faqItems: FaqItem[] = [
   {
     frage: 'Wie viele Sitzungen brauche ich?',
     antwort:
-      'Das hängt von der Körperregion, deinem Haartyp und dem Haarwachstum ab. In der Regel sind sieben bis zehn Sitzungen im Abstand von einigen Wochen sinnvoll. Da Haare in Zyklen wachsen, lässt sich nur das Haar behandeln, das gerade aktiv ist. Deshalb sind mehrere Termine nötig.',
+      'Das hängt von der Körperregion, deinem Haartyp und dem Haarwachstum ab. In der Regel sind sieben bis zehn Sitzungen im Abstand von vier bis acht Wochen sinnvoll. Da Haare in Zyklen wachsen, lässt sich nur das Haar behandeln, das gerade aktiv ist. Deshalb sind mehrere Termine nötig. Ein sichtbares Ergebnis stellt sich meist schon nach wenigen Behandlungen ein, bis zur vollständigen Haarreduktion braucht es die komplette Reihe.',
   },
   {
     frage: 'Funktioniert der Laser bei jedem Hauttyp?',
