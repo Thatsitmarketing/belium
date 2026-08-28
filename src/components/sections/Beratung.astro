@@ -8,7 +8,7 @@
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
 import Ornament from '@/components/Ornament.astro';
-import beratungImg from '@/assets/images/wartebereich-blumen-belium-gelsenkirchen-buer.jpg';
+import beratungImg from '@/assets/images/behandlungsraum-uebersicht-belium-gelsenkirchen-buer.jpg';
 
 /** Die einzelnen Stationen des Beratungsgesprächs, in der Reihenfolge des Termins. */
 const gespraech = [
@@ -70,8 +70,8 @@ const eckdaten = [
         <div class="beratung__media">
           <Image
             src={beratungImg}
-            alt="Wartebereich mit frischen Blumen bei Belium Beauty in Gelsenkirchen Buer"
-            widths={[380, 560, 760]}
+            alt="Heller Behandlungsraum mit Behandlungsliege und Diodenlaser bei Belium Beauty in Gelsenkirchen Buer"
+            widths={[480, 760, 1040]}
             sizes="(min-width: 900px) 34vw, 88vw"
             loading="lazy"
             format="avif"
@@ -136,7 +136,7 @@ const eckdaten = [
 
   /* --- Bild, Eckdaten, Zitat --- */
   .beratung__media { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid var(--color-sand); }
-  .beratung__img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  .beratung__img { display: block; width: 100%; height: auto; }
 
   .beratung__facts { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.25rem; }
   .bfact {
