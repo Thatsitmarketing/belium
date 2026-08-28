@@ -8,14 +8,16 @@
 import { Image } from 'astro:assets';
 import Icon from '@/components/Icon.astro';
 import { site } from '@/data/site';
-import mariaImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.png';
-import warteraum from '@/assets/images/warteraum-belium-gelsenkirchen-buer.png';
-import wartebereich from '@/assets/images/wartebereich-belium-gelsenkirchen-buer.png';
-import behandlungsraum from '@/assets/images/behandlungsraum-neutral-belium-gelsenkirchen-buer.png';
-import behandlungsraum2 from '@/assets/images/behandlungsraum-belium-gelsenkirchen-buer.png';
-import lichtdecke from '@/assets/images/studio-lichtdecke-belium-gelsenkirchen-buer.png';
-import eingang from '@/assets/images/studio-eingang-belium-gelsenkirchen-buer.png';
-import dekoration from '@/assets/images/studio-dekoration-belium-gelsenkirchen-buer.png';
+import mariaImg from '@/assets/images/maria-espejo-belium-beauty-gelsenkirchen.jpg';
+import behandlungsraum from '@/assets/images/behandlungsraum-uebersicht-belium-gelsenkirchen-buer.jpg';
+import behandlungsraum2 from '@/assets/images/behandlungsraum-diodenlaser-belium-gelsenkirchen-buer.jpg';
+import lichtdecke from '@/assets/images/behandlungsraum-lichtdecke-belium-gelsenkirchen-buer.jpg';
+import eingang from '@/assets/images/studio-eingang-belium-gelsenkirchen-buer.jpg';
+import wartebereich from '@/assets/images/wartebereich-blumen-belium-gelsenkirchen-buer.jpg';
+import empfang from '@/assets/images/studio-empfang-flyer-belium-gelsenkirchen-buer.jpg';
+import wandbild from '@/assets/images/studio-wandbild-belium-gelsenkirchen-buer.jpg';
+import spiegel from '@/assets/images/studio-spiegel-detail-belium-gelsenkirchen-buer.jpg';
+import liege from '@/assets/images/behandlungsliege-laserschutzbrille-belium-gelsenkirchen.jpg';
 
 const qualifikationen = [
   'Zertifizierte Laserschutzbeauftragte für kosmetische Laserbehandlungen',
@@ -26,13 +28,15 @@ const qualifikationen = [
 ];
 
 const studio = [
-  { src: warteraum, alt: 'Gemütlicher Wartebereich im Studio von Belium Beauty in Gelsenkirchen Buer' },
-  { src: behandlungsraum, alt: 'Ruhiger, sauberer Behandlungsraum bei Belium Beauty' },
+  { src: behandlungsraum, alt: 'Ruhiger, heller Behandlungsraum bei Belium Beauty in Gelsenkirchen Buer' },
+  { src: eingang, alt: 'Einladender Eingangsbereich mit beleuchteter Treppe im Studio von Belium Beauty' },
   { src: lichtdecke, alt: 'Beleuchtete Lichtdecke sorgt für Wohlfühlatmosphäre im Behandlungsraum' },
-  { src: eingang, alt: 'Einladender Eingangsbereich des Studios von Belium Beauty' },
+  { src: wartebereich, alt: 'Wartebereich mit frischen Blumen im Studio von Belium Beauty' },
   { src: behandlungsraum2, alt: 'Behandlungsraum mit Diodenlaser bei Belium Beauty in Gelsenkirchen Buer' },
-  { src: wartebereich, alt: 'Ruhiger Wartebereich mit warmer Beleuchtung im Studio' },
-  { src: dekoration, alt: 'Liebevolle Dekoration sorgt für eine wohnliche Atmosphäre im Studio' },
+  { src: liege, alt: 'Frisch bezogene Behandlungsliege mit bereitgelegter Laserschutzbrille' },
+  { src: wandbild, alt: 'Beleuchtetes Wandbild und Trockenblumen im Studio von Belium Beauty' },
+  { src: empfang, alt: 'Infoflyer und Visitenkarten von Belium Beauty am Empfang' },
+  { src: spiegel, alt: 'Dekorativer Sonnenspiegel mit Spiegelung des Wandbildes im Studio' },
 ];
 ---
 <section id="ueber-maria" class="maria">
