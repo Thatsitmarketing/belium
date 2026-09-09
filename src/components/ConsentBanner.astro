@@ -6,7 +6,9 @@ import Wordmark from '@/components/Wordmark.astro';
  * Modal mit Tabs (Zustimmung / Details / Über Cookies), granulare Kategorien als Schalter
  * (Notwendig immer aktiv) und drei gleichwertige Aktionen (Ablehnen / Auswahl erlauben /
  * Alle zulassen). DSGVO/GDPR: „block by default" – ohne Einwilligung lädt NICHTS Externes;
- * keine Vorauswahl bei optionalen Kategorien; jederzeit widerrufbar über das Cookie-Widget.
+ * keine Vorauswahl bei optionalen Kategorien; jederzeit widerrufbar über den Link
+ * „Cookie-Einstellungen" im Footer (window.openConsent). Bewusst KEIN dauerhaft sichtbares
+ * Cookie-Widget auf der Seite.
  *
  * Kompatibilität: window.__beliumConsent ('all' | 'essential') und das Event `belium:consent`
  * mit { granted } bleiben erhalten (z. B. für die Google-Karte im Kontaktbereich).
@@ -103,7 +105,7 @@ const kategorien = [
         </p>
         <p class="cc__text">
           Deine Einwilligung ist freiwillig und jederzeit mit Wirkung für die Zukunft widerrufbar,
-          über das Cookie-Symbol unten rechts. Details findest du in unserer
+          über den Link „Cookie-Einstellungen" im Footer. Details findest du in unserer
           <a href="/datenschutz">Datenschutzerklärung</a> und im <a href="/impressum">Impressum</a>.
         </p>
       </section>
@@ -115,11 +117,6 @@ const kategorien = [
       <button type="button" class="btn btn-primary cc__btn" data-consent="all">Alle zulassen</button>
     </div>
   </div>
-
-  <!-- Gebrandetes Cookie-Widget (rechtsbündig): jederzeitiger Zugriff / Widerruf -->
-  <button type="button" id="consent-widget" class="consent-widget" aria-label="Cookie-Einstellungen öffnen" hidden>
-    <Icon name="cookie" class="w-6 h-6" />
-  </button>
 </div>
 
 <style>
@@ -224,28 +221,6 @@ const kategorien = [
   @media (min-width: 620px) { .cc__actions { grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; } }
   .cc__btn { width: 100%; }
 
-  /* Gebrandetes Cookie-Widget (rund, Gold – passend zum Marken-Look), rechtsbündig */
-  .consent-widget {
-    position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
-    z-index: 85; width: 3.1rem; height: 3.1rem; border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: var(--gradient-gold); color: #2a1c07; border: 0; cursor: pointer;
-    box-shadow: var(--shadow-gold);
-    transition: transform 0.2s cubic-bezier(0.22,1,0.36,1), box-shadow 0.2s ease;
-  }
-  .consent-widget:hover { transform: translateY(-2px) rotate(-6deg); box-shadow: 0 18px 40px -14px rgba(169,116,31,0.65); }
-  .consent-widget:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
-  @media (prefers-reduced-motion: reduce) { .consent-widget:hover { transform: none; } }
-  /* Mobil dezenter, damit es keine Inhalte oder CTAs überdeckt */
-  @media (max-width: 640px) {
-    .consent-widget {
-      width: 2.6rem; height: 2.6rem; right: 0.75rem;
-      bottom: calc(0.75rem + env(safe-area-inset-bottom));
-      opacity: 0.9;
-    }
-    .consent-widget :global(svg) { width: 1.25rem; height: 1.25rem; }
-  }
-
   /* Mobil: kompaktes Bottom-Sheet statt zentriertem Modal – deckt deutlich weniger
      vom Inhalt ab, bleibt am Daumen und respektiert die Safe-Area. */
   @media (max-width: 640px) {
@@ -304,7 +279,6 @@ const kategorien = [
     var KEY = 'belium-consent-v2';
     var banner = document.getElementById('consent-banner');
     var overlay = document.querySelector('[data-cc-overlay]');
-    var widget = document.getElementById('consent-widget');
     var OPTIONAL = ['preferences', 'statistics', 'marketing'];
 
     function inputs() { return Array.prototype.slice.call(document.querySelectorAll('[data-cc-cat]')); }
@@ -349,12 +323,10 @@ const kategorien = [
     function open() {
       if (banner) banner.hidden = false;
       if (overlay) overlay.hidden = false;
-      if (widget) widget.hidden = true;
     }
     function close() {
       if (banner) banner.hidden = true;
       if (overlay) overlay.hidden = true;
-      if (widget) widget.hidden = false;
     }
 
     function store(cats) {
@@ -396,9 +368,8 @@ const kategorien = [
       });
     });
 
-    // Widget öffnet den Manager erneut (Widerruf jederzeit)
+    // Der Footer-Link „Cookie-Einstellungen" öffnet den Manager erneut (Widerruf jederzeit)
     window.openConsent = open;
-    if (widget) widget.addEventListener('click', open);
 
     // Initialzustand
     var saved = null;
@@ -406,7 +377,7 @@ const kategorien = [
     if (saved) {
       var cats;
       try { cats = JSON.parse(saved); } catch (e) { cats = null; }
-      if (cats) { setToggles(cats); apply(cats); if (widget) widget.hidden = false; }
+      if (cats) { setToggles(cats); apply(cats); }
       else open();
     } else {
       open();

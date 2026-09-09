@@ -86,6 +86,9 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
   `telefon_klick` (+ CTA-Klicks). Es werden **keine** externen Pixel automatisch geladen.
 - Consent-Banner (`ConsentBanner.astro`) lädt vor Einwilligung nichts Externes. Karte & Bewertungen
   hören auf das Event `belium:consent`.
+- **Kein dauerhaft sichtbares Cookie-Widget** auf der Seite: Es gibt ausschließlich den
+  Consent-Dialog beim Seitenaufruf (mit Skriptblockierung). Der Widerruf läuft über den Link
+  „Cookie-Einstellungen" im Footer, der `window.openConsent()` aufruft.
 
 ## Wichtige Regeln
 - **HWG-konform:** „schmerzarm" statt „schmerzfrei", „dauerhafte Haarreduktion" statt Erfolgsgarantien.

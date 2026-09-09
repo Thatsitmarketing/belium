@@ -52,6 +52,7 @@ const year = 2026;
       <ul class="footer__links">
         <li><a href="/impressum">Impressum</a></li>
         <li><a href="/datenschutz">Datenschutz</a></li>
+        <li><button type="button" class="footer__consent" data-open-consent>Cookie-Einstellungen</button></li>
       </ul>
     </nav>
   </div>
@@ -129,3 +130,12 @@ const year = 2026;
     font-size: 0.85rem; color: color-mix(in srgb, var(--color-cream) 55%, transparent);
   }
 </style>
+
+<script is:inline>
+  // Widerruf der Cookie-Einwilligung: öffnet den Consent-Manager erneut (window.openConsent).
+  document.querySelectorAll('[data-open-consent]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      if (typeof window.openConsent === 'function') window.openConsent();
+    });
+  });
+</script>
