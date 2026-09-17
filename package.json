@@ -9,7 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "design:setup": "npx --yes impeccable install --providers=claude --scope=project"
+    "design:setup": "npx --yes impeccable install --providers=claude --scope=project",
+    "mail:test": "node --disable-warning=ExperimentalWarning scripts/smtp-test.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",

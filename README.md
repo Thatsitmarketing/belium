@@ -17,6 +17,7 @@ npm run dev        # http://localhost:4321
 | `npm run dev` | Dev-Server mit Hot Reload |
 | `npm run build` | Produktionsbuild nach `dist/` |
 | `npm run preview` | `dist/` lokal ansehen |
+| `npm run mail:test` | Testmail über die SMTP-Zugangsdaten aus `.dev.vars` verschicken |
 | `node scripts/gen-assets.mjs` | OG-Bild und Apple-Touch-Icon neu erzeugen |
 | `npm run design:setup` | Impeccable Design-Skill lokal installieren (siehe unten) |
 
@@ -36,7 +37,21 @@ Details, Deploy-Anleitung und offene Punkte stehen in [`CLAUDE.md`](./CLAUDE.md)
 - Build command: `npm run build`
 - Output directory: `dist`
 - Pages Functions unter `functions/` werden automatisch erkannt (Formularversand `/api/lead`).
+- Compatibility date mindestens `2023-08-01` (der Mailversand nutzt `cloudflare:sockets`).
 - Umgebungsvariablen für Formularzustellung und Spam-Schutz: siehe `CLAUDE.md`.
+
+## Mailversand
+
+Anfragen aus dem Kontaktformular gehen per SMTP über das IONOS Postfach an `info@belium.de`.
+Einzurichten sind nur die Umgebungsvariablen in Cloudflare Pages, der Code ist fertig.
+Schritt für Schritt inklusive Fehlertabelle: **[`docs/mailversand.md`](./docs/mailversand.md)**.
+
+Vor dem Deploy lokal testen:
+
+```bash
+cp .dev.vars.example .dev.vars   # echte Zugangsdaten eintragen, Datei ist gitignored
+npm run mail:test
+```
 
 ## Struktur
 

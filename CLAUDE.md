@@ -21,13 +21,17 @@ ausschließlich persönlich in der kostenlosen Beratung genannt.
 ## Verzeichnisstruktur
 ```
 ├── astro.config.mjs          # Astro-Konfig (site-URL, sitemap, tailwind)
-├── functions/api/lead.ts     # Cloudflare Pages Function: Formular-/Lead-Verarbeitung
+├── functions/api/lead.ts     # Cloudflare Pages Function: Formular-/Lead-Verarbeitung + Mailversand
+├── .dev.vars.example         # Vorlage für lokale Mail-Zugangsdaten (.dev.vars ist gitignored)
 ├── public/                   # statische Assets (robots.txt, favicon, og-image, apple-touch-icon)
 ├── scripts/
 │   ├── gen-assets.mjs        # erzeugt OG-Bild + apple-touch-icon (manuell auszuführen)
-│   └── screenshots.mjs       # Playwright-Screenshots der Breakpoints
+│   ├── screenshots.mjs       # Playwright-Screenshots der Breakpoints
+│   ├── smtp-test.mjs         # Testmail verschicken (npm run mail:test)
+│   └── _cf-sockets-*.mjs     # Node-Nachbau von cloudflare:sockets, nur für den Mailtest
 ├── docs/
 │   ├── keyword-research.md   # Ergebnis der Keyword-Recherche
+│   ├── mailversand.md        # >>> Anleitung: Mailversand über IONOS einrichten <<<
 │   └── screenshots/          # Responsive-Screenshots (375/768/1024/1440/1920)
 └── src/
     ├── assets/images/        # Quellbilder (werden zur Build-Zeit optimiert)
@@ -40,6 +44,7 @@ ausschließlich persönlich in der kostenlosen Beratung genannt.
     ├── data/                  # >>> HIER werden Inhalte & Preise gepflegt <<<
     ├── layouts/               # Layout.astro (Basis), LegalLayout.astro (Rechtsseiten)
     ├── pages/                 # index.astro, impressum.astro, datenschutz.astro
+    ├── server/smtp.ts         # SMTP-Client für die Cloudflare-Laufzeit (nur serverseitig)
     └── styles/global.css      # Design-System (Farben, Typo, Buttons) via Tailwind @theme
 ```
 
@@ -56,6 +61,7 @@ npm install         # Abhängigkeiten
 npm run dev         # lokaler Dev-Server (http://localhost:4321)
 npm run build       # Produktionsbuild nach dist/
 npm run preview     # dist/ lokal ansehen
+npm run mail:test   # Testmail über die SMTP-Zugangsdaten aus .dev.vars verschicken
 node scripts/gen-assets.mjs   # OG-Bild + Icon neu erzeugen (nur bei Bedarf)
 npm run design:setup          # Impeccable Design-Skill lokal installieren (nach .claude/skills/)
 ```
@@ -71,12 +77,26 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - **Build command:** `npm run build`
 - **Build output directory:** `dist`
 - **Functions:** werden automatisch aus `functions/` erkannt (kein Adapter nötig).
+- **Compatibility date:** mindestens `2023-08-01` (der Mailversand nutzt `cloudflare:sockets`).
 - **Environment variables** (im Pages-Dashboard setzen, für Formularzustellung):
   - `TURNSTILE_SECRET_KEY` – Cloudflare-Turnstile Secret (Site-Key zusätzlich in `src/data/site.ts`)
-  - Zustellung, eine der beiden Varianten:
-    - `RESEND_API_KEY` + `LEAD_TO_EMAIL` + `LEAD_FROM_EMAIL` (E-Mail via Resend), **oder**
-    - `LEAD_WEBHOOK_URL` (POST als JSON, z. B. Make/Zapier)
+  - Zustellung, eine der drei Varianten (die erste vollständig konfigurierte gewinnt):
+    1. **SMTP (aktiv, IONOS):** `SMTP_HOST` = `smtp.ionos.de`, `SMTP_PORT` = `587`,
+       `SMTP_USER` = `info@belium.de`, `SMTP_PASS` (als **Secret**), dazu `LEAD_TO_EMAIL`,
+       `LEAD_FROM_EMAIL`, `LEAD_FROM_NAME`. Optional `SMTP_SECURE=tls` für Port 465.
+    2. `RESEND_API_KEY` + `LEAD_TO_EMAIL` + `LEAD_FROM_EMAIL` (E-Mail via Resend)
+    3. `LEAD_WEBHOOK_URL` (POST als JSON, z. B. Make/Zapier)
   - Ohne Zustellkanal läuft die Function im **Demo-Modus** (Anfrage wird angenommen, aber nicht zugestellt).
+
+### Mailversand
+Vollständige Anleitung inklusive IONOS-Werten, Fehlertabelle und lokalem Test:
+**[`docs/mailversand.md`](./docs/mailversand.md)**. Kurzfassung:
+- Der SMTP-Dialog läuft in `src/server/smtp.ts` direkt über `cloudflare:sockets`
+  (STARTTLS auf 587, direktes TLS auf 465). In Workers gibt es kein `nodemailer`.
+- Absender muss das authentifizierte IONOS-Postfach sein, die Adresse der Interessentin steht
+  im `Reply-To`. Betreff: `Neue Anfrage über belium.de: <Name>`.
+- Vor dem Deploy testen: `.dev.vars` aus `.dev.vars.example` anlegen, dann `npm run mail:test`.
+  Der Test fährt denselben Client unter Node, `.dev.vars` gehört nie ins Repo.
 
 ## Conversion & Tracking
 - Primär-CTA: Terminanfrage über `LeadForm` (→ `/api/lead`). Sekundär: WhatsApp mit vorbelegtem Text.
@@ -108,7 +128,10 @@ ist **nicht Teil des Repos** – `.claude/skills/` bleibt bewusst in `.gitignore
 - [ ] **Vorher-Nachher-Fotos** (mit Zone + Sitzungsanzahl) liefern → `inhalt.ts` `ergebnisseVorhanden = true`.
 - [ ] **Google-/ProvenExpert-Widget-IDs** für den Bewertungsabschnitt (optional – der Abschnitt
       zeigt inzwischen echte, wörtlich übernommene Google-Rezensionen aus `src/data/reviews.ts`).
-- [ ] **Turnstile-Key** + **Zustellkanal** (Resend oder Webhook) in Cloudflare konfigurieren.
+- [ ] **SMTP-Zugangsdaten** (IONOS-Postfach `info@belium.de`) als Umgebungsvariablen in Cloudflare
+      Pages hinterlegen, `SMTP_PASS` als Secret. Code ist fertig, siehe `docs/mailversand.md`.
+      Danach einmal neu deployen und eine Testanfrage über das Formular schicken.
+- [ ] **Turnstile-Key** (Site-Key in `src/data/site.ts`, Secret in Cloudflare) setzen.
 - [ ] **Geokoordinaten** im `site.ts` final verifizieren (aktuell Näherung).
 - [ ] Datenschutzerklärung & Impressum rechtlich final prüfen lassen.
 - [ ] Finale **Domain** in `astro.config.mjs` (`SITE`) bestätigen.

@@ -1,0 +1,32 @@
+# Vorlage für lokale Tests des Mailversands.
+# Kopieren nach .dev.vars und echte Werte eintragen. .dev.vars ist in .gitignore
+# und darf NIE committet werden.
+#
+# Testen:  npm run mail:test
+# Produktion: dieselben Variablen im Cloudflare-Pages-Dashboard setzen
+#             (Settings -> Environment variables), siehe docs/mailversand.md
+
+# --- SMTP-Zugang (IONOS) -----------------------------------------------------
+SMTP_HOST=smtp.ionos.de
+SMTP_PORT=587
+# Benutzername = die vollständige E-Mail-Adresse des Postfachs
+SMTP_USER=info@belium.de
+SMTP_PASS=hier-das-postfach-passwort
+# Optional: "tls" erzwingt direktes TLS (Port 465). Ohne Angabe: 465 -> tls, sonst STARTTLS.
+# SMTP_SECURE=starttls
+
+# --- Absender und Empfänger --------------------------------------------------
+# Empfänger der Anfragen (mehrere durch Komma getrennt)
+LEAD_TO_EMAIL=info@belium.de
+# Absender – muss bei IONOS das authentifizierte Postfach oder ein Alias davon sein
+LEAD_FROM_EMAIL=info@belium.de
+LEAD_FROM_NAME=Belium Beauty Website
+
+# --- Spam-Schutz (optional, aber empfohlen) ----------------------------------
+# Secret-Key aus dem Cloudflare-Turnstile-Dashboard.
+# Der zugehörige Site-Key gehört in src/data/site.ts (turnstileSiteKey).
+# TURNSTILE_SECRET_KEY=
+
+# --- Alternativen zu SMTP (nur eine Variante nötig) --------------------------
+# RESEND_API_KEY=
+# LEAD_WEBHOOK_URL=
