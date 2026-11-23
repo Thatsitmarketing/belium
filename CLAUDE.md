@@ -135,3 +135,7 @@ Vollständige Anleitung inklusive IONOS-Werten, Fehlertabelle und lokalem Test:
 - [ ] **Geokoordinaten** im `site.ts` final verifizieren (aktuell Näherung).
 - [ ] Datenschutzerklärung & Impressum rechtlich final prüfen lassen.
 - [ ] Finale **Domain** in `astro.config.mjs` (`SITE`) bestätigen.
+
+## Änderungen
+
+- 23.11.2026: Impressum um Abschnitt "Webdesign und Umsetzung" (Agenturhinweis That's it. Marketing) ergänzt, Footer um "Made by That's it. Marketing" mit Link auf https://thatsit.marketing erweitert.
